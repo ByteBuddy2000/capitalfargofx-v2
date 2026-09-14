@@ -1,6 +1,7 @@
 // middleware.ts
 
-import { auth } from "@/auth"
+import NextAuth from "next-auth"
+import authConfig from "./auth.config"
 import { NextResponse } from "next/server"
 
 const normalizeRole = (role: unknown) =>
@@ -9,7 +10,9 @@ const normalizeRole = (role: unknown) =>
 const isAdminRole = (role: string) =>
   role === "ADMIN" || role === "SUPER ADMIN"
 
-export default auth((req) => {
+const { auth: withAuth } = NextAuth(authConfig)
+
+export default withAuth((req) => {
   const { nextUrl } = req
   const pathname = nextUrl.pathname
 

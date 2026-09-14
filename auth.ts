@@ -2,20 +2,13 @@
 import type { NextAuthConfig } from "next-auth"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+import authConfig from "./auth.config"
 import bcrypt from "bcryptjs"
 import { connectToDB } from "@/lib/connectToDB"
 import { User } from "@/models/User"
 
 export const authOptions: NextAuthConfig = {
-  trustHost: true,
-
-  session: {
-    strategy: "jwt",
-  },
-
-  pages: {
-    signIn: "/login",
-  },
+  ...authConfig,
 
   providers: [
     CredentialsProvider({
@@ -127,5 +120,8 @@ export const authOptions: NextAuthConfig = {
   // secret: process.env.AUTH_SECRET,
 }
 
-export const { handlers, auth } = NextAuth(authOptions)
+export const { handlers, auth } = NextAuth({
+  ...authConfig,
+  ...authOptions,
+})
 
