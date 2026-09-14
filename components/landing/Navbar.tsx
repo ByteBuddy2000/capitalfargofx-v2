@@ -79,7 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       className={`fixed top-0 right-0 left-0 z-40 transition-all duration-300 ${
         isScrolled
           ? "border-b border-slate-800/80 bg-slate-950/90 py-3.5 shadow-lg backdrop-blur-md"
-          : "bg-gradient-to-b from-slate-950/80 to-transparent py-5"
+          : "bg-linear-to-b from-slate-950/80 to-transparent py-5"
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -140,7 +140,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 variant="primary"
                 rightIcon={<ArrowUpRight className="h-3.5 w-3.5" />}
                 onClick={() => handleAuth("register")}
-                className="border-none bg-gradient-to-r from-blue-600 to-emerald-600 shadow-md shadow-blue-500/20 hover:from-blue-700 hover:to-emerald-700"
+                className="border-none bg-linear-to-r from-blue-600 to-emerald-600 shadow-md shadow-blue-500/20 hover:from-blue-700 hover:to-emerald-700"
               >
                 Create Account
               </Button>
@@ -231,7 +231,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       setMobileMenuOpen(false)
                       handleAuth("register")
                     }}
-                    className="border-none bg-gradient-to-r from-blue-600 to-emerald-600"
+                    className="border-none bg-linear-to-r from-blue-600 to-emerald-600"
                   >
                     Register
                   </Button>

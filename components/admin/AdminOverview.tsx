@@ -143,7 +143,7 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({
   return (
     <div className="space-y-8">
       {/* Top Banner */}
-      <div className="flex flex-col justify-between gap-4 rounded-3xl border border-slate-800 bg-gradient-to-r from-slate-900 via-amber-950/40 to-slate-900 p-6 shadow-xl sm:flex-row sm:items-center sm:p-8">
+      <div className="flex flex-col justify-between gap-4 rounded-3xl border border-slate-800 bg-linear-to-r from-slate-900 via-amber-950/40 to-slate-900 p-6 shadow-xl sm:flex-row sm:items-center sm:p-8">
         <div>
           <span className="mb-1 block text-xs font-bold tracking-wider text-amber-400 uppercase">
             Institutional Operations Center

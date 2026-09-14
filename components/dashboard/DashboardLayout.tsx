@@ -200,7 +200,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 onClick={() => onTabChange(item.id)}
                 className={`flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left text-sm font-medium transition-colors ${isActive
                   ? "rounded-r-md border-l-4 border-[#2563EB] bg-[#2563EB]/10 text-white"
-                  : "rounded-md text-[#64748B] hover:bg-white/[0.03] hover:text-white"
+                  : "rounded-md text-[#64748B] hover:bg-white/3 hover:text-white"
                   }`}
               >
                 <div className="flex items-center gap-3">
@@ -233,7 +233,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               </span>
             </div>
             <div className="mb-2.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
-              <div className="h-full w-3/4 rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 shadow-sm transition-all duration-500" />
+              <div className="h-full w-3/4 rounded-full bg-linear-to-r from-emerald-500 to-teal-400 shadow-sm transition-all duration-500" />
             </div>
             <p className="text-[11px] text-slate-400">75% Progress to VIP Gold</p>
           </div>
