@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
-import { auth } from "@/auth"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/auth"
 import { connectToDB } from "@/lib/connectToDB"
 import { User, type IUser } from "@/models/User"
 import { Asset } from "@/models/Asset"
@@ -63,7 +64,7 @@ const publicUser = (
 export async function GET(): Promise<
   NextResponse<{ user: PublicUserData } | { message: string }>
 > {
-  const session = await auth()
+  const session = await getServerSession(authOptions)
   const userId = session?.user?.id
 
   if (!userId) {

@@ -1,133 +1,68 @@
 // middleware.ts
-
-import NextAuth from "next-auth"
-import authConfig from "./auth.config"
 import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
+import { getToken } from "next-auth/jwt"
 
-const normalizeRole = (role: unknown): string => {
-  return String(role ?? "").trim().toUpperCase()
-}
+// Paths that are strictly protected
+const AUTH_ROUTES = ["/dashboard", "/admin"]
 
-const isAdminRole = (role: unknown): boolean => {
-  const normalized = normalizeRole(role)
+export async function middleware(request: NextRequest) {
+  const token = await getToken({
+    req: request,
+    secret: process.env.AUTH_SECRET,
+  })
 
-  return (
-    normalized === "ADMIN" ||
-    normalized === "SUPER ADMIN"
+  const { pathname } = request.nextUrl
+
+  const role = String(token?.role ?? "").trim().toLowerCase()
+  const destination =
+    role === "admin" || role === "super admin"
+      ? "/admin"
+      : role === "user"
+        ? "/dashboard"
+        : "/login"
+
+  // 1. Redirect logged-in users away from the login page.
+  if (token && pathname === "/login") {
+    return NextResponse.redirect(new URL(destination, request.url))
+  }
+
+  // 2. Protect defined dashboard routes
+  const isProtectedRoute = AUTH_ROUTES.some((route) =>
+    pathname.startsWith(route)
   )
-}
 
-const isUserRole = (role: unknown): boolean => {
-  return normalizeRole(role) === "USER"
-}
-
-const { auth: withAuth } = NextAuth(authConfig)
-
-export default withAuth((req) => {
-  const { nextUrl } = req
-  const pathname = nextUrl.pathname
-  const session = req.auth
-
-  const role = normalizeRole(session?.user?.role)
-
-  const isLoggedIn = !!session?.user
-
-  const isAdmin = isAdminRole(role)
-  const isUser = isUserRole(role)
-
-  // ============================================================
-  // Logged-in users should not access /login
-  // ============================================================
-
-  if (pathname === "/login" && isLoggedIn) {
-    if (!isAdmin && !isUser) {
-      return NextResponse.next()
+  if (isProtectedRoute) {
+    if (!token) {
+      // Redirect to signin if no session
+      return NextResponse.redirect(new URL("/login", request.url))
     }
 
-    return NextResponse.redirect(
-      new URL(
-        isAdmin
-          ? "/admin"
-          : isUser
-            ? "/dashboard"
-            : "/login",
-        req.url
-      )
-    )
-  }
-
-  // ============================================================
-  // Protect /dashboard and /admin
-  // ============================================================
-
-  const isDashboardRoute = pathname.startsWith("/dashboard")
-  const isAdminRoute = pathname.startsWith("/admin")
-
-  if ((isDashboardRoute || isAdminRoute) && !isLoggedIn) {
-    const loginUrl = new URL("/login", req.url)
-
-    loginUrl.searchParams.set(
-      "callbackUrl",
-      pathname
-    )
-
-    return NextResponse.redirect(loginUrl)
-  }
-
-  if ((isDashboardRoute || isAdminRoute) && isLoggedIn && !isAdmin && !isUser) {
-    return NextResponse.redirect(new URL("/login", req.url))
-  }
-
-  // ============================================================
-  // ADMIN route protection
-  // ============================================================
-
-  if (isAdminRoute && isLoggedIn) {
-    if (!isAdmin) {
-      return NextResponse.redirect(
-        new URL("/dashboard", req.url)
-      )
+    if (role !== "user" && role !== "admin" && role !== "super admin") {
+      return NextResponse.redirect(new URL("/login", request.url))
     }
 
-    return NextResponse.next()
-  }
-
-  // ============================================================
-  // USER dashboard protection
-  // ============================================================
-
-  if (isDashboardRoute && isLoggedIn) {
-    if (!isUser) {
-      return NextResponse.redirect(
-        new URL("/admin", req.url)
-      )
+    if (pathname.startsWith("/admin") && role === "user") {
+      return NextResponse.redirect(new URL("/dashboard", request.url))
     }
 
-    return NextResponse.next()
+    if (
+      pathname.startsWith("/dashboard") &&
+      (role === "admin" || role === "super admin")
+    ) {
+      return NextResponse.redirect(new URL("/admin", request.url))
+    }
   }
 
-  // ============================================================
-  // Redirect authenticated users from "/"
-  // ============================================================
-
-  if (pathname === "/" && isLoggedIn) {
-    return NextResponse.redirect(
-      new URL(
-        isAdmin
-          ? "/admin"
-          : isUser
-            ? "/dashboard"
-            : "/login",
-        req.url
-      )
-    )
+  // 3. Optional: Redirect root "/" to user's dashboard if logged in
+  if (pathname === "/" && token) {
+    return NextResponse.redirect(new URL(destination, request.url))
   }
 
   return NextResponse.next()
-})
+}
 
 export const config = {
-  matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
-  ],
+  // We match everything except static files and API routes
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 }

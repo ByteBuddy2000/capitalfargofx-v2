@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server"
-import { auth } from "@/auth"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/auth"
 import { connectToDB } from "@/lib/connectToDB"
 import { Asset } from "@/models/Asset"
 
 export async function GET() {
-  const session = await auth()
+  const session = await getServerSession(authOptions)
   const userId = session?.user?.id
 
   if (!userId) {

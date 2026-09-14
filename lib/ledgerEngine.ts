@@ -402,7 +402,6 @@ export class LedgerEngine {
 
     return { success: true }
   }
-
   /**
    * Admin rejects a deposit
    */
@@ -959,7 +958,7 @@ export const ledgerEngine = {
             username: "admin",
             fullName: "System Administrator",
             email: "admin@CapitalsFargo.com",
-            role: "ADMIN",
+            role: "admin",
             status: "ACTIVE",
             btcWallet: "",
             ethWallet: "",
@@ -989,7 +988,7 @@ export const ledgerEngine = {
             username: "admin",
             fullName: "System Administrator",
             email: "admin@CapitalsFargo.com",
-            role: "ADMIN",
+            role: "admin",
             status: "ACTIVE",
             btcWallet: "",
             ethWallet: "",
@@ -1082,7 +1081,7 @@ export const ledgerEngine = {
             username: "admin",
             fullName: "System Administrator",
             email: "admin@CapitalsFargo.com",
-            role: "ADMIN",
+            role: "admin",
             status: "ACTIVE",
             btcWallet: "",
             ethWallet: "",
@@ -1118,7 +1117,7 @@ export const ledgerEngine = {
             username: "admin",
             fullName: "System Administrator",
             email: "admin@CapitalsFargo.com",
-            role: "ADMIN",
+            role: "admin",
             status: "ACTIVE",
             btcWallet: "",
             ethWallet: "",
@@ -1186,7 +1185,7 @@ export const ledgerEngine = {
               username: "admin",
               fullName: "System Administrator",
               email: "admin@CapitalsFargo.com",
-              role: "ADMIN",
+              role: "admin",
               status: "ACTIVE",
               btcWallet: "",
               ethWallet: "",
@@ -1205,7 +1204,7 @@ export const ledgerEngine = {
               username: "admin",
               fullName: "System Administrator",
               email: "admin@CapitalsFargo.com",
-              role: "ADMIN",
+              role: "admin",
               status: "ACTIVE",
               btcWallet: "",
               ethWallet: "",
@@ -1236,7 +1235,7 @@ export const ledgerEngine = {
             username: "admin",
             fullName: "System Administrator",
             email: "admin@CapitalsFargo.com",
-            role: "ADMIN",
+            role: "admin",
             status: "ACTIVE",
             btcWallet: "",
             ethWallet: "",

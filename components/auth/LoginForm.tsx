@@ -15,7 +15,6 @@ import { Input } from "../ui/Input"
 import { Button } from "../ui/Button"
 import { useToast } from "../ui/Toast"
 import { useRouter } from "next/navigation"
-import { isAdminRole } from "@/types"
 
 interface LoginFormProps {
   onSwitchToRegister: () => void
@@ -77,11 +76,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       }
 
       const session = await getSession()
-      const role = String(session?.user?.role || "").toUpperCase()
+      const role = String(session?.user?.role || "").trim().toLowerCase()
 
       console.log("LOGIN ROLE:", role)
 
-      if (role !== "USER" && !isAdminRole(role)) {
+      if (role !== "user" && role !== "admin" && role !== "super admin") {
         const message = "Your account role could not be verified. Please try again."
         setError(message)
         toastError("Authentication Failed", message)
@@ -90,9 +89,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
       success("Authentication Successful", "Welcome back to CapitalsFargoFX.")
 
-      const destination = isAdminRole(role)
+      const destination = role === "admin" || role === "super admin"
         ? "/admin"
-        : role === "USER"
+        : role === "user"
           ? "/dashboard"
           : "/login"
 
@@ -111,9 +110,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     }
   }
 
-  const handleDemoLogin = (role: "INVESTOR" | "ADMIN") => {
+  const handleDemoLogin = (role: "investor" | "admin") => {
     setError(
-      `Demo access is disabled. Sign in with your ${role === "ADMIN" ? "admin" : "investor"} account.`
+      `Demo access is disabled. Sign in with your ${role === "admin" ? "admin" : "investor"} account.`
     )
   }
 
@@ -128,7 +127,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
-            onClick={() => handleDemoLogin("INVESTOR")}
+            onClick={() => handleDemoLogin("investor")}
             className="cursor-pointer rounded-xl border border-blue-200 bg-white p-2 text-left text-xs transition-all hover:border-blue-400 hover:shadow-xs"
           >
             <span className="block truncate font-bold text-slate-900">
@@ -141,7 +140,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
           <button
             type="button"
-            onClick={() => handleDemoLogin("ADMIN")}
+            onClick={() => handleDemoLogin("admin")}
             className="cursor-pointer rounded-xl border border-amber-200 bg-white p-2 text-left text-xs transition-all hover:border-amber-400 hover:shadow-xs"
           >
             <span className="block truncate font-bold text-amber-900">

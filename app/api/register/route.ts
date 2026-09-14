@@ -33,9 +33,9 @@ const registrationSchema = z.object({
   usdtWallet: z.string().trim().optional().default(""),
   referralCode: z.string().trim().optional().default(""),
   role: z
-    .enum(["USER", "ADMIN", "SUPER ADMIN", "user", "admin", "super admin"])
+    .enum(["user", "admin", "super admin"])
     .optional()
-    .default("USER"),
+    .default("user"),
 })
 
 export async function POST(request: Request) {

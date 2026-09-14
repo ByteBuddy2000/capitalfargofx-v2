@@ -44,7 +44,7 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({
       .then((data) => {
         setUsers(
           (data.users as unknown as User[]).filter(
-            (user) => user.role === "USER" || user.role === "user"
+            (user) => user.role === "user"
           )
         )
         setDeposits(

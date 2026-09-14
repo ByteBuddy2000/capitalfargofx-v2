@@ -1,17 +1,9 @@
 // types/index.ts
 export type Role =
-  | "USER"
-  | "ADMIN"
-  | "SUPER ADMIN"
   | "user"
   | "admin"
   | "super admin"
 export type UserRole = Role
-
-export const isAdminRole = (role: unknown): boolean => {
-  const normalizedRole = String(role ?? "").trim().toUpperCase()
-  return normalizedRole === "ADMIN" || normalizedRole === "SUPER ADMIN"
-}
 
 export type UserStatus = "ACTIVE" | "SUSPENDED" | "BANNED"
 

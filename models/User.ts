@@ -2,9 +2,6 @@
 import mongoose, { type Model, type Schema, type Types } from "mongoose"
 
 export type UserRole =
-  | "USER"
-  | "ADMIN"
-  | "SUPER ADMIN"
   | "user"
   | "admin"
   | "super admin"
@@ -55,8 +52,8 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     passwordHash: { type: String, required: true, select: false },
     role: {
       type: String,
-      enum: ["USER", "ADMIN", "SUPER ADMIN", "user", "admin", "super admin"],
-      default: "USER",
+      enum: ["user", "admin", "super admin"],
+      default: "user",
     },
     status: {
       type: String,

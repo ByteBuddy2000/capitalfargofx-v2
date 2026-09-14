@@ -12,7 +12,7 @@ export async function GET() {
     await connectToDB()
 
     const [users, deposits, withdrawals, investments] = await Promise.all([
-      User.find({ role: { $in: ["USER", "user"] } })
+      User.find({ role: "user" })
         .select("-passwordHash")
         .sort({ createdAt: -1 })
         .lean(),

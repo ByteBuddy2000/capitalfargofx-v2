@@ -1,7 +1,7 @@
 // AdminUsers.tsx
 import React, { useState } from "react"
 import { Users, Search } from "lucide-react"
-import { isAdminRole, User, UserStatus } from "../../types"
+import { User, UserStatus } from "../../types"
 import { authApi } from "../../lib/api"
 import { Button } from "../ui/Button"
 import { Input } from "../ui/Input"
@@ -47,10 +47,10 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser }) => {
   }, [toastError])
 
   const visibleUsers = allUsers.filter((u) => {
-    const currentRole = String(currentUser.role).trim().toUpperCase()
-    const userRole = String(u.role).trim().toUpperCase()
+    const currentRole = currentUser.role
+    const userRole = u.role
 
-    return !(currentRole === "ADMIN" && userRole === "SUPER ADMIN")
+    return !(currentRole === "admin" && userRole === "super admin")
   })
 
   const filtered = visibleUsers.filter((u) => {
@@ -220,7 +220,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser }) => {
                     <td className="whitespace-nowrap px-4 py-4">
                       <div className="flex items-center gap-1.5">
                         <span
-                          className={`rounded px-2 py-0.5 text-[10px] font-black uppercase ${isAdminRole(u.role)
+                          className={`rounded px-2 py-0.5 text-[10px] font-black uppercase ${u.role === "admin" || u.role === "super admin"
                               ? "border border-amber-800 bg-amber-950 text-amber-300"
                               : "bg-slate-800 text-slate-300"
                             }`}

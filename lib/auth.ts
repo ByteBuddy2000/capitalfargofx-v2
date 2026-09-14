@@ -1,13 +1,13 @@
-// lib/auth.ts - Auth utilities (requires auth from root)a
-import { auth } from "@/auth"
-import { isAdminRole } from "@/types"
+// lib/auth.ts - Auth utilities for the root NextAuth configuration
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/auth"
 
 /**
  * Server-side utility: Get authenticated user or throw 401
  * Use in route handlers and server components
  */
 export async function requireAuth() {
-  const session = await auth()
+  const session = await getServerSession(authOptions)
 
   if (!session?.user) {
     throw new Error("Unauthorized: No session found")
@@ -23,7 +23,7 @@ export async function requireAuth() {
 export async function requireAdmin() {
   const user = await requireAuth()
 
-  if (!isAdminRole(user.role)) {
+  if (user.role !== "admin" && user.role !== "super admin") {
     throw new Error("Forbidden: Admin role required")
   }
 
