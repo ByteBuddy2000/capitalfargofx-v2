@@ -22,8 +22,8 @@ export default function RootLayout({
         <SessionWrapper>
           {children}
         </SessionWrapper>
+        <Tawk />
       </body>
-      <Tawk />
     </html>
   )
 }
