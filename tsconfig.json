@@ -26,6 +26,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
-, "oldImageComponents/landing/FinalCta.txs"  ],
+, "oldImageComponents/landing/FinalCta.txs", "middleware.ts"  ],
   "exclude": ["node_modules"]
 }
