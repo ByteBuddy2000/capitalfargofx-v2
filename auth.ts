@@ -80,7 +80,7 @@ export const authOptions: NextAuthConfig = {
       if (user) {
         token.id = user.id
         token.email = user.email
-        token.role = user.role as
+        token.role = String(user.role ?? "").trim().toUpperCase() as
           | "USER"
           | "ADMIN"
           | "SUPER ADMIN"
@@ -102,7 +102,7 @@ export const authOptions: NextAuthConfig = {
         session.user._id = token.id as string
         session.user.email = token.email as string
         session.user.name = (token.name as string) || undefined
-        session.user.role = token.role as
+        session.user.role = String(token.role ?? "").trim().toUpperCase() as
           | "USER"
           | "ADMIN"
           | "SUPER ADMIN"
@@ -118,7 +118,6 @@ export const authOptions: NextAuthConfig = {
     },
   },
 
-  // secret: process.env.AUTH_SECRET,
 }
 
 export const { handlers, auth } = NextAuth({

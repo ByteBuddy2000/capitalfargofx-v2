@@ -40,6 +40,10 @@ export default withAuth((req) => {
   // ============================================================
 
   if (pathname === "/login" && isLoggedIn) {
+    if (!isAdmin && !isUser) {
+      return NextResponse.next()
+    }
+
     return NextResponse.redirect(
       new URL(
         isAdmin
@@ -68,6 +72,10 @@ export default withAuth((req) => {
     )
 
     return NextResponse.redirect(loginUrl)
+  }
+
+  if ((isDashboardRoute || isAdminRoute) && isLoggedIn && !isAdmin && !isUser) {
+    return NextResponse.redirect(new URL("/login", req.url))
   }
 
   // ============================================================
