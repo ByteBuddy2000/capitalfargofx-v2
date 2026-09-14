@@ -4,44 +4,62 @@ import NextAuth from "next-auth"
 import authConfig from "./auth.config"
 import { NextResponse } from "next/server"
 
-const normalizeRole = (role: unknown) =>
-  String(role ?? "").toUpperCase()
+const normalizeRole = (role: unknown): string => {
+  return String(role ?? "").trim().toUpperCase()
+}
 
-const isAdminRole = (role: string) =>
-  role === "ADMIN" || role === "SUPER ADMIN"
+const isAdminRole = (role: unknown): boolean => {
+  const normalized = normalizeRole(role)
+
+  return (
+    normalized === "ADMIN" ||
+    normalized === "SUPER ADMIN"
+  )
+}
+
+const isUserRole = (role: unknown): boolean => {
+  return normalizeRole(role) === "USER"
+}
 
 const { auth: withAuth } = NextAuth(authConfig)
 
 export default withAuth((req) => {
   const { nextUrl } = req
   const pathname = nextUrl.pathname
-
   const session = req.auth
 
-  // ============================================================
-  // Redirect logged-in users away from login page
-  // ============================================================
-  if (pathname === "/login" && session?.user) {
-    const role = normalizeRole(session.user.role)
+  const role = normalizeRole(session?.user?.role)
 
+  const isLoggedIn = !!session?.user
+
+  const isAdmin = isAdminRole(role)
+  const isUser = isUserRole(role)
+
+  // ============================================================
+  // Logged-in users should not access /login
+  // ============================================================
+
+  if (pathname === "/login" && isLoggedIn) {
     return NextResponse.redirect(
       new URL(
-        isAdminRole(role)
+        isAdmin
           ? "/admin"
-          : "/dashboard",
+          : isUser
+            ? "/dashboard"
+            : "/login",
         req.url
       )
     )
   }
 
   // ============================================================
-  // Protect dashboard/admin routes
+  // Protect /dashboard and /admin
   // ============================================================
-  const protectedRoute =
-    pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/admin")
 
-  if (protectedRoute && !session?.user) {
+  const isDashboardRoute = pathname.startsWith("/dashboard")
+  const isAdminRoute = pathname.startsWith("/admin")
+
+  if ((isDashboardRoute || isAdminRoute) && !isLoggedIn) {
     const loginUrl = new URL("/login", req.url)
 
     loginUrl.searchParams.set(
@@ -53,41 +71,45 @@ export default withAuth((req) => {
   }
 
   // ============================================================
-  // Role checks
+  // ADMIN route protection
   // ============================================================
-  if (session?.user) {
-    const role = normalizeRole(session.user.role)
 
-    if (
-      pathname.startsWith("/admin") &&
-      !isAdminRole(role)
-    ) {
+  if (isAdminRoute && isLoggedIn) {
+    if (!isAdmin) {
       return NextResponse.redirect(
         new URL("/dashboard", req.url)
       )
     }
 
-    if (
-      pathname.startsWith("/dashboard") &&
-      isAdminRole(role)
-    ) {
+    return NextResponse.next()
+  }
+
+  // ============================================================
+  // USER dashboard protection
+  // ============================================================
+
+  if (isDashboardRoute && isLoggedIn) {
+    if (!isUser) {
       return NextResponse.redirect(
         new URL("/admin", req.url)
       )
     }
+
+    return NextResponse.next()
   }
 
   // ============================================================
-  // Redirect "/" when authenticated
+  // Redirect authenticated users from "/"
   // ============================================================
-  if (pathname === "/" && session?.user) {
-    const role = normalizeRole(session.user.role)
 
+  if (pathname === "/" && isLoggedIn) {
     return NextResponse.redirect(
       new URL(
-        isAdminRole(role)
+        isAdmin
           ? "/admin"
-          : "/dashboard",
+          : isUser
+            ? "/dashboard"
+            : "/login",
         req.url
       )
     )

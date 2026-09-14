@@ -79,6 +79,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       const session = await getSession()
       const role = String(session?.user?.role || "").toUpperCase()
 
+      console.log("LOGIN ROLE:", role)
+
       if (role !== "USER" && !isAdminRole(role)) {
         const message = "Your account role could not be verified. Please try again."
         setError(message)
@@ -87,17 +89,16 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       }
 
       success("Authentication Successful", "Welcome back to CapitalsFargoFX.")
-      const callbackUrl = new URLSearchParams(window.location.search).get(
-        "callbackUrl"
-      )
-      const destination =
-        callbackUrl && callbackUrl.startsWith("/") && !callbackUrl.startsWith("//")
-          ? callbackUrl
-          : isAdminRole(role)
-            ? "/admin"
-            : "/dashboard"
 
-      router.push(destination)
+      const destination = isAdminRole(role)
+        ? "/admin"
+        : role === "USER"
+          ? "/dashboard"
+          : "/login"
+
+      router.replace(destination)
+      router.refresh()
+
     } catch (requestError) {
       const message =
         requestError instanceof Error
