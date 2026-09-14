@@ -1,0 +1,362 @@
+import React, { useState } from "react"
+import { motion } from "motion/react"
+import {
+  Check,
+  Sparkles,
+  ArrowRight,
+  Calculator,
+  CheckCircle2,
+} from "lucide-react"
+import { InvestmentPlan } from "../../types"
+import { Button } from "../ui/Button"
+import { storage } from "../../lib/storage"
+
+interface PlansSectionProps {
+  plans?: InvestmentPlan[]
+  onSelectPlan?: (plan: InvestmentPlan) => void
+}
+
+export const PlansSection: React.FC<PlansSectionProps> = ({
+  plans,
+  onSelectPlan,
+}) => {
+  const activePlans = plans && plans.length > 0 ? plans : storage.getPlans()
+  const [calculatorAmount, setCalculatorAmount] = useState<number>(10000)
+  const [selectedCalcPlanId, setSelectedCalcPlanId] = useState<string>(
+    activePlans[1]?.id || activePlans[0]?.id || "plan-gold"
+  )
+
+  const currentCalcPlan =
+    activePlans.find((p) => p.id === selectedCalcPlanId) || activePlans[0]
+
+  // Dynamic calculations
+  const calcAmount = Math.max(100, calculatorAmount || 100)
+  const calculatedProfit =
+    (calcAmount * (currentCalcPlan?.returnPercentage || 0)) / 100
+  const calculatedTotal = currentCalcPlan?.principalReturn
+    ? calcAmount + calculatedProfit
+    : calculatedProfit
+  const calculatedReferral =
+    (calcAmount * (currentCalcPlan?.referralPercentage || 5)) / 100
+
+  return (
+    <section id="plans" className="py-24 bg-slate-900 text-white relative overflow-hidden">
+      {/* Background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Section Header */}
+        <div className="mx-auto mb-16 max-w-3xl text-center">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-800 bg-blue-950 px-3.5 py-1 text-xs font-bold tracking-wider text-blue-400 uppercase">
+            <Sparkles className="h-3.5 w-3.5" />
+            Structured Yield Tiers
+          </div>
+          <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl">
+            Transparent Investment Plans
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-slate-300">
+            Select an institutional contract tier configured for automated yield
+            distribution and principal recovery.
+          </p>
+        </div>
+
+        {/* 3 Core Investment Plan Cards */}
+        <div className="mb-20 grid grid-cols-1 items-stretch gap-8 lg:grid-cols-3">
+          {activePlans.map((plan, idx) => {
+            const isGold = plan.slug === "gold" || plan.featured
+            return (
+              <motion.div
+                key={plan.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                className={`relative flex flex-col justify-between rounded-3xl p-8 transition-all duration-300 ${
+                  isGold
+                    ? 'bg-gradient-to-b from-slate-800 to-slate-900 border-2 border-emerald-500 shadow-2xl shadow-emerald-950/50 scale-100 lg:scale-105 z-20'
+                    : 'bg-slate-950/80 border border-slate-800 hover:border-slate-700 shadow-xl'
+                }`}
+              >
+                {/* Featured Badge */}
+                {isGold && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-4 py-1 text-xs font-black tracking-wider text-slate-950 uppercase shadow-md">
+                    ★ Most Popular Choice
+                  </div>
+                )}
+
+                <div>
+                  <div className="mb-4 flex items-center justify-between">
+                    <h3 className="text-xl font-black tracking-tight text-white">
+                      {plan.name}
+                    </h3>
+                    <span className="rounded-lg border border-slate-700 bg-slate-800 px-2.5 py-1 font-mono text-xs text-slate-300">
+                      {plan.durationHours}h Cycle
+                    </span>
+                  </div>
+
+                  <p className="mb-6 min-h-[36px] text-xs leading-relaxed text-slate-400">
+                    {plan.description}
+                  </p>
+
+                  {/* Return Percentage Highlight */}
+                  <div className="mb-6 rounded-2xl border border-slate-800 bg-slate-900/90 p-5">
+                    <span className="block text-xs font-semibold tracking-wider text-slate-400 uppercase">
+                      Contract Yield
+                    </span>
+                    <div className="mt-1 flex items-baseline gap-1">
+                      <span className="text-4xl font-black text-emerald-400">
+                        {plan.returnPercentage}%
+                      </span>
+                      <span className="text-xs font-medium text-slate-400">
+                        ROI / {plan.durationHours} Hours
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Feature Checklist */}
+                  <ul className="mb-8 space-y-3.5 text-xs text-slate-300">
+                    <li className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                      <span className="text-slate-400">Minimum Deposit:</span>
+                      <span className="font-mono font-bold text-white">
+                        ${(plan?.minimumAmount || 0).toLocaleString()}
+                      </span>
+                    </li>
+                    <li className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                      <span className="text-slate-400">Maximum Deposit:</span>
+                      <span className="font-mono font-bold text-white">
+                        {(plan?.maximumAmount || 0) > 0
+                          ? `$${(plan?.maximumAmount || 0).toLocaleString()}`
+                          : "Unlimited"}
+                      </span>
+                    </li>
+                    <li className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                      <span className="text-slate-400">Duration / Lock:</span>
+                      <span className="font-mono font-bold text-emerald-400">
+                        {plan?.durationHours || 24} Hours
+                      </span>
+                    </li>
+                    <li className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                      <span className="text-slate-400">Principal Return:</span>
+                      <span className="flex items-center gap-1 font-bold text-white">
+                        <Check className="h-3.5 w-3.5 text-emerald-400" /> Yes,
+                        100% Back
+                      </span>
+                    </li>
+                    <li className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                      <span className="text-slate-400">
+                        Affiliate Commission:
+                      </span>
+                      <span className="font-mono font-bold text-blue-400">
+                        {plan?.referralPercentage || 5}% Instant
+                      </span>
+                    </li>
+                    <li className="flex items-center justify-between">
+                      <span className="text-slate-400">
+                        Deposit / Setup Fee:
+                      </span>
+                      <span className="font-bold text-slate-200">
+                        0.00% (Free)
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
+                <Button
+                  size="lg"
+                  variant={isGold ? "primary" : "outline"}
+                  rightIcon={<ArrowRight className="h-4 w-4" />}
+                  onClick={() => plan && onSelectPlan?.(plan)}
+                  className={`w-full justify-center py-3.5 font-bold ${
+                    isGold
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-slate-950 border-none shadow-lg shadow-emerald-500/25'
+                      : 'bg-slate-900 border-slate-700 text-white hover:bg-slate-800'
+                  }`}
+                >
+                  Choose {plan?.name || "Plan"}
+                </Button>
+              </motion.div>
+            )
+          })}
+        </div>
+
+        {/* Interactive Live Investment Profit Calculator */}
+        <div className="mx-auto max-w-4xl rounded-3xl border border-slate-800 bg-slate-950 p-6 shadow-2xl sm:p-10">
+          <div className="mb-8 flex flex-col justify-between gap-4 border-b border-slate-800 pb-6 sm:flex-row sm:items-center">
+            <div>
+              <div className="mb-1 inline-flex items-center gap-1.5 text-xs font-bold tracking-wider text-emerald-400 uppercase">
+                <Calculator className="h-4 w-4" />
+                Live Yield Simulator
+              </div>
+              <h3 className="text-xl font-bold tracking-tight text-white">
+                Calculate Your Projected Return
+              </h3>
+            </div>
+            {/* Plan Selector Buttons */}
+            <div className="flex flex-wrap gap-2">
+              {activePlans.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => {
+                    setSelectedCalcPlanId(p.id)
+                    if (calculatorAmount < (p?.minimumAmount || 0)) {
+                      setCalculatorAmount(p?.minimumAmount || 100)
+                    }
+                  }}
+                  className={`cursor-pointer rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                    selectedCalcPlanId === p.id
+                      ? "bg-blue-600 text-white shadow-md"
+                      : "border border-slate-800 bg-slate-900 text-slate-400 hover:text-white"
+                  }`}
+                >
+                  {p.name} ({p.returnPercentage}%)
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12">
+            {/* Slider and Input Controls */}
+            <div className="space-y-6 lg:col-span-6">
+              <div>
+                <label className="mb-2 block text-xs font-semibold tracking-wider text-slate-400 uppercase">
+                  Investment Capital (EURO)
+                </label>
+                <div className="relative flex items-center">
+                  <span className="absolute left-4 text-lg font-bold text-slate-500">
+                    $
+                  </span>
+                  <input
+                    type="number"
+                    min={currentCalcPlan?.minimumAmount || 100}
+                    max={
+                      (currentCalcPlan?.maximumAmount || 0) > 0
+                        ? currentCalcPlan.maximumAmount
+                        : 1000000
+                    }
+                    step={100}
+                    value={calculatorAmount}
+                    onChange={(e) =>
+                      setCalculatorAmount(Number(e.target.value))
+                    }
+                    className="w-full rounded-xl border border-slate-700 bg-slate-900 py-3 pr-4 pl-9 font-mono text-lg font-bold text-white focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Range Slider */}
+              <div>
+                <input
+                  type="range"
+                  min={currentCalcPlan?.minimumAmount || 100}
+                  max={
+                    (currentCalcPlan?.maximumAmount || 0) > 0
+                      ? currentCalcPlan.maximumAmount
+                      : 50000
+                  }
+                  step={100}
+                  value={calculatorAmount}
+                  onChange={(e) => setCalculatorAmount(Number(e.target.value))}
+                  className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-slate-800 accent-emerald-400"
+                />
+                <div className="mt-2 flex justify-between font-mono text-[11px] text-slate-500">
+                  <span>
+                    Min: $
+                    {(currentCalcPlan?.minimumAmount || 100).toLocaleString()}
+                  </span>
+                  <span>
+                    Max:{" "}
+                    {(currentCalcPlan?.maximumAmount || 0) > 0
+                      ? `$${(currentCalcPlan?.maximumAmount || 0).toLocaleString()}`
+                      : "Unlimited"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 text-xs text-slate-400">
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+                <span>
+                  Calculated under {currentCalcPlan?.name || "Configured Plan"}{" "}
+                  ({currentCalcPlan?.durationHours || 24} Hours Cycle)
+                </span>
+              </div>
+            </div>
+
+            {/* Simulated Return Summary Box */}
+            <div className="rounded-2xl border border-slate-800 bg-slate-900/90 p-6 lg:col-span-6">
+              <div className="space-y-3.5 text-xs text-slate-300">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <span className="text-slate-400">Principal Investment:</span>
+                  <span className="font-mono font-bold text-white">
+                    ${(calcAmount || 0).toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <span className="text-slate-400">
+                    Configured Yield ({currentCalcPlan?.returnPercentage || 0}
+                    %):
+                  </span>
+                  <span className="font-mono font-bold text-emerald-400">
+                    +$
+                    {(calculatedProfit || 0).toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <span className="text-slate-400">Principal Return:</span>
+                  <span className="font-bold text-emerald-400">
+                    100% Unlocked
+                  </span>
+                </div>
+                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                  <span className="text-slate-400">
+                    Upline Affiliate Bonus (5%):
+                  </span>
+                  <span className="font-mono font-bold text-blue-400">
+                    $
+                    {(calculatedReferral || 0).toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-sm font-bold text-white">
+                    Total Payout at Maturity:
+                  </span>
+                  <span className="font-mono text-2xl font-black text-emerald-400">
+                    $
+                    {(calculatedTotal || 0).toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
+              </div>
+
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() =>
+                  currentCalcPlan && onSelectPlan?.(currentCalcPlan)
+                }
+                className="mt-6 w-full border-none bg-emerald-500 font-bold text-slate-950 hover:bg-emerald-600"
+              >
+                Invest ${(calcAmount || 0).toLocaleString()} in{" "}
+                {currentCalcPlan?.name || "Selected Plan"}
+              </Button>
+            </div>
+          </div>
+
+          <p className="mt-6 text-center text-[11px] leading-relaxed text-slate-500">
+            Disclaimer: Investment returns and payouts are strictly determined
+            server-side based on configured contract terms, active operational
+            liquidity, and applicable terms of service.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,80 @@
+import { NextResponse } from "next/server"
+import mongoose from "mongoose"
+import { requireAuth } from "@/lib/auth"
+import { connectToDB } from "@/lib/connectToDB"
+import { Notification } from "@/models/Notification"
+
+export type MeNotificationsResponse = {
+  notifications: Array<Record<string, unknown>>
+}
+
+export async function GET(): Promise<
+  NextResponse<MeNotificationsResponse | { message: string }>
+> {
+  try {
+    const user = await requireAuth()
+    if (!user) {
+      return NextResponse.json(
+        { message: "Authentication required." },
+        { status: 401 }
+      )
+    }
+
+    await connectToDB()
+    const notifications = await Notification.find({ userId: user._id })
+      .sort({ createdAt: -1 })
+      .lean()
+    return NextResponse.json({ notifications })
+  } catch (error: unknown) {
+    console.error(error)
+    return NextResponse.json(
+      { message: "Internal server error." },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PATCH(
+  request: Request
+): Promise<
+  NextResponse<{ notification: Record<string, unknown> } | { message: string }>
+> {
+  try {
+    const user = await requireAuth()
+    if (!user) {
+      return NextResponse.json(
+        { message: "Authentication required." },
+        { status: 401 }
+      )
+    }
+
+    const body = (await request.json()) as { id?: string }
+    if (!body.id || !mongoose.isValidObjectId(body.id)) {
+      return NextResponse.json(
+        { message: "Notification id is required." },
+        { status: 400 }
+      )
+    }
+
+    await connectToDB()
+    const notification = await Notification.findOneAndUpdate(
+      { _id: body.id, userId: user._id },
+      { read: true },
+      { new: true }
+    ).lean()
+    if (!notification) {
+      return NextResponse.json(
+        { message: "Notification not found." },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json({ notification })
+  } catch (error: unknown) {
+    console.error(error)
+    return NextResponse.json(
+      { message: "Internal server error." },
+      { status: 500 }
+    )
+  }
+}

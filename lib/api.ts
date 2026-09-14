@@ -1,0 +1,281 @@
+import {
+  User,
+  InvestmentPlan,
+  Deposit,
+  Withdrawal,
+  Investment,
+  Transaction,
+} from "../types"
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "/api"
+
+type MongoRecord = { _id?: string }
+
+function normalizeRecord<T extends { id?: string }>(
+  record: T & MongoRecord
+): T {
+  const normalized = { ...record } as T & MongoRecord
+  if (normalized._id && !normalized.id) normalized.id = normalized._id
+  delete normalized._id
+  return normalized
+}
+
+type PopulatedUser = {
+  _id?: string
+  fullName?: string
+  username?: string
+  email?: string
+}
+type PopulatedPlan = { _id?: string; name?: string }
+type ApiDeposit = Omit<Deposit, "userId" | "planId"> & {
+  _id?: string
+  userId: string | PopulatedUser
+  planId: string | PopulatedPlan
+}
+
+function normalizeDeposit(record: ApiDeposit): Deposit {
+  const user =
+    typeof record.userId === "object" && record.userId !== null
+      ? record.userId
+      : undefined
+  const plan =
+    typeof record.planId === "object" && record.planId !== null
+      ? record.planId
+      : undefined
+
+  const userId =
+    user?._id || (typeof record.userId === "string" ? record.userId : "")
+  const planId =
+    plan?._id || (typeof record.planId === "string" ? record.planId : "")
+  const deposit = {
+    ...normalizeRecord(record as ApiDeposit),
+    userId,
+    planId,
+  } as Deposit
+
+  deposit.userFullName = deposit.userFullName || user?.fullName || ""
+  deposit.userUsername = deposit.userUsername || user?.username
+  deposit.userEmail = deposit.userEmail || user?.email
+  deposit.planName = deposit.planName || plan?.name || ""
+  deposit.asset = deposit.asset || deposit.cryptoCurrency
+  deposit.cryptoCurrency = deposit.cryptoCurrency || deposit.asset
+  deposit.txHash = deposit.txHash || deposit.transactionHash
+  deposit.transactionHash = deposit.transactionHash || deposit.txHash
+  return deposit
+}
+
+type ApiInvestment = Omit<Investment, "planId"> & {
+  _id?: string
+  planId: string | PopulatedPlan
+}
+
+function normalizeInvestment(record: ApiInvestment): Investment {
+  const planId =
+    typeof record.planId === "string" ? record.planId : record.planId._id || ""
+  const planName =
+    typeof record.planId === "string" ? undefined : record.planId.name
+  return {
+    ...normalizeRecord(record as ApiInvestment),
+    planId,
+    planName: record.planName || planName || "",
+  } as Investment
+}
+
+function normalizeHeaders(headers?: HeadersInit): Record<string, string> {
+  if (!headers) return {}
+  if (headers instanceof Headers) return Object.fromEntries(headers.entries())
+  if (Array.isArray(headers)) return Object.fromEntries(headers)
+  return { ...headers }
+}
+
+async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const response = await fetch(`${API_URL}${path}`, {
+    ...options,
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...normalizeHeaders(options.headers),
+    },
+  })
+
+  const body = await response.json().catch(() => ({}))
+
+  if (response.status === 401) {
+    throw new Error(body.message || "Session expired. Please log in again.")
+  }
+
+  if (!response.ok) throw new Error(body.message || "Request failed.")
+
+  return body as T
+}
+
+export const authApi = {
+  async me() {
+    const result = await request<{ user: User }>("/auth/me", {
+      cache: "no-store",
+    })
+    return result.user
+  },
+  async prices() {
+    const result = await request<{
+      prices: { BTC: number; ETH: number; USDT: number }
+      source: string
+    }>("/prices")
+    return result.prices
+  },
+  async assets() {
+    const result = await request<{
+      assets: Array<{
+        _id?: string
+        userId: string
+        symbol: "BTC" | "ETH" | "USDT"
+        availableBalance: number
+        lockedBalance: number
+        walletAddress: string
+      }>
+    }>("/me/assets")
+    return result.assets.map(normalizeRecord)
+  },
+  async plans() {
+    const result = await request<{
+      plans: (InvestmentPlan & { _id?: string })[]
+    }>("/plans")
+    return result.plans.map(normalizeRecord)
+  },
+  async deposits() {
+    const result = await request<{ deposits: ApiDeposit[] }>("/me/deposits")
+    return result.deposits.map(normalizeDeposit)
+  },
+  async withdrawals() {
+    const result = await request<{
+      withdrawals: (Withdrawal & { _id?: string })[]
+    }>("/me/withdrawals")
+    return result.withdrawals.map(normalizeRecord)
+  },
+  async investments() {
+    const result = await request<{ investments: ApiInvestment[] }>(
+      "/me/investments"
+    )
+    return result.investments.map(normalizeInvestment)
+  },
+  async transactions() {
+    const result = await request<{
+      transactions: (Transaction & { _id?: string })[]
+    }>("/me/transactions")
+    return result.transactions.map(normalizeRecord)
+  },
+  async adminDeposits() {
+    const result = await request<{ deposits: ApiDeposit[] }>("/admin/deposits")
+    return result.deposits.map(normalizeDeposit)
+  },
+  async adminOverview() {
+    return request<{
+      users: Array<Record<string, unknown>>
+      deposits: ApiDeposit[]
+      withdrawals: Array<Record<string, unknown>>
+      investments: Array<Record<string, unknown>>
+    }>("/admin/overview")
+  },
+  async adminUsers() {
+    const result = await request<{ users: Array<User & { _id?: string }> }>(
+      "/admin/users"
+    )
+    return result.users.map(normalizeRecord)
+  },
+  async updateAdminUser(data: {
+    userId: string
+    status?: User["status"]
+    balanceType?: "available" | "earning"
+    operation?: "CREDIT" | "DEBIT"
+    amount?: number
+    reason?: string
+  }) {
+    const result = await request<{ user: User & { _id?: string } }>(
+      "/admin/users",
+      {
+        method: "PATCH",
+        body: JSON.stringify(data),
+      }
+    )
+    return normalizeRecord(result.user)
+  },
+  async approveDeposit(id: string, adminNotes = "") {
+    return request(`/admin/deposits/${id}/approve`, {
+      method: "POST",
+      body: JSON.stringify({ adminNotes }),
+    })
+  },
+  async rejectDeposit(id: string, reason: string) {
+    return request(`/admin/deposits/${id}/reject`, {
+      method: "POST",
+      body: JSON.stringify({ reason }),
+    })
+  },
+  async adminWithdrawals() {
+    const result = await request<{
+      withdrawals: (Withdrawal & { _id?: string })[]
+    }>("/admin/withdrawals")
+    return result.withdrawals.map(normalizeRecord)
+  },
+  async updateWithdrawal(
+    id: string,
+    status: string,
+    txHash = "",
+    adminNotes = ""
+  ) {
+    return request(`/admin/withdrawals/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ status, txHash, adminNotes }),
+    })
+  },
+  async adminPlans() {
+    const result = await request<{ plans: Array<InvestmentPlan & { _id?: string }> }>("/admin/plans")
+    return result.plans.map(normalizeRecord)
+  },
+  async saveAdminPlan(plan: InvestmentPlan) {
+    const result = await request<{ plan: InvestmentPlan & { _id?: string } }>("/admin/plans", {
+      method: "PUT",
+      body: JSON.stringify(plan),
+    })
+    return normalizeRecord(result.plan)
+  },
+  async adminReferrals() {
+    const result = await request<{ referrals: Array<Record<string, unknown>> }>("/admin/referrals")
+    return result.referrals
+  },
+  async adminWallets() {
+    const result = await request<{ wallets: Array<Record<string, unknown>> }>("/admin/wallets")
+    return result.wallets.map((wallet) => normalizeRecord(wallet as { id?: string; _id?: string }))
+  },
+  async saveAdminWallet(wallet: Record<string, unknown>) {
+    const result = await request<{ wallet: Record<string, unknown> }>("/admin/wallets", {
+      method: "PUT",
+      body: JSON.stringify(wallet),
+    })
+    return normalizeRecord(result.wallet as { id?: string; _id?: string })
+  },
+  async adminSettings() {
+    const result = await request<{ settings: Record<string, unknown> | null }>("/admin/settings")
+    return result.settings
+  },
+  async saveAdminSettings(settings: Record<string, unknown>) {
+    const result = await request<{ settings: Record<string, unknown> }>("/admin/settings", {
+      method: "PUT",
+      body: JSON.stringify(settings),
+    })
+    return result.settings
+  },
+  async changePassword(payload: {
+    currentPassword: string
+    newPassword: string
+  }) {
+    return request<{ message: string }>("/admin/change-password", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    })
+  },
+  async adminAuditLogs() {
+    const result = await request<{ logs: Array<Record<string, unknown>> }>("/admin/audit")
+    return result.logs
+  },
+}
