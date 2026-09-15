@@ -1,3 +1,4 @@
+// models/Plan.ts
 import mongoose, { type Model, type Schema, type Types } from "mongoose"
 
 export type PlanStatus = "ACTIVE" | "INACTIVE"

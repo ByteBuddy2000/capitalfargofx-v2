@@ -7,3 +7,5 @@ Email: pedroduarte@test.com
 
 Password: password123
 
+role: super Admin
+

@@ -47,10 +47,9 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser }) => {
   }, [toastError])
 
   const visibleUsers = allUsers.filter((u) => {
-    const currentRole = currentUser.role
     const userRole = u.role
 
-    return !(currentRole === "admin" && userRole === "super admin")
+    return userRole !== "super admin"
   })
 
   const filtered = visibleUsers.filter((u) => {
