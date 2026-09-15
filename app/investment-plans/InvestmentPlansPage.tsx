@@ -14,7 +14,6 @@ import {
   ArrowRight,
   Info,
 } from "lucide-react"
-import { CURRENT_PLANS } from "@/lib/defaultPlans"
 import type { IPlan } from "@/models/Plan"
 
 interface InvestmentPlansPageProps {
