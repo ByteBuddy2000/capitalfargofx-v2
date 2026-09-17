@@ -46,9 +46,9 @@ export const PLATFORM_METRICS = [
   {
     id: "deposits",
     label: "Total Deposits",
-    value: "€967K+",
+    value: "$967K+",
     numericValue: 967,
-    prefix: "€",
+    prefix: "$",
     suffix: "K+",
     detail: "Secured in structured vaults",
     badge: "100% principal protected",
@@ -56,9 +56,9 @@ export const PLATFORM_METRICS = [
   {
     id: "withdrawals",
     label: "Withdrawals Processed",
-    value: "€3.7M+",
+    value: "$3.7M+",
     numericValue: 3.7,
-    prefix: "€",
+    prefix: "$",
     suffix: "M+",
     detail: "Instant liquidity execution",
     badge: "Avg. dispatch: < 15 mins",

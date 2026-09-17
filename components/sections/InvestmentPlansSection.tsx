@@ -83,8 +83,8 @@ export const InvestmentPlansSection: React.FC<
                   key={plan.slug}
                   id={`plan-card-${plan.slug}`}
                   className={`relative flex w-[290px] flex-shrink-0 snap-center flex-col justify-between rounded-3xl p-6 transition-all duration-300 sm:w-[320px] sm:p-7 md:w-auto ${isFeatured
-                      ? "border-2 border-blue-500/60 bg-gradient-to-b from-blue-950 via-slate-900 to-slate-950 text-white shadow-2xl md:-translate-y-2"
-                      : "border border-slate-800 bg-slate-900/85 text-slate-100 shadow-sm backdrop-blur-md hover:border-blue-500/50 hover:shadow-xl"
+                    ? "border-2 border-blue-500/60 bg-gradient-to-b from-blue-950 via-slate-900 to-slate-950 text-white shadow-2xl md:-translate-y-2"
+                    : "border border-slate-800 bg-slate-900/85 text-slate-100 shadow-sm backdrop-blur-md hover:border-blue-500/50 hover:shadow-xl"
                     }`}
                 >
                   {/* Featured Badge */}
@@ -100,8 +100,8 @@ export const InvestmentPlansSection: React.FC<
                     <div className="mb-4 flex items-center justify-between">
                       <span
                         className={`rounded-lg px-2.5 py-1 font-mono text-xs font-bold tracking-wider uppercase ${isFeatured
-                            ? "border border-blue-700/50 bg-blue-900/60 text-cyan-300"
-                            : "border border-slate-700 bg-slate-800 text-slate-300"
+                          ? "border border-blue-700/50 bg-blue-900/60 text-cyan-300"
+                          : "border border-slate-700 bg-slate-800 text-slate-300"
                           }`}
                       >
                         {plan.name.toUpperCase()}
@@ -137,8 +137,8 @@ export const InvestmentPlansSection: React.FC<
                     {/* Capital Range & Core Metrics Grid */}
                     <div
                       className={`my-4 space-y-2.5 rounded-2xl p-4 ${isFeatured
-                          ? "border border-slate-700 bg-slate-800/80"
-                          : "border border-slate-800 bg-slate-950/80"
+                        ? "border border-slate-700 bg-slate-800/80"
+                        : "border border-slate-800 bg-slate-950/80"
                         }`}
                     >
                       <div className="flex items-center justify-between text-xs">
@@ -197,8 +197,8 @@ export const InvestmentPlansSection: React.FC<
                       id={`btn-invest-${plan.slug}`}
                       onClick={() => onOpenInvestModal(plan.slug)}
                       className={`group flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${isFeatured
-                          ? "bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 hover:from-cyan-400 hover:to-indigo-500"
-                          : "bg-blue-600 text-white shadow-sm hover:bg-blue-500"
+                        ? "bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 hover:from-cyan-400 hover:to-indigo-500"
+                        : "bg-blue-600 text-white shadow-sm hover:bg-blue-500"
                         }`}
                     >
                       <span>Invest in {plan.name.replace(" Plan", "")}</span>

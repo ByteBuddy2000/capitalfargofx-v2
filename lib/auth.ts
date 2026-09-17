@@ -1,4 +1,4 @@
-// lib/auth.ts - Auth utilities for the root NextAuth configuration
+// lib/auth.ts - 
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/auth"
 

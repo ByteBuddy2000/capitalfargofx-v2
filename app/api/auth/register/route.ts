@@ -8,16 +8,10 @@ export async function POST(request: Request) {
     const result = await registerUserAction(body)
 
     if (!result.success) {
-      return NextResponse.json(
-        { message: result.error },
-        { status: 400 }
-      )
+      return NextResponse.json({ message: result.error }, { status: 400 })
     }
 
-    return NextResponse.json(
-      { user: result.data.user },
-      { status: 201 }
-    )
+    return NextResponse.json({ user: result.data.user }, { status: 201 })
   } catch (error) {
     console.error("Registration API error:", error)
     return NextResponse.json(

@@ -80,14 +80,14 @@ export const WithdrawView: React.FC<WithdrawViewProps> = ({
 
     if (!amount || amount < minWithdrawal) {
       setErrorMsg(
-        `Minimum withdrawal amount is €${minWithdrawal.toFixed(2)} USD.`
+        `Minimum withdrawal amount is $${minWithdrawal.toFixed(2)} USD.`
       )
       return
     }
 
     if (amount > selectedAssetUsdBalance) {
       setErrorMsg(
-        `Insufficient ${selectedCrypto} balance (€${selectedAssetUsdBalance.toFixed(2)} USD available).`
+        `Insufficient ${selectedCrypto} balance ($${selectedAssetUsdBalance.toFixed(2)} USD available).`
       )
       return
     }
@@ -279,14 +279,14 @@ export const WithdrawView: React.FC<WithdrawViewProps> = ({
               <div>
                 <div className="mb-2 flex items-center justify-between">
                   <label className="text-xs font-bold tracking-wider text-slate-700 uppercase">
-                    2. Withdrawal Amount (EURO)
+                    2. Withdrawal Amount (USD)
                   </label>
                   <button
                     type="button"
                     onClick={() => setAmount(selectedAssetUsdBalance)}
                     className="cursor-pointer text-xs font-bold text-blue-600 hover:text-blue-700"
                   >
-                    Max (€
+                    Max ($
                     {selectedAssetUsdBalance.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     })}
@@ -295,7 +295,7 @@ export const WithdrawView: React.FC<WithdrawViewProps> = ({
                 </div>
                 <div className="relative">
                   <span className="absolute top-1/2 left-4 -translate-y-1/2 text-xl font-bold text-slate-400">
-                    €
+                    $
                   </span>
                   <input
                     type="number"
@@ -309,9 +309,9 @@ export const WithdrawView: React.FC<WithdrawViewProps> = ({
                   />
                 </div>
                 <div className="mt-1 flex justify-between text-xs text-slate-500">
-                  <span>Minimum: €{minWithdrawal.toFixed(2)}</span>
+                  <span>Minimum: ${minWithdrawal.toFixed(2)}</span>
                   <span>
-                    Available: €
+                    Available: $
                     {selectedAssetUsdBalance.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     })}
@@ -320,7 +320,7 @@ export const WithdrawView: React.FC<WithdrawViewProps> = ({
                 <div className="text-xs font-semibold text-blue-600">
                   Estimated:{" "}
                   {cryptoAmount.toFixed(selectedCrypto === "BTC" ? 6 : 4)}{" "}
-                  {selectedCrypto} at €{selectedPrice.toLocaleString()} EURO
+                  {selectedCrypto} at ${selectedPrice.toLocaleString()} USD
                 </div>
               </div>
 

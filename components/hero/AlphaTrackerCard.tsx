@@ -83,13 +83,13 @@ export const AlphaTrackerCard: React.FC = () => {
                 Total Projected Valuation
               </div>
               <div className="font-mono text-3xl font-extrabold tracking-tight text-white">
-                €15,500.00
+                $15,500.00
               </div>
             </div>
             <div className="text-right">
               <span className="inline-flex items-center gap-1 rounded-lg border border-emerald-500/20 bg-emerald-950/50 px-2 py-1 text-sm font-bold text-emerald-400">
                 <TrendingUp className="h-4 w-4" />
-                +€5,500 Profit
+                +$5,500 Profit
               </span>
               <div className="mt-1 font-mono text-[10px] text-slate-400">
                 {activeEpoch === "72h"
@@ -207,7 +207,7 @@ export const AlphaTrackerCard: React.FC = () => {
 
             {/* Float tag on current endpoint */}
             <div className="absolute top-1 right-0 translate-y-[-50%] rounded bg-emerald-600 px-1.5 py-0.5 font-mono text-[10px] font-bold text-white shadow-sm">
-              Maturity: €15,500
+              Maturity: $15,500
             </div>
           </div>
         </div>
@@ -219,7 +219,7 @@ export const AlphaTrackerCard: React.FC = () => {
               Allocation
             </div>
             <div className="font-mono text-base font-bold text-white">
-              €10,000
+              $10,000
             </div>
             <div className="text-[10px] text-slate-400">
               100% Principal Return
@@ -232,7 +232,7 @@ export const AlphaTrackerCard: React.FC = () => {
               <span className="font-mono font-bold text-blue-400">5.00%</span>
             </div>
             <div className="font-mono text-base font-bold text-blue-100">
-              +€500.00
+              +$500.00
             </div>
             <div className="text-[10px] text-blue-400">Instant Settlement</div>
           </div>

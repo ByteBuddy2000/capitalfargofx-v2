@@ -1,3 +1,4 @@
+// app/api/admin/wallets/route.ts
 import { NextRequest, NextResponse } from "next/server"
 import { authErrorStatus, requireAdmin } from "@/lib/auth"
 import { connectToDB } from "@/lib/connectToDB"
@@ -16,7 +17,14 @@ export async function GET() {
     return NextResponse.json({ wallets })
   } catch (error: unknown) {
     const status = authErrorStatus(error)
-    return NextResponse.json({ message: status ? "Administrator access required." : "Unable to load wallets." }, { status: status || 500 })
+    return NextResponse.json(
+      {
+        message: status
+          ? "Administrator access required."
+          : "Unable to load wallets.",
+      },
+      { status: status || 500 }
+    )
   }
 }
 
@@ -37,11 +45,27 @@ export async function PUT(request: NextRequest) {
       depositFee: String(body.depositFee || "0.00%"),
       isActive: body.isActive !== false && body.active !== false,
     }
-    if (!values.name || !values.symbol || !values.network || !values.address) return NextResponse.json({ message: "Valid wallet values are required." }, { status: 400 })
-    const wallet = id ? await CryptoWallet.findByIdAndUpdate(id, values, { new: true, runValidators: true }).lean() : await CryptoWallet.create(values)
+    if (!values.name || !values.symbol || !values.network || !values.address)
+      return NextResponse.json(
+        { message: "Valid wallet values are required." },
+        { status: 400 }
+      )
+    const wallet = id
+      ? await CryptoWallet.findByIdAndUpdate(id, values, {
+          new: true,
+          runValidators: true,
+        }).lean()
+      : await CryptoWallet.create(values)
     return NextResponse.json({ wallet })
   } catch (error: unknown) {
     const status = authErrorStatus(error)
-    return NextResponse.json({ message: status ? "Administrator access required." : "Unable to save wallet." }, { status: status || 500 })
+    return NextResponse.json(
+      {
+        message: status
+          ? "Administrator access required."
+          : "Unable to save wallet.",
+      },
+      { status: status || 500 }
+    )
   }
 }

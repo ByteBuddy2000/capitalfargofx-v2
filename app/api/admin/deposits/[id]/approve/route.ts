@@ -1,3 +1,4 @@
+// app/api/admin/deposits/[id]/approve/route.ts
 import { NextRequest, NextResponse } from "next/server"
 import { authErrorStatus, requireAdmin } from "@/lib/auth"
 import { connectToDB } from "@/lib/connectToDB"

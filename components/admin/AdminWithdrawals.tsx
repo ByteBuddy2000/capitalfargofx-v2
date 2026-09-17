@@ -188,7 +188,7 @@ export const AdminWithdrawals: React.FC<AdminWithdrawalsProps> = () => {
               <thead>
                 <tr className="border-b border-slate-800 bg-slate-950/80 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                   <th className="py-3.5 pl-6">Investor</th>
-                  <th className="py-3.5">Amount (EURO)</th>
+                  <th className="py-3.5">Amount (USD)</th>
                   <th className="py-3.5">Asset</th>
                   <th className="py-3.5">Destination Address</th>
                   <th className="py-3.5">Broadcast Hash</th>

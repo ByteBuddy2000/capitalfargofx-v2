@@ -175,7 +175,7 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
                     htmlFor="simulator-amount-input"
                     className="font-mono text-xs font-bold tracking-wider text-slate-400 uppercase"
                   >
-                    2. Principal Investment Capital (EUR)
+                    2. Principal Investment Capital (USD)
                   </label>
                   <span className="font-mono text-xs text-slate-400">
                     Tier Range: {formatCurrency(selectedPlan.minimumAmount)} –{" "}
@@ -188,7 +188,7 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
                 {/* Number Input Box */}
                 <div className="relative">
                   <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 font-mono text-lg font-bold text-slate-500">
-                    €
+                    $
                   </div>
                   <input
                     id="simulator-amount-input"
@@ -205,7 +205,7 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
                     className="w-full rounded-xl border border-slate-800 bg-slate-950 py-3.5 pr-4 pl-9 font-mono text-xl font-bold text-white transition-all focus:bg-slate-900 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 font-mono text-xs font-semibold text-slate-500">
-                    EUR
+                    USD
                   </div>
                 </div>
 
@@ -228,7 +228,7 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
                     <span>
                       Max:{" "}
                       {selectedPlan.maximumAmount === 0
-                        ? "€15,000+"
+                        ? "$15,000+"
                         : formatCurrency(maxRange)}
                     </span>
                   </div>

@@ -1,3 +1,4 @@
+// models/PlatformSettings.ts
 import mongoose, { type Model, type Schema, type Types } from "mongoose"
 
 export interface IPlatformSettings extends mongoose.Document {

@@ -10,7 +10,6 @@ import {
   ShieldCheck,
   CheckCircle2,
   ArrowRight,
-  
   AlertCircle,
 } from "lucide-react"
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"

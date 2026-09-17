@@ -146,7 +146,7 @@ export const InvestModal: React.FC<InvestModalProps> = ({
             <div>
               <div className="mb-1.5 flex items-center justify-between">
                 <label className="font-mono text-xs font-bold tracking-wider text-slate-400 uppercase">
-                  Investment Capital (EUR)
+                  Investment Capital (USD)
                 </label>
                 <span className="font-mono text-[11px] text-slate-400">
                   Min: {formatCurrency(selectedPlan.minimumAmount)}

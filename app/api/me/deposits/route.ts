@@ -1,3 +1,4 @@
+// app/api/me/deposits/route.ts
 import { NextResponse } from "next/server"
 import { authErrorStatus, requireAuth } from "@/lib/auth"
 import { connectToDB } from "@/lib/connectToDB"

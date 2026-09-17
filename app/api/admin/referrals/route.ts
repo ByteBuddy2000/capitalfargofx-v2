@@ -1,3 +1,4 @@
+// app/api/admin/referrals/route.ts
 import { NextResponse } from "next/server"
 import { authErrorStatus, requireAdmin } from "@/lib/auth"
 import { connectToDB } from "@/lib/connectToDB"
@@ -16,7 +17,11 @@ export async function GET() {
   } catch (error: unknown) {
     const status = authErrorStatus(error)
     return NextResponse.json(
-      { message: status ? "Administrator access required." : "Unable to load referrals." },
+      {
+        message: status
+          ? "Administrator access required."
+          : "Unable to load referrals.",
+      },
       { status: status || 500 }
     )
   }

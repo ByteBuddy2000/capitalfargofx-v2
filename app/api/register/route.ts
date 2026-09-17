@@ -25,17 +25,17 @@ const validateUsdtAddress = (address: string): boolean => {
 
 const registrationSchema = z.object({
   fullName: z.string().trim().min(1),
-  username: z.string().trim().regex(/^[a-zA-Z0-9_]{3,30}$/),
+  username: z
+    .string()
+    .trim()
+    .regex(/^[a-zA-Z0-9_]{3,30}$/),
   email: z.string().trim().email(),
   password: z.string().min(6),
   btcWallet: z.string().trim().optional().default(""),
   ethWallet: z.string().trim().optional().default(""),
   usdtWallet: z.string().trim().optional().default(""),
   referralCode: z.string().trim().optional().default(""),
-  role: z
-    .enum(["user", "admin", "super admin"])
-    .optional()
-    .default("user"),
+  role: z.enum(["user", "admin", "super admin"]).optional().default("user"),
 })
 
 export async function POST(request: Request) {
@@ -73,7 +73,10 @@ export async function POST(request: Request) {
       )
     }
 
-    if (normalizedWallets.USDT && !validateUsdtAddress(normalizedWallets.USDT)) {
+    if (
+      normalizedWallets.USDT &&
+      !validateUsdtAddress(normalizedWallets.USDT)
+    ) {
       return NextResponse.json(
         {
           message:
@@ -176,7 +179,10 @@ export async function POST(request: Request) {
             ? `Database error: ${message}`
             : "Invalid registration payload.",
       },
-      { status: message.includes("MONGODB") || message.includes("Mongo") ? 500 : 400 }
+      {
+        status:
+          message.includes("MONGODB") || message.includes("Mongo") ? 500 : 400,
+      }
     )
   }
 }

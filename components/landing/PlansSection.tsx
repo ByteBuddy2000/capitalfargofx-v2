@@ -222,7 +222,7 @@ export const PlansSection: React.FC<PlansSectionProps> = ({
             <div className="space-y-6 lg:col-span-6">
               <div>
                 <label className="mb-2 block text-xs font-semibold tracking-wider text-slate-400 uppercase">
-                  Investment Capital (EURO)
+                  Investment Capital (USD)
                 </label>
                 <div className="relative flex items-center">
                   <span className="absolute left-4 text-lg font-bold text-slate-500">

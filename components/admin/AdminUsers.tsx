@@ -331,7 +331,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser }) => {
             </div>
 
             <Input
-              label="Adjustment Amount (EURO)"
+              label="Adjustment Amount (USD)"
               type="number"
               min={1}
               step={10}

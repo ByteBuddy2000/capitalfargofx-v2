@@ -1,3 +1,4 @@
+// app/api/plans/route.ts
 import { NextResponse } from "next/server"
 import { connectToDB } from "@/lib/connectToDB"
 import { Plan } from "@/models/Plan"

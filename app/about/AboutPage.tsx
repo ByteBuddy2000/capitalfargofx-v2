@@ -6,11 +6,9 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection"
 import { FinalCtaSection } from "@/components/sections/FinalCtaSection"
 import {
-  
   Cpu,
   Activity,
   Lock,
-
   CheckCircle2,
   ArrowRight,
   Database,
@@ -211,8 +209,8 @@ export const AboutPage: React.FC = () => {
               </h3>
 
               <p className="text-sm leading-relaxed text-slate-400">
-                At CapitalsFargoFX, institutional transparency is not an abstract
-                ideal—it is enforced through immutable ledger records,
+                At CapitalsFargoFX, institutional transparency is not an
+                abstract ideal—it is enforced through immutable ledger records,
                 deterministic yield math, and segregated client vaults.
               </p>
 

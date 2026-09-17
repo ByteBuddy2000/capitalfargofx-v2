@@ -1,3 +1,4 @@
+// app/api/me/notifications/route.ts
 import { NextResponse } from "next/server"
 import mongoose from "mongoose"
 import { requireAuth } from "@/lib/auth"

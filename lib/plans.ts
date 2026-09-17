@@ -102,7 +102,7 @@ export const CURRENT_PLANS = [
 export function formatCurrency(amount: number): string {
   return new Intl.NumberFormat("en-IE", {
     style: "currency",
-    currency: "EUR",
+    currency: "USD",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount)
@@ -111,7 +111,7 @@ export function formatCurrency(amount: number): string {
 export function formatCurrencyWithDecimals(amount: number): string {
   return new Intl.NumberFormat("en-IE", {
     style: "currency",
-    currency: "EUR",
+    currency: "USD",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(amount)

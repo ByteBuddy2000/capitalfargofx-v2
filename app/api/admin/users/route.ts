@@ -1,3 +1,4 @@
+// app/api/admin/users/route.ts
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdmin } from "@/lib/auth"
 import { connectToDB } from "@/lib/connectToDB"

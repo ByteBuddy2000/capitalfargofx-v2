@@ -1,3 +1,4 @@
+// models/CryptoWallet.ts
 import mongoose, { type Model, type Schema, type Types } from "mongoose"
 
 export interface ICryptoWallet extends mongoose.Document {

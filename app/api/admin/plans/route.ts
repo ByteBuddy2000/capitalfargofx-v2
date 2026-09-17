@@ -1,3 +1,4 @@
+// app/api/admin/plans/route.ts
 import { NextRequest, NextResponse } from "next/server"
 import { authErrorStatus, requireAdmin } from "@/lib/auth"
 import { connectToDB } from "@/lib/connectToDB"
@@ -17,7 +18,11 @@ export async function GET() {
   } catch (error: unknown) {
     const status = authErrorStatus(error)
     return NextResponse.json(
-      { message: status ? "Administrator access required." : "Unable to load plans." },
+      {
+        message: status
+          ? "Administrator access required."
+          : "Unable to load plans.",
+      },
       { status: status || 500 }
     )
   }
@@ -31,29 +36,55 @@ export async function PUT(request: NextRequest) {
     const id = typeof body.id === "string" ? body.id : ""
     const values = {
       name: String(body.name || "").trim(),
-      slug: String(body.slug || body.name || "").trim().toLowerCase().replace(/\s+/g, "-"),
+      slug: String(body.slug || body.name || "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "-"),
       description: String(body.description || ""),
       returnPercentage: Number(body.returnPercentage),
       durationHours: Number(body.durationHours),
       minimumAmount: Number(body.minimumAmount),
       maximumAmount: Number(body.maximumAmount || 0),
-      referralPercentage: Number(body.referralPercentage ?? body.referralCommissionRate ?? 0),
+      referralPercentage: Number(
+        body.referralPercentage ?? body.referralCommissionRate ?? 0
+      ),
       principalReturn: Boolean(body.principalReturn),
-      status: body.isActive === false || body.status === "INACTIVE" ? "INACTIVE" : "ACTIVE",
+      status:
+        body.isActive === false || body.status === "INACTIVE"
+          ? "INACTIVE"
+          : "ACTIVE",
       featured: Boolean(body.featured),
     }
-    if (!values.name || !values.slug || !Number.isFinite(values.returnPercentage) || !Number.isFinite(values.durationHours) || !Number.isFinite(values.minimumAmount)) {
-      return NextResponse.json({ message: "Valid plan values are required." }, { status: 400 })
+    if (
+      !values.name ||
+      !values.slug ||
+      !Number.isFinite(values.returnPercentage) ||
+      !Number.isFinite(values.durationHours) ||
+      !Number.isFinite(values.minimumAmount)
+    ) {
+      return NextResponse.json(
+        { message: "Valid plan values are required." },
+        { status: 400 }
+      )
     }
-    const plan = id && /^[a-f\d]{24}$/i.test(id)
-      ? await Plan.findByIdAndUpdate(id, values, { new: true, runValidators: true }).lean()
-      : await Plan.create(values)
-    if (!plan) return NextResponse.json({ message: "Plan not found." }, { status: 404 })
+    const plan =
+      id && /^[a-f\d]{24}$/i.test(id)
+        ? await Plan.findByIdAndUpdate(id, values, {
+            new: true,
+            runValidators: true,
+          }).lean()
+        : await Plan.create(values)
+    if (!plan)
+      return NextResponse.json({ message: "Plan not found." }, { status: 404 })
     return NextResponse.json({ plan, adminId: admin.id })
   } catch (error: unknown) {
     const status = authErrorStatus(error)
     return NextResponse.json(
-      { message: status ? "Administrator access required." : "Unable to save plan." },
+      {
+        message: status
+          ? "Administrator access required."
+          : "Unable to save plan.",
+      },
       { status: status || 500 }
     )
   }

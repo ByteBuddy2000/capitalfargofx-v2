@@ -340,7 +340,7 @@ export const DepositView: React.FC<DepositViewProps> = ({
             {/* Amount Field */}
             <div className="space-y-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-xs">
               <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
-                2. Deposit Amount (EURO)
+                2. Deposit Amount (USD)
               </label>
               <div className="relative">
                 <span className="absolute top-1/2 left-4 -translate-y-1/2 text-xl font-bold text-slate-400">
