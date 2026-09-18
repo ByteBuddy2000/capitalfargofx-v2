@@ -2,13 +2,7 @@
 
 import React from "react"
 import { useRouter } from "next/navigation"
-import {
-  Mail,
-  Send,
-  ArrowUpRight,
-  Lock,
-  Cpu,
-} from "lucide-react"
+import { Mail, Send, ArrowUpRight, Lock, Cpu } from "lucide-react"
 import Logo from "../Logo/Logo"
 
 interface FooterProps {
@@ -60,8 +54,8 @@ export const Footer: React.FC<FooterProps> = ({
       className="border-t border-slate-800 bg-slate-950 text-slate-300"
     >
       {/* Top Banner / Status Strip */}
-      <div className="hidden xl:block border-b border-slate-800/80 bg-slate-900/50 py-4">
-      {/* <div className="border-b border-slate-800/80 bg-slate-900/50 py-4"> */}
+      <div className="hidden border-b border-slate-800/80 bg-slate-900/50 py-4 xl:block">
+        {/* <div className="border-b border-slate-800/80 bg-slate-900/50 py-4"> */}
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 text-xs sm:flex-row sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/60 px-2.5 py-1 font-mono text-emerald-400">
@@ -95,7 +89,7 @@ export const Footer: React.FC<FooterProps> = ({
             </p>
 
             <div className="hidden flex-wrap gap-2 pt-2 text-xs">
-            {/* <div className="flex flex-wrap gap-2 pt-2 text-xs"> */}
+              {/* <div className="flex flex-wrap gap-2 pt-2 text-xs"> */}
               <div className="flex items-center gap-1.5 rounded border border-slate-700/60 bg-slate-800/80 px-2.5 py-1 font-mono text-slate-300">
                 <Lock className="h-3 w-3 text-blue-400" />
                 <span>Cold-Vault Custody</span>
@@ -235,8 +229,8 @@ export const Footer: React.FC<FooterProps> = ({
         </div>
 
         {/* Regulatory & Risk Warning Notice */}
-        <div className="hidden mt-12 border-t border-slate-800 pt-8">
-        {/* <div className="mt-12 border-t border-slate-800 pt-8"> */}
+        <div className="mt-12 hidden border-t border-slate-800 pt-8">
+          {/* <div className="mt-12 border-t border-slate-800 pt-8"> */}
           <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 text-xs leading-relaxed text-slate-400">
             <span className="mr-1.5 font-bold tracking-wide text-slate-300 uppercase">
               Risk Warning & Disclosure:

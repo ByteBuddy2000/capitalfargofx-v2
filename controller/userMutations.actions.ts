@@ -31,13 +31,19 @@ export async function createUserDeposit(data: {
     const plan = await Plan.findOne({
       status: "ACTIVE",
       $or: [
-        ...(mongoose.isValidObjectId(data.planId) ? [{ _id: data.planId }] : []),
+        ...(mongoose.isValidObjectId(data.planId)
+          ? [{ _id: data.planId }]
+          : []),
         { slug: data.planId },
       ],
     }).lean()
     if (!plan) return { success: false, message: "Investment plan not found." }
 
-    const deposit = await Deposit.create({ ...data, userId: id, planId: plan._id })
+    const deposit = await Deposit.create({
+      ...data,
+      userId: id,
+      planId: plan._id,
+    })
     return { success: true, deposit: JSON.parse(JSON.stringify(deposit)) }
   } catch (error) {
     console.error("Failed to create deposit:", error)
@@ -62,7 +68,9 @@ export async function createUserWithdrawal(data: {
     }
 
     const withdrawal = await Withdrawal.create({ ...data, userId: id })
-    await User.findByIdAndUpdate(id, { $inc: { availableBalance: -Number(data.amount) } })
+    await User.findByIdAndUpdate(id, {
+      $inc: { availableBalance: -Number(data.amount) },
+    })
     return { success: true, withdrawal: JSON.parse(JSON.stringify(withdrawal)) }
   } catch (error) {
     console.error("Failed to create withdrawal:", error)
@@ -72,19 +80,36 @@ export async function createUserWithdrawal(data: {
 
 export async function settleUserInvestment(investmentId: string) {
   const id = await userId()
-  if (!id || !mongoose.isValidObjectId(investmentId)) return { success: false, message: "Invalid investment." }
+  if (!id || !mongoose.isValidObjectId(investmentId))
+    return { success: false, message: "Invalid investment." }
 
   try {
     await connectToDB()
     const investment = await Investment.findOneAndUpdate(
-      { _id: investmentId, userId: id, status: "ACTIVE", maturityDate: { $lte: new Date() } },
+      {
+        _id: investmentId,
+        userId: id,
+        status: "ACTIVE",
+        maturityDate: { $lte: new Date() },
+      },
       { $set: { status: "COMPLETED", payoutProcessed: true } },
       { new: true }
     ).lean()
-    if (!investment) return { success: false, message: "Investment is not ready for settlement." }
+    if (!investment)
+      return {
+        success: false,
+        message: "Investment is not ready for settlement.",
+      }
 
-    const payout = investment.principalReturn ? investment.totalExpectedReturn : investment.expectedProfit
-    await User.findByIdAndUpdate(id, { $inc: { availableBalance: payout, earningBalance: investment.expectedProfit } })
+    const payout = investment.principalReturn
+      ? investment.totalExpectedReturn
+      : investment.expectedProfit
+    await User.findByIdAndUpdate(id, {
+      $inc: {
+        availableBalance: payout,
+        earningBalance: investment.expectedProfit,
+      },
+    })
     return { success: true, investment: JSON.parse(JSON.stringify(investment)) }
   } catch (error) {
     console.error("Failed to settle investment:", error)

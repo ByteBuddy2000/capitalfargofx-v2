@@ -22,9 +22,7 @@ export async function getUserAssets() {
   try {
     await connectToDB()
 
-    const assets = await Asset.find({ userId })
-      .sort({ symbol: 1 })
-      .lean()
+    const assets = await Asset.find({ userId }).sort({ symbol: 1 }).lean()
 
     return {
       success: true,

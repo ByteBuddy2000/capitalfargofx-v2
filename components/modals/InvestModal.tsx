@@ -8,7 +8,6 @@ import {
   Copy,
   Check,
   ShieldCheck,
-
   ArrowRight,
 } from "lucide-react"
 

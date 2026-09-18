@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react"
 import { Users, Search, TrendingUp, Gift } from "lucide-react"
 import { Referral, User } from "@/types"
@@ -8,7 +9,9 @@ interface AdminReferralsProps {
   initialReferrals?: Referral[]
 }
 
-export const AdminReferrals: React.FC<AdminReferralsProps> = ({ initialReferrals = [] }) => {
+export const AdminReferrals: React.FC<AdminReferralsProps> = ({
+  initialReferrals = [],
+}) => {
   const [searchTerm, setSearchTerm] = useState("")
   const [allReferrals, setAllReferrals] = useState<Referral[]>(() =>
     initialReferrals.map((record) => ({

@@ -56,10 +56,9 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id
-        token.role = String(user.role ?? "").trim().toLowerCase() as
-          | "user"
-          | "admin"
-          | "super admin"
+        token.role = String(user.role ?? "")
+          .trim()
+          .toLowerCase() as "user" | "admin" | "super admin"
         token.name = user.fullName
         token.username = user.username
         token.email = user.email
@@ -71,10 +70,9 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id as string
-        session.user.role = String(token.role ?? "").trim().toLowerCase() as
-          | "user"
-          | "admin"
-          | "super admin"
+        session.user.role = String(token.role ?? "")
+          .trim()
+          .toLowerCase() as "user" | "admin" | "super admin"
         session.user.name = token.name as string
         session.user.email = token.email as string
         session.user.fullName = token.fullname as string

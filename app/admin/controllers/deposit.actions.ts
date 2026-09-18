@@ -100,10 +100,12 @@ export async function approveAdminDeposit(
     })
       .populate("planId")
       .populate("userId")
-      .exec()) as (IDeposit & {
-      planId: IPlan
-      userId: IUser
-    }) | null
+      .exec()) as
+      | (IDeposit & {
+          planId: IPlan
+          userId: IUser
+        })
+      | null
 
     if (!deposit) {
       return {
@@ -208,22 +210,16 @@ export async function approveAdminDeposit(
     if (investor.uplineId) {
       const uplineUser = await User.findById(investor.uplineId).exec()
 
-      if (
-        uplineUser &&
-        uplineUser._id.toString() !== investor._id.toString()
-      ) {
+      if (uplineUser && uplineUser._id.toString() !== investor._id.toString()) {
         const rate = Number(plan.referralPercentage || 5)
-        const commissionAmount =
-          (Number(deposit.amount) * rate) / 100
+        const commissionAmount = (Number(deposit.amount) * rate) / 100
 
         if (commissionAmount > 0) {
           uplineUser.availableBalance =
-            Number(uplineUser.availableBalance || 0) +
-            commissionAmount
+            Number(uplineUser.availableBalance || 0) + commissionAmount
 
           uplineUser.referralEarnings =
-            Number(uplineUser.referralEarnings || 0) +
-            commissionAmount
+            Number(uplineUser.referralEarnings || 0) + commissionAmount
 
           await uplineUser.save()
 
@@ -299,8 +295,7 @@ export async function rejectAdminDeposit(
 
     deposit.status = "REJECTED"
     deposit.rejectedAt = new Date()
-    deposit.adminNotes =
-      data?.reason || "Rejected by administrator."
+    deposit.adminNotes = data?.reason || "Rejected by administrator."
 
     await deposit.save()
 

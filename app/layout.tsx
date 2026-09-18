@@ -12,17 +12,13 @@ export const metadata: Metadata = {
   },
 }
 
-
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-
   return (
     <html lang="en">
       <body cz-shortcut-listen="true">
-        <SessionWrapper>
-          {children}
-        </SessionWrapper>
+        <SessionWrapper>{children}</SessionWrapper>
         {/* <Tawk /> */}
       </body>
     </html>

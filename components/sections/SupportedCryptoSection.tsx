@@ -33,7 +33,7 @@ export const SupportedCryptoSection: React.FC = () => {
         </div>
 
         {/* Crypto Rails Cards (Horizontal scroll on mobile, 3-col grid on desktop) */}
-        <div className="no-scrollbar flex snap-x snap-mandatory space-x-5 overflow-x-auto pb-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-8 md:space-x-0">
+        <div className="no-scrollbar flex snap-x snap-mandatory space-x-5 overflow-x-auto pb-4 md:grid md:grid-cols-2 md:gap-8 md:space-x-0 lg:grid-cols-3">
           {SUPPORTED_CRYPTOS.map((crypto) => (
             <div
               key={crypto.symbol}
@@ -61,16 +61,13 @@ export const SupportedCryptoSection: React.FC = () => {
                         {crypto.symbol}
                       </span>
                     </div>
-                    
                   </div>
-
-                  
                 </div>
 
                 {/* Technical Specifications */}
                 <div className="space-y-3 border-y border-slate-800 py-4 font-mono text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-sans text-slate-400">
+                    <span className="font-sans text-[10px] text-slate-400">
                       Settlement Network:
                     </span>
                     <span className="max-w-42.5 truncate text-right font-bold text-slate-200">
@@ -79,7 +76,7 @@ export const SupportedCryptoSection: React.FC = () => {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-sans text-slate-400">
+                    <span className="font-sans text-[10px] text-slate-400">
                       Deposit Fee:
                     </span>
                     <span className="font-bold text-emerald-400">
@@ -88,7 +85,7 @@ export const SupportedCryptoSection: React.FC = () => {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-sans text-slate-400">
+                    <span className="font-sans text-[10px] text-slate-400">
                       Confirmation Speed:
                     </span>
                     <span className="font-bold text-blue-400">
@@ -102,9 +99,9 @@ export const SupportedCryptoSection: React.FC = () => {
                   <span>Multi-Signature Cold Storage Protocol</span>
                 </div>
               </div>
-               <span className="absolute top-1 right-2.5 rounded-full border border-slate-700/50 bg-slate-800 px-2 py-1 font-mono text-[10px] font-semibold text-slate-300">
-                    Native Tier
-                  </span>
+              <span className="absolute top-1 right-2.5 rounded-full border border-slate-700/50 bg-slate-800 px-2 py-1 font-mono text-[10px] font-semibold text-slate-300">
+                Native Tier
+              </span>
 
               <div className="mt-6 border-t border-slate-800 pt-4">
                 <div className="font-mono text-[10px] text-slate-400">

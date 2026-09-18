@@ -1,17 +1,6 @@
 import React, { useState } from "react"
-import {
-  CURRENT_PLANS,
-  formatCurrency,
-  calculateYield,
-} from "../../lib/plans"
-import {
-  Calculator,
-
-  Users,
-  ArrowRight,
-  Info,
-  AlertCircle,
-} from "lucide-react"
+import { CURRENT_PLANS, formatCurrency, calculateYield } from "../../lib/plans"
+import { Calculator, Users, ArrowRight, Info, AlertCircle } from "lucide-react"
 
 interface YieldSimulatorProps {
   initialPlanSlug?: string

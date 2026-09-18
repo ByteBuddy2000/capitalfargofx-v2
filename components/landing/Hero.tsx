@@ -4,9 +4,7 @@ import {
   TrendingUp,
   ArrowRight,
   CheckCircle2,
-
   Zap,
-  
   ArrowUpRight,
 } from "lucide-react"
 import { Button } from "../ui/Button"

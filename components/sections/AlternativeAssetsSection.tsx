@@ -128,7 +128,6 @@ export const AlternativeAssetsSection: React.FC = () => {
             )
           })}
         </div>
-
       </div>
     </section>
   )

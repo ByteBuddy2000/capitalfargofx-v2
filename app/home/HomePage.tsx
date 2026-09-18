@@ -51,7 +51,10 @@ export const HomePage: React.FC<HomePageProps> = ({ plans }) => {
       <WhyUsSection />
 
       {/* 6. Investment Plans Preview with Horizontal Scroll */}
-      <InvestmentPlansSection plans={plans} onOpenInvestModal={onOpenInvestModal} />
+      <InvestmentPlansSection
+        plans={plans}
+        onOpenInvestModal={onOpenInvestModal}
+      />
 
       {/* 7. Interactive Live Yield Simulator */}
       <YieldSimulator

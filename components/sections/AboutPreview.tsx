@@ -41,8 +41,8 @@ export const AboutPreview: React.FC = () => {
             CapitalsFargoFX is an international digital asset management and
             cryptocurrency investment firm engineered to deliver structured
             returns. By combining algorithmic market routing with institutional
-            transparency, CapitalsFargoFX bridges traditional financial rigor and
-            decentralized digital opportunity.
+            transparency, CapitalsFargoFX bridges traditional financial rigor
+            and decentralized digital opportunity.
           </p>
         </div>
 

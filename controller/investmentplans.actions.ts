@@ -5,7 +5,6 @@
 import { connectToDB } from "@/lib/connectToDB"
 import { Plan } from "@/models/Plan"
 
-
 export type PlansResponse = {
   success: boolean
   message?: string

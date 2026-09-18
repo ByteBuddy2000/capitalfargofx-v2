@@ -24,7 +24,6 @@ export interface Testimonial {
   image?: string
 }
 
-
 export interface FaqItem {
   readonly id?: string
   readonly question: string
@@ -246,8 +245,8 @@ export const ALTERNATIVE_ASSETS = [
     category: "Asset-Backed Yield",
     description:
       "Fractional exposure into prime multi-family developments and Class-A logistics hubs.",
-       image:
-        "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80",
+    image:
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80",
     highlight:
       "Secured by physical real property contracts with structured tenancy yields.",
     allocationTiers: "Integrated in Level 4 - Level 6 Portfolios",
@@ -257,14 +256,13 @@ export const ALTERNATIVE_ASSETS = [
     category: "Strategic Tech",
     description:
       "Capital deployment into decentralized GPU clusters and enterprise zero-knowledge verification infrastructure.",
-      image:
-        "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&auto=format&fit=crop&q=80",
+    image:
+      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&auto=format&fit=crop&q=80",
     highlight:
       "Harnessing global distributed computing demand for generative AI workloads.",
     allocationTiers: "Integrated in Level 5 - Level 6 Portfolios",
   },
 ]
-
 
 export const TESTIMONIALS: readonly Testimonial[] = [
   {

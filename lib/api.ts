@@ -229,40 +229,59 @@ export const authApi = {
     })
   },
   async adminPlans() {
-    const result = await request<{ plans: Array<InvestmentPlan & { _id?: string }> }>("/admin/plans")
+    const result = await request<{
+      plans: Array<InvestmentPlan & { _id?: string }>
+    }>("/admin/plans")
     return result.plans.map(normalizeRecord)
   },
   async saveAdminPlan(plan: InvestmentPlan) {
-    const result = await request<{ plan: InvestmentPlan & { _id?: string } }>("/admin/plans", {
-      method: "PUT",
-      body: JSON.stringify(plan),
-    })
+    const result = await request<{ plan: InvestmentPlan & { _id?: string } }>(
+      "/admin/plans",
+      {
+        method: "PUT",
+        body: JSON.stringify(plan),
+      }
+    )
     return normalizeRecord(result.plan)
   },
   async adminReferrals() {
-    const result = await request<{ referrals: Array<Record<string, unknown>> }>("/admin/referrals")
+    const result = await request<{ referrals: Array<Record<string, unknown>> }>(
+      "/admin/referrals"
+    )
     return result.referrals
   },
   async adminWallets() {
-    const result = await request<{ wallets: Array<Record<string, unknown>> }>("/admin/wallets")
-    return result.wallets.map((wallet) => normalizeRecord(wallet as { id?: string; _id?: string }))
+    const result = await request<{ wallets: Array<Record<string, unknown>> }>(
+      "/admin/wallets"
+    )
+    return result.wallets.map((wallet) =>
+      normalizeRecord(wallet as { id?: string; _id?: string })
+    )
   },
   async saveAdminWallet(wallet: Record<string, unknown>) {
-    const result = await request<{ wallet: Record<string, unknown> }>("/admin/wallets", {
-      method: "PUT",
-      body: JSON.stringify(wallet),
-    })
+    const result = await request<{ wallet: Record<string, unknown> }>(
+      "/admin/wallets",
+      {
+        method: "PUT",
+        body: JSON.stringify(wallet),
+      }
+    )
     return normalizeRecord(result.wallet as { id?: string; _id?: string })
   },
   async adminSettings() {
-    const result = await request<{ settings: Record<string, unknown> | null }>("/admin/settings")
+    const result = await request<{ settings: Record<string, unknown> | null }>(
+      "/admin/settings"
+    )
     return result.settings
   },
   async saveAdminSettings(settings: Record<string, unknown>) {
-    const result = await request<{ settings: Record<string, unknown> }>("/admin/settings", {
-      method: "PUT",
-      body: JSON.stringify(settings),
-    })
+    const result = await request<{ settings: Record<string, unknown> }>(
+      "/admin/settings",
+      {
+        method: "PUT",
+        body: JSON.stringify(settings),
+      }
+    )
     return result.settings
   },
   async changePassword(payload: {
@@ -275,7 +294,9 @@ export const authApi = {
     })
   },
   async adminAuditLogs() {
-    const result = await request<{ logs: Array<Record<string, unknown>> }>("/admin/audit")
+    const result = await request<{ logs: Array<Record<string, unknown>> }>(
+      "/admin/audit"
+    )
     return result.logs
   },
 }

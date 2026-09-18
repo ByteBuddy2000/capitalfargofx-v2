@@ -10,9 +10,7 @@ interface AdminAuditLogsProps {
   initialLogs?: AuditLog[]
 }
 
-export const AdminAuditLogs = ({
-  initialLogs = [],
-}: AdminAuditLogsProps) => {
+export const AdminAuditLogs = ({ initialLogs = [] }: AdminAuditLogsProps) => {
   const [searchTerm, setSearchTerm] = useState("")
   const [actionFilter, setActionFilter] = useState("ALL")
   const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null)
@@ -35,12 +33,9 @@ export const AdminAuditLogs = ({
     if (!searchTerm.trim()) return true
 
     const query = searchTerm.toLowerCase()
-    return [
-      log.actorUsername,
-      log.action,
-      log.notes || "",
-      log.entity,
-    ].some((value) => value.toLowerCase().includes(query))
+    return [log.actorUsername, log.action, log.notes || "", log.entity].some(
+      (value) => value.toLowerCase().includes(query)
+    )
   })
 
   return (
@@ -103,7 +98,10 @@ export const AdminAuditLogs = ({
               </thead>
               <tbody className="divide-y divide-slate-800">
                 {filteredLogs.map((log) => (
-                  <tr key={log.id} className="transition-colors hover:bg-slate-800/50">
+                  <tr
+                    key={log.id}
+                    className="transition-colors hover:bg-slate-800/50"
+                  >
                     <td className="py-4 pl-6">
                       <span className="block font-mono text-xs font-black text-amber-400">
                         {log.action}
@@ -113,16 +111,24 @@ export const AdminAuditLogs = ({
                       </span>
                     </td>
                     <td className="py-4">
-                      <span className="block font-bold text-white">@{log.actorUsername}</span>
-                      <span className="font-mono text-[10px] text-slate-500">{log.actorId}</span>
+                      <span className="block font-bold text-white">
+                        @{log.actorUsername}
+                      </span>
+                      <span className="font-mono text-[10px] text-slate-500">
+                        {log.actorId}
+                      </span>
                     </td>
                     <td className="py-4">
-                      <span className="font-semibold text-slate-300">{log.entity}</span>
+                      <span className="font-semibold text-slate-300">
+                        {log.entity}
+                      </span>
                       <span className="block max-w-30 truncate font-mono text-[10px] text-slate-500">
                         {log.entityId}
                       </span>
                     </td>
-                    <td className="py-4 text-xs font-medium text-slate-200">{log.notes || "-"}</td>
+                    <td className="py-4 text-xs font-medium text-slate-200">
+                      {log.notes || "-"}
+                    </td>
                     <td className="py-4 font-mono text-[11px] text-slate-400">
                       {new Date(log.timestamp).toLocaleString()}
                     </td>

@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react"
 import {
   Users,
@@ -10,7 +11,10 @@ import { User, Deposit, Withdrawal } from "@/types"
 import { Button } from "@/components/ui/Button"
 import { useToast } from "@/components/ui/Toast"
 import { AdminTab } from "./AdminLayout"
-import { approveAdminDeposit, rejectAdminDeposit } from "../controllers/deposit.actions"
+import {
+  approveAdminDeposit,
+  rejectAdminDeposit,
+} from "../controllers/deposit.actions"
 import { updateAdminWithdrawal } from "../controllers/withdrawal.action"
 
 interface AdminOverviewProps {
@@ -32,7 +36,9 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({
 
   const [users, setUsers] = useState<User[]>(overview?.users ?? [])
   const [deposits, setDeposits] = useState<Deposit[]>(overview?.deposits ?? [])
-  const [withdrawals, setWithdrawals] = useState<Withdrawal[]>(overview?.withdrawals ?? [])
+  const [withdrawals, setWithdrawals] = useState<Withdrawal[]>(
+    overview?.withdrawals ?? []
+  )
   const [investments, setInvestments] = useState<
     Array<{ amount: number; status: string }>
   >(overview?.investments ?? [])

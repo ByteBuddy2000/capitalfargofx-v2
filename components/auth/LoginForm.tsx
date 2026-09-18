@@ -76,12 +76,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       }
 
       const session = await getSession()
-      const role = String(session?.user?.role || "").trim().toLowerCase()
+      const role = String(session?.user?.role || "")
+        .trim()
+        .toLowerCase()
 
       console.log("LOGIN ROLE:", role)
 
       if (role !== "user" && role !== "admin" && role !== "super admin") {
-        const message = "Your account role could not be verified. Please try again."
+        const message =
+          "Your account role could not be verified. Please try again."
         setError(message)
         toastError("Authentication Failed", message)
         return
@@ -89,15 +92,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
       success("Authentication Successful", "Welcome back to CapitalsFargoFX.")
 
-      const destination = role === "admin" || role === "super admin"
-        ? "/admin"
-        : role === "user"
-          ? "/dashboard"
-          : "/login"
+      const destination =
+        role === "admin" || role === "super admin"
+          ? "/admin"
+          : role === "user"
+            ? "/dashboard"
+            : "/login"
 
       router.replace(destination)
       router.refresh()
-
     } catch (requestError) {
       const message =
         requestError instanceof Error
@@ -201,7 +204,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 onClick={() => setShowPassword((visible) => !visible)}
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 aria-pressed={showPassword}
-                className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none"
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />

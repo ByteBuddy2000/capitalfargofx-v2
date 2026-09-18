@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react"
 import { ArrowDownToLine, Search } from "lucide-react"
 import { User, Deposit } from "@/types"
@@ -5,14 +6,19 @@ import { useToast } from "@/components/ui/Toast"
 import { Button } from "@/components/ui/Button"
 import { Badge } from "@/components/ui/Badge"
 import { Modal } from "@/components/ui/Modal"
-import { approveAdminDeposit, rejectAdminDeposit } from "../controllers/deposit.actions"
+import {
+  approveAdminDeposit,
+  rejectAdminDeposit,
+} from "../controllers/deposit.actions"
 
 interface AdminDepositsProps {
   currentUser: User
   initialDeposits?: Deposit[]
 }
 
-export const AdminDeposits: React.FC<AdminDepositsProps> = ({ initialDeposits = [] }) => {
+export const AdminDeposits: React.FC<AdminDepositsProps> = ({
+  initialDeposits = [],
+}) => {
   const [filter, setFilter] = useState<
     "ALL" | "PENDING" | "APPROVED" | "REJECTED"
   >("PENDING")
@@ -74,7 +80,9 @@ export const AdminDeposits: React.FC<AdminDepositsProps> = ({ initialDeposits = 
   const handleConfirmReject = async () => {
     if (!targetDeposit) return
     try {
-      const result = await rejectAdminDeposit(targetDeposit.id, { reason: rejectReason })
+      const result = await rejectAdminDeposit(targetDeposit.id, {
+        reason: rejectReason,
+      })
       if (!result.success) {
         throw new Error(result.message || "Unable to reject deposit.")
       }

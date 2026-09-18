@@ -3,11 +3,7 @@
 import React from "react"
 import { useRouter } from "next/navigation"
 import { AlphaTrackerCard } from "./AlphaTrackerCard"
-import {
-  ArrowRight,
-  ChevronRight,
-  CheckCircle,
-} from "lucide-react"
+import { ArrowRight, ChevronRight, CheckCircle } from "lucide-react"
 import { TRUST_FEATURES } from "@/lib/data"
 
 interface HeroProps {

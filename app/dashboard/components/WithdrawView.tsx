@@ -96,10 +96,16 @@ export const WithdrawView: React.FC<WithdrawViewProps> = ({
       const result = await createUserWithdrawal({
         amount: Number(amount),
         asset: selectedCrypto,
-        network: selectedCrypto === "BTC" ? "Bitcoin Native" : selectedCrypto === "ETH" ? "ERC-20" : "ERC-20 / TRC-20",
+        network:
+          selectedCrypto === "BTC"
+            ? "Bitcoin Native"
+            : selectedCrypto === "ETH"
+              ? "ERC-20"
+              : "ERC-20 / TRC-20",
         destinationAddress: destinationAddress.trim(),
       })
-      if (!result.success || !result.withdrawal) throw new Error(result.message || "Unable to submit withdrawal.")
+      if (!result.success || !result.withdrawal)
+        throw new Error(result.message || "Unable to submit withdrawal.")
       setSubmittedWithdrawal({
         ...result.withdrawal,
         id: String(result.withdrawal._id || result.withdrawal.id),

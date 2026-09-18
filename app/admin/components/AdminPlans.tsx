@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react"
 import { Layers, Plus, Edit2 } from "lucide-react"
 import { Button } from "@/components/ui/Button"
@@ -44,7 +45,9 @@ const normalizePlan = (value: unknown): InvestmentPlan => {
   return normalizedPlan
 }
 
-export const AdminPlans: React.FC<AdminPlansProps> = ({ initialPlans = [] }) => {
+export const AdminPlans: React.FC<AdminPlansProps> = ({
+  initialPlans = [],
+}) => {
   const [plans, setPlans] = useState<InvestmentPlan[]>(initialPlans)
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [editingPlan, setEditingPlan] = useState<InvestmentPlan | null>(null)

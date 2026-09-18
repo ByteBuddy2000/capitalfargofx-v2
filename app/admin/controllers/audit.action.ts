@@ -31,9 +31,7 @@ export async function getAdminAuditLogs(): Promise<AdminAuditLogsResponse> {
 
     await connectToDB()
 
-    const logs = await AuditLog.find({})
-      .sort({ timestamp: -1 })
-      .lean()
+    const logs = await AuditLog.find({}).sort({ timestamp: -1 }).lean()
 
     return {
       success: true,

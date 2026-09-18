@@ -14,7 +14,9 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
-  const role = String(token?.role ?? "").trim().toLowerCase()
+  const role = String(token?.role ?? "")
+    .trim()
+    .toLowerCase()
   const destination =
     role === "admin" || role === "super admin"
       ? "/admin"

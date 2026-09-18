@@ -17,10 +17,7 @@ async function requireAdminSession() {
   const session = await getServerSession(authOptions)
   const admin = session?.user
 
-  if (
-    !admin?.id ||
-    (admin.role !== "admin" && admin.role !== "super admin")
-  ) {
+  if (!admin?.id || (admin.role !== "admin" && admin.role !== "super admin")) {
     return null
   }
 
@@ -80,15 +77,11 @@ export async function updateAdminSettings(
 
     await connectToDB()
 
-    const settings = await PlatformSettings.findOneAndUpdate(
-      {},
-      data,
-      {
-        new: true,
-        upsert: true,
-        runValidators: true,
-      }
-    ).lean()
+    const settings = await PlatformSettings.findOneAndUpdate({}, data, {
+      new: true,
+      upsert: true,
+      runValidators: true,
+    }).lean()
 
     return {
       success: true,

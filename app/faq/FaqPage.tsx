@@ -10,7 +10,6 @@ import {
   ChevronDown,
   ChevronUp,
   ArrowRight,
-
 } from "lucide-react"
 
 export const FaqPage: React.FC = () => {

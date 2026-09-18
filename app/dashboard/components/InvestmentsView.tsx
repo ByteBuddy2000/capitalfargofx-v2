@@ -19,7 +19,8 @@ export const InvestmentsView: React.FC<InvestmentsViewProps> = ({
 }) => {
   const [currentTime] = useState(() => Date.now())
   const [filter, setFilter] = useState<"ALL" | "ACTIVE" | "COMPLETED">("ALL")
-  const [allInvestments, setAllInvestments] = useState<Investment[]>(initialInvestments)
+  const [allInvestments, setAllInvestments] =
+    useState<Investment[]>(initialInvestments)
   const { success, info } = useToast()
 
   const filtered = allInvestments.filter((i) => {
@@ -43,7 +44,8 @@ export const InvestmentsView: React.FC<InvestmentsViewProps> = ({
       if (!investment) return
 
       const result = await settleUserInvestment(invId)
-      if (!result.success || !result.investment) throw new Error(result.message || "Unable to settle investment.")
+      if (!result.success || !result.investment)
+        throw new Error(result.message || "Unable to settle investment.")
       const settledInvestment = {
         ...result.investment,
         id: String(result.investment._id || result.investment.id),

@@ -176,8 +176,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         <div className="text-xs font-bold">
           {referralCode.trim() ? (
             <span className="flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-emerald-700">
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              @{referralCode.trim()}
+              <CheckCircle2 className="h-3.5 w-3.5" />@{referralCode.trim()}
             </span>
           ) : (
             <span className="font-mono text-slate-500">

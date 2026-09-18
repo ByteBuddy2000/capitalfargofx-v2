@@ -25,7 +25,11 @@ export const SupportView: React.FC<SupportViewProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { success } = useToast()
-  const settings = initialSettings || { supportEmail: "", telegramChannel: "", updatedAt: "" }
+  const settings = initialSettings || {
+    supportEmail: "",
+    telegramChannel: "",
+    updatedAt: "",
+  }
   const [tickets, setTickets] = useState<SupportTicket[]>(initialTickets)
 
   const handleSubmitTicket = async (e: React.FormEvent) => {
@@ -34,8 +38,14 @@ export const SupportView: React.FC<SupportViewProps> = ({
 
     setIsSubmitting(true)
     try {
-      const result = await createUserSupportTicket({ subject: subject.trim(), category, priority, message: message.trim() })
-      if (!result.success || !result.ticket) throw new Error(result.message || "Unable to submit support inquiry.")
+      const result = await createUserSupportTicket({
+        subject: subject.trim(),
+        category,
+        priority,
+        message: message.trim(),
+      })
+      if (!result.success || !result.ticket)
+        throw new Error(result.message || "Unable to submit support inquiry.")
       const ticket = result.ticket as unknown as SupportTicket
       setTickets((current) => [ticket, ...current])
       setSubject("")
@@ -45,7 +55,12 @@ export const SupportView: React.FC<SupportViewProps> = ({
         "Our institutional investor support desk will review your inquiry promptly."
       )
     } catch (error) {
-      success("Ticket Error", error instanceof Error ? error.message : "Unable to submit support inquiry.")
+      success(
+        "Ticket Error",
+        error instanceof Error
+          ? error.message
+          : "Unable to submit support inquiry."
+      )
     } finally {
       setIsSubmitting(false)
     }

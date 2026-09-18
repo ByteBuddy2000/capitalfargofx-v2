@@ -92,21 +92,55 @@ export default function AdminPage({ initialData }: AdminPageProps) {
   const renderTab = () => {
     switch (activeTab) {
       case "deposits":
-        return <AdminDeposits currentUser={adminUser} initialDeposits={adminData.deposits} />
+        return (
+          <AdminDeposits
+            currentUser={adminUser}
+            initialDeposits={adminData.deposits}
+          />
+        )
       case "withdrawals":
-        return <AdminWithdrawals currentUser={adminUser} initialWithdrawals={adminData.withdrawals} />
+        return (
+          <AdminWithdrawals
+            currentUser={adminUser}
+            initialWithdrawals={adminData.withdrawals}
+          />
+        )
       case "users":
-        return <AdminUsers currentUser={adminUser} initialUsers={adminData.users} />
+        return (
+          <AdminUsers currentUser={adminUser} initialUsers={adminData.users} />
+        )
       case "plans":
-        return <AdminPlans currentUser={adminUser} initialPlans={adminData.plans} />
+        return (
+          <AdminPlans currentUser={adminUser} initialPlans={adminData.plans} />
+        )
       case "referrals":
-        return <AdminReferrals currentUser={adminUser} initialReferrals={adminData.referrals} />
+        return (
+          <AdminReferrals
+            currentUser={adminUser}
+            initialReferrals={adminData.referrals}
+          />
+        )
       case "wallets":
-        return <AdminWallets currentUser={adminUser} initialWallets={adminData.wallets} />
+        return (
+          <AdminWallets
+            currentUser={adminUser}
+            initialWallets={adminData.wallets}
+          />
+        )
       case "settings":
-        return <AdminSettings currentUser={adminUser} initialSettings={adminData.settings} />
+        return (
+          <AdminSettings
+            currentUser={adminUser}
+            initialSettings={adminData.settings}
+          />
+        )
       case "audit":
-        return <AdminAuditLogs currentUser={adminUser} initialLogs={adminData.auditLogs} />
+        return (
+          <AdminAuditLogs
+            currentUser={adminUser}
+            initialLogs={adminData.auditLogs}
+          />
+        )
       default:
         return (
           <AdminOverview

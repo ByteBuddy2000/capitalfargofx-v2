@@ -169,7 +169,7 @@ export const PlansSection: React.FC<PlansSectionProps> = ({
                   variant={isGold ? "primary" : "outline"}
                   rightIcon={<ArrowRight className="h-4 w-4" />}
                   onClick={() => plan && onSelectPlan?.(plan)}
-                  className={`w-full justify-center py-3.5 font-bold rounded-md ${
+                  className={`w-full justify-center rounded-md py-3.5 font-bold ${
                     isGold
                       ? "border-none bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-lg shadow-emerald-500/25 hover:from-emerald-600 hover:to-teal-600"
                       : "border-slate-700 bg-slate-900 text-white hover:bg-slate-800"

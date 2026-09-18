@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/auth"
 import { connectToDB } from "@/lib/connectToDB"
 import { CryptoWallet } from "@/models/CryptoWallet"
+import { Asset, ASSET_SYMBOLS } from "@/models/Asset"
 
 export type AdminWalletsResponse = {
   success: boolean
@@ -18,6 +19,12 @@ export type SaveWalletResponse = {
   success: boolean
   message?: string
   wallet?: Record<string, unknown>
+}
+
+export type AssetResponse = {
+  success: boolean
+  message?: string
+  asset?: Record<string, unknown>
 }
 
 type WalletInput = {
@@ -38,10 +45,7 @@ async function requireAdminSession() {
   const session = await getServerSession(authOptions)
   const admin = session?.user
 
-  if (
-    !admin?.id ||
-    (admin.role !== "admin" && admin.role !== "super admin")
-  ) {
+  if (!admin?.id || (admin.role !== "admin" && admin.role !== "super admin")) {
     return null
   }
 
@@ -62,9 +66,7 @@ export async function getAdminWallets(): Promise<AdminWalletsResponse> {
 
     await connectToDB()
 
-    const wallets = await CryptoWallet.find({})
-      .sort({ symbol: 1 })
-      .lean()
+    const wallets = await CryptoWallet.find({}).sort({ symbol: 1 }).lean()
 
     return {
       success: true,
@@ -108,22 +110,28 @@ export async function saveAdminWallet(
       isActive: data.isActive !== false && data.active !== false,
     }
 
-    if (
-      !values.name ||
-      !values.symbol ||
-      !values.network ||
-      !values.address
-    ) {
+    await connectToDB()
+
+    const existingWallet = await CryptoWallet.findOne({
+      symbol: values.symbol,
+      _id: { $ne: id || null },
+    })
+
+    if (existingWallet) {
+      return {
+        success: false,
+        message: `${values.symbol} wallet already exists.`,
+      }
+    }
+
+    if (!values.name || !values.symbol || !values.network || !values.address) {
       return {
         success: false,
         message: "Valid wallet values are required.",
       }
     }
 
-    if (
-      !Number.isFinite(values.minDeposit) ||
-      values.minDeposit < 0
-    ) {
+    if (!Number.isFinite(values.minDeposit) || values.minDeposit < 0) {
       return {
         success: false,
         message: "Minimum deposit must be a valid non-negative number.",
@@ -157,6 +165,222 @@ export async function saveAdminWallet(
     return {
       success: false,
       message: "Unable to save wallet.",
+    }
+  }
+}
+
+export async function createAsset(data: {
+  userId: string
+  symbol: string
+  walletAddress?: string
+}): Promise<AssetResponse> {
+  try {
+    const admin = await requireAdminSession()
+
+    if (!admin) {
+      return {
+        success: false,
+        message: "Administrator access required.",
+      }
+    }
+
+    await connectToDB()
+
+    if (!mongoose.isValidObjectId(data.userId)) {
+      return {
+        success: false,
+        message: "Invalid user.",
+      }
+    }
+
+    const symbol = String(data.symbol).toUpperCase()
+
+    if (!ASSET_SYMBOLS.includes(symbol as never)) {
+      return {
+        success: false,
+        message: "Invalid asset symbol.",
+      }
+    }
+
+    const existingAsset = await Asset.findOne({
+      userId: data.userId,
+      symbol,
+    })
+
+    if (existingAsset) {
+      return {
+        success: false,
+        message: `${symbol} asset already exists.`,
+      }
+    }
+
+    const asset = await Asset.create({
+      userId: data.userId,
+      symbol,
+      walletAddress: data.walletAddress || "",
+      availableBalance: 0,
+      lockedBalance: 0,
+    })
+
+    return {
+      success: true,
+      asset: JSON.parse(JSON.stringify(asset)),
+    }
+  } catch (error) {
+    console.error("Failed to create asset:", error)
+
+    return {
+      success: false,
+      message: "Unable to create asset.",
+    }
+  }
+}
+
+export async function updateAsset(
+  assetId: string,
+  updates: {
+    walletAddress?: string
+  }
+): Promise<AssetResponse> {
+  try {
+    const admin = await requireAdminSession()
+
+    if (!admin) {
+      return {
+        success: false,
+        message: "Administrator access required.",
+      }
+    }
+
+    await connectToDB()
+
+    if (!mongoose.isValidObjectId(assetId)) {
+      return {
+        success: false,
+        message: "Invalid asset ID.",
+      }
+    }
+
+    const asset = await Asset.findByIdAndUpdate(
+      assetId,
+      {
+        ...(updates.walletAddress !== undefined && {
+          walletAddress: updates.walletAddress.trim(),
+        }),
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    ).lean()
+
+    if (!asset) {
+      return {
+        success: false,
+        message: "Asset not found.",
+      }
+    }
+
+    return {
+      success: true,
+      asset: JSON.parse(JSON.stringify(asset)),
+    }
+  } catch (error) {
+    console.error("Failed to update asset:", error)
+
+    return {
+      success: false,
+      message: "Unable to update asset.",
+    }
+  }
+}
+
+export async function deleteAsset(assetId: string): Promise<AssetResponse> {
+  try {
+    const admin = await requireAdminSession()
+
+    if (!admin) {
+      return {
+        success: false,
+        message: "Administrator access required.",
+      }
+    }
+
+    await connectToDB()
+
+    if (!mongoose.isValidObjectId(assetId)) {
+      return {
+        success: false,
+        message: "Invalid asset ID.",
+      }
+    }
+
+    const asset = await Asset.findByIdAndDelete(assetId).lean()
+
+    if (!asset) {
+      return {
+        success: false,
+        message: "Asset not found.",
+      }
+    }
+
+    return {
+      success: true,
+      asset: JSON.parse(JSON.stringify(asset)),
+      message: "Asset deleted successfully.",
+    }
+  } catch (error) {
+    console.error("Failed to delete asset:", error)
+
+    return {
+      success: false,
+      message: "Unable to delete asset.",
+    }
+  }
+}
+
+export async function deleteAdminWallet(
+  walletId: string
+): Promise<SaveWalletResponse> {
+  try {
+    const admin = await requireAdminSession()
+
+    if (!admin) {
+      return {
+        success: false,
+        message: "Administrator access required.",
+      }
+    }
+
+    if (!mongoose.isValidObjectId(walletId)) {
+      return {
+        success: false,
+        message: "Invalid wallet ID.",
+      }
+    }
+
+    await connectToDB()
+
+    const wallet = await CryptoWallet.findByIdAndDelete(walletId).lean()
+
+    if (!wallet) {
+      return {
+        success: false,
+        message: "Wallet not found.",
+      }
+    }
+
+    return {
+      success: true,
+      wallet: JSON.parse(JSON.stringify(wallet)),
+      message: "Wallet deleted successfully.",
+    }
+  } catch (error) {
+    console.error("Failed to delete admin wallet:", error)
+
+    return {
+      success: false,
+      message: "Unable to delete wallet.",
     }
   }
 }

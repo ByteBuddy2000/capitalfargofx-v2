@@ -1,4 +1,4 @@
-// 
+//
 "use client"
 
 import { useState } from "react"
@@ -16,7 +16,7 @@ export default function LoginPage() {
         <header className="p-6">
           <div className="mx-auto flex max-w-7xl items-center justify-between">
             {/* Brand Logo */}
-        <Logo />
+            <Logo />
 
             {/* <Link
               href="/"

@@ -1,5 +1,8 @@
-import React, {  useState } from "react"
-import { Wallet, Edit2, Plus } from "lucide-react"
+// app/admin/components/AdminWallets.tsx
+"use client"
+import React, { useState } from "react"
+import Image from "next/image"
+import { Wallet, Edit2, Plus, Trash2 } from "lucide-react"
 import { User, CryptoWalletConfig } from "@/types"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
@@ -7,7 +10,10 @@ import { Badge } from "@/components/ui/Badge"
 import { CryptoQRCode } from "@/components/ui/CryptoQRCode"
 import { Modal } from "@/components/ui/Modal"
 import { useToast } from "@/components/ui/Toast"
-import { saveAdminWallet } from "../controllers/wallet.action"
+import {
+  deleteAdminWallet,
+  saveAdminWallet,
+} from "../controllers/wallet.action"
 
 interface AdminWalletsProps {
   currentUser: User
@@ -20,9 +26,12 @@ const normalizeWallet = (value: unknown): CryptoWalletConfig => {
 
   return {
     id: String(record.id || record._id || ""),
-    asset: record.asset === "BTC" || record.asset === "ETH" || record.asset === "USDT"
-      ? record.asset
-      : undefined,
+    asset:
+      record.asset === "BTC" ||
+      record.asset === "ETH" ||
+      record.asset === "USDT"
+        ? record.asset
+        : undefined,
     name: String(record.name || ""),
     symbol: String(record.symbol || record.asset || ""),
     network: String(record.network || ""),
@@ -35,7 +44,15 @@ const normalizeWallet = (value: unknown): CryptoWalletConfig => {
   }
 }
 
-export const AdminWallets: React.FC<AdminWalletsProps> = ({ initialWallets = [] }) => {
+const walletSymbolImages: Record<string, string> = {
+  BTC: "/bitcoin.png",
+  ETH: "/ethereum.png",
+  USDT: "/usdt.png",
+}
+
+export const AdminWallets: React.FC<AdminWalletsProps> = ({
+  initialWallets = [],
+}) => {
   const [wallets, setWallets] = useState<CryptoWalletConfig[]>(initialWallets)
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [editingWallet, setEditingWallet] = useState<CryptoWalletConfig | null>(
@@ -51,7 +68,6 @@ export const AdminWallets: React.FC<AdminWalletsProps> = ({ initialWallets = [] 
 
   const handleOpenCreate = () => {
     const newWallet: CryptoWalletConfig = {
-      id: `wallet-${Date.now()}`,
       symbol: "USDT",
       name: "Tether USD (TRC-20)",
       network: "TRC-20 (TRON)",
@@ -80,18 +96,47 @@ export const AdminWallets: React.FC<AdminWalletsProps> = ({ initialWallets = [] 
 
         const normalizedWallet = normalizeWallet(savedWallet.wallet)
         setWallets((current) => {
-          const exists = current.some((wallet) => wallet.id === normalizedWallet.id)
+          const exists = current.some(
+            (wallet) => wallet.id === normalizedWallet.id
+          )
           return exists
-            ? current.map((wallet) => (wallet.id === normalizedWallet.id ? normalizedWallet : wallet))
+            ? current.map((wallet) =>
+                wallet.id === normalizedWallet.id ? normalizedWallet : wallet
+              )
             : [...current, normalizedWallet]
         })
-        success("Wallet Address Updated", `Deposit receiving address for ${editingWallet.name} saved.`)
+        success(
+          "Wallet Address Updated",
+          `Deposit receiving address for ${editingWallet.name} saved.`
+        )
         setEditModalOpen(false)
       })
       .catch((error) => {
-        const message = error instanceof Error ? error.message : "Unable to save wallet."
+        const message =
+          error instanceof Error ? error.message : "Unable to save wallet."
         success("Wallet Save Failed", message)
       })
+  }
+
+  const handleDeleteWallet = async (wallet: CryptoWalletConfig) => {
+    const confirmed = window.confirm(`Delete ${wallet.name}?`)
+
+    if (!confirmed) return
+
+    if (!wallet.id) {
+      success("Delete Failed", "Wallet ID is missing.")
+      return
+    }
+
+    const result = await deleteAdminWallet(wallet.id)
+    if (!result.success) {
+      success("Delete Failed", result.message || "Unable to delete wallet.")
+      return
+    }
+
+    setWallets((current) => current.filter((item) => item.id !== wallet.id))
+
+    success("Wallet Deleted", `${wallet.name} removed successfully.`)
   }
 
   return (
@@ -121,16 +166,25 @@ export const AdminWallets: React.FC<AdminWalletsProps> = ({ initialWallets = [] 
 
       {/* Wallets Grid */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {wallets.map((w) => (
+        {wallets.map((w, idx) => (
           <div
-            key={w.id}
+            key={idx}
             className="flex flex-col justify-between rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-sm"
           >
             <div>
-              <div className="mb-3 flex items-center justify-between">
+              <div className="relative mb-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-teal-800 bg-teal-950 text-xs font-bold text-teal-300">
-                    {w.symbol}
+                  <div className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-xl border border-teal-800 bg-teal-950 text-xs font-bold text-teal-300">
+                    <Image
+                      src={
+                        walletSymbolImages[w.symbol.toUpperCase()] ||
+                        "/usdt.png"
+                      }
+                      alt={`${w.symbol} wallet symbol`}
+                      fill
+                      sizes="32px"
+                      className="object-contain p-1"
+                    />
                   </div>
                   <div>
                     <h3 className="text-base font-bold text-white">{w.name}</h3>
@@ -139,7 +193,10 @@ export const AdminWallets: React.FC<AdminWalletsProps> = ({ initialWallets = [] 
                     </p>
                   </div>
                 </div>
-                <Badge variant={w.isActive ? "success" : "neutral"}>
+                <Badge
+                  className="absolute top-0 right-0"
+                  variant={w.isActive ? "success" : "neutral"}
+                >
                   {w.isActive ? "ACTIVE" : "DISABLED"}
                 </Badge>
               </div>
@@ -164,13 +221,22 @@ export const AdminWallets: React.FC<AdminWalletsProps> = ({ initialWallets = [] 
               </div>
             </div>
 
-            <Button
-              onClick={() => handleOpenEdit(w)}
-              leftIcon={<Edit2 className="h-4 w-4" />}
-              className="w-full justify-center border-slate-700 bg-slate-800 font-bold text-slate-200 hover:bg-slate-700"
-            >
-              Update Address
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => handleOpenEdit(w)}
+                // leftIcon={<Edit2 className="h-4 w-4" />}
+                className="bg-slate-800 font-bold text-slate-200 hover:bg-slate-700"
+              >
+                <Edit2 className="h-4 w-4" />
+              </Button>
+
+              <Button
+                onClick={() => handleDeleteWallet(w)}
+                className="bg-red-600 text-white hover:bg-red-700"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         ))}
       </div>

@@ -88,7 +88,7 @@ export const DiversifiedCategoriesSection: React.FC = () => {
 
               <div className="flex items-center justify-between border-t border-slate-800 pt-4 font-mono text-xs">
                 <span className="text-slate-400">Allocation Target:</span>
-                <span className="text-[9px] lg:text-sm font-semibold text-slate-200">
+                <span className="text-[9px] font-semibold text-slate-200 lg:text-sm">
                   {category.metric}
                 </span>
               </div>

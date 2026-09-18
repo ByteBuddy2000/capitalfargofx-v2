@@ -18,17 +18,31 @@ export interface ISupportTicket extends mongoose.Document {
 
 const supportTicketSchema: Schema<ISupportTicket> = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, index: true },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
     userFullName: { type: String, required: true },
     userEmail: { type: String, required: true },
     subject: { type: String, required: true, trim: true },
     category: { type: String, required: true },
-    priority: { type: String, enum: ["LOW", "MEDIUM", "HIGH"], default: "MEDIUM" },
+    priority: {
+      type: String,
+      enum: ["LOW", "MEDIUM", "HIGH"],
+      default: "MEDIUM",
+    },
     message: { type: String, required: true },
-    status: { type: String, enum: ["OPEN", "IN_PROGRESS", "RESOLVED"], default: "OPEN" },
+    status: {
+      type: String,
+      enum: ["OPEN", "IN_PROGRESS", "RESOLVED"],
+      default: "OPEN",
+    },
   },
   { timestamps: true }
 )
 
 export const SupportTicket: Model<ISupportTicket> =
-  mongoose.models.SupportTicket || mongoose.model<ISupportTicket>("SupportTicket", supportTicketSchema)
+  mongoose.models.SupportTicket ||
+  mongoose.model<ISupportTicket>("SupportTicket", supportTicketSchema)

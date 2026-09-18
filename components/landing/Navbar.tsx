@@ -7,7 +7,6 @@ import {
   LayoutDashboard,
   Lock,
   ArrowUpRight,
-
 } from "lucide-react"
 import { User } from "../../types"
 import { Button } from "../ui/Button"
@@ -103,7 +102,8 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="hidden items-center gap-3 sm:flex">
           {currentUser ? (
             <div className="flex items-center gap-2.5">
-              {(currentUser.role === "admin" || currentUser.role === "super admin") && (
+              {(currentUser.role === "admin" ||
+                currentUser.role === "super admin") && (
                 <Button
                   size="sm"
                   variant="dark"
@@ -199,7 +199,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   >
                     Open Investor Dashboard
                   </Button>
-                  {(currentUser.role === "admin" || currentUser.role === "super admin") && (
+                  {(currentUser.role === "admin" ||
+                    currentUser.role === "super admin") && (
                     <Button
                       variant="secondary"
                       leftIcon={<Lock className="h-4 w-4 text-amber-500" />}

@@ -169,8 +169,9 @@ export const TestimonialsSection: React.FC = () => {
 
         <div className="mt-8 flex items-center justify-center gap-2 text-xs text-slate-500">
           <span
-            className={`h-1.5 w-1.5 rounded-full ${isPaused ? "bg-slate-600" : "animate-pulse bg-emerald-400"
-              }`}
+            className={`h-1.5 w-1.5 rounded-full ${
+              isPaused ? "bg-slate-600" : "animate-pulse bg-emerald-400"
+            }`}
           />
 
           <span>

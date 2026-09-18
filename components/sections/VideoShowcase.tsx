@@ -27,7 +27,6 @@ interface VideoModalProps {
   videoSrc: string
 }
 
-
 /* -------------------------------------------------------------------------- */
 /* Protected Video Props                                                      */
 /* -------------------------------------------------------------------------- */
@@ -139,7 +138,7 @@ export const VideoPreviewModal: React.FC<VideoModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="ml-3 rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="ml-3 rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-800 hover:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
             aria-label="Close video preview"
           >
             <X className="h-5 w-5" />
@@ -203,8 +202,7 @@ export const VideoPreviewModal: React.FC<VideoModalProps> = ({
           </h4>
 
           <p className="mt-1 text-xs leading-relaxed text-slate-400">
-            Educational video briefing for institutional and private
-            investors.
+            Educational video briefing for institutional and private investors.
           </p>
         </div>
 
@@ -233,7 +231,7 @@ export const VideoPreviewModal: React.FC<VideoModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-blue-500 focus:ring-2 focus:ring-blue-400 focus:outline-none"
             >
               Close Briefing
             </button>
@@ -323,7 +321,7 @@ export const VideoShowcaseSectionOne: React.FC = () => {
                   }
                 }}
                 onContextMenu={(event) => event.preventDefault()}
-                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 shadow-2xl transition-all duration-300 hover:border-blue-500/50 hover:shadow-blue-500/20 focus:outline-none focus:ring-2 focus:ring-blue-500 select-none"
+                className="group relative cursor-pointer overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 shadow-2xl transition-all duration-300 select-none hover:border-blue-500/50 hover:shadow-blue-500/20 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 aria-label="Watch Cryptocurrency Foundations and Custody video"
               >
                 <div
@@ -349,7 +347,7 @@ export const VideoShowcaseSectionOne: React.FC = () => {
                   <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-tr from-slate-950 via-slate-900/65 to-blue-900/50 transition-opacity duration-300 group-hover:via-slate-900/55" />
 
                   {/* Geometric Grid */}
-                  <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] bg-size-[16px_16px]] opacity-20" />
+                  <div className="bg-size-[16px_16px]] pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] opacity-20" />
 
                   {/* Content */}
                   <div className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-between p-6 sm:p-8">
@@ -492,7 +490,7 @@ export const VideoShowcaseSectionTwo: React.FC = () => {
                   }
                 }}
                 onContextMenu={(event) => event.preventDefault()}
-                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 shadow-xl transition-all duration-300 hover:border-cyan-400/60 focus:outline-none focus:ring-2 focus:ring-cyan-500 lg:col-span-7 select-none"
+                className="group relative cursor-pointer overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 shadow-xl transition-all duration-300 select-none hover:border-cyan-400/60 focus:ring-2 focus:ring-cyan-500 focus:outline-none lg:col-span-7"
                 aria-label="Watch Digital Asset Strategies and Liquidity Execution video"
               >
                 <div
@@ -518,7 +516,7 @@ export const VideoShowcaseSectionTwo: React.FC = () => {
                   <div className="pointer-events-none absolute inset-0 z-10 bg-linear-to-t from-slate-950 via-slate-900/60 to-transparent" />
 
                   {/* Telemetry */}
-                  <div className="pointer-events-none hidden inset-0 z-10 items-center justify-center opacity-40">
+                  <div className="pointer-events-none inset-0 z-10 hidden items-center justify-center opacity-40">
                     <div className="flex h-full w-full flex-col justify-between p-4 font-mono text-[10px] text-cyan-400">
                       <div className="flex justify-between gap-4">
                         <span>ROUTING: 100 GIGABIT FIBER</span>
@@ -533,7 +531,7 @@ export const VideoShowcaseSectionTwo: React.FC = () => {
                   </div>
 
                   {/* Play Button */}
-                  <div className="relative z-20 mt-24 flex flex-col items-center gap-3 pointer-events-none">
+                  <div className="pointer-events-none relative z-20 mt-24 flex flex-col items-center gap-3">
                     <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-linear-to-tr from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/25 transition-transform group-hover:scale-105">
                       <Play className="ml-1 h-8 w-8 fill-white" />
                     </div>
@@ -594,7 +592,7 @@ export const VideoShowcaseSectionTwo: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setModalOpen(true)}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-blue-600 to-cyan-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all hover:from-blue-500 hover:to-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-blue-600 to-cyan-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all hover:from-blue-500 hover:to-cyan-500 focus:ring-2 focus:ring-cyan-400 focus:outline-none"
                   >
                     <span>Launch Strategy Overview</span>
 

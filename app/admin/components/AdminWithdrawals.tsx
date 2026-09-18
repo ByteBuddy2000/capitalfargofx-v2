@@ -13,7 +13,9 @@ interface AdminWithdrawalsProps {
   initialWithdrawals?: Withdrawal[]
 }
 
-export const AdminWithdrawals: React.FC<AdminWithdrawalsProps> = ({ initialWithdrawals = [] }) => {
+export const AdminWithdrawals: React.FC<AdminWithdrawalsProps> = ({
+  initialWithdrawals = [],
+}) => {
   const [filter, setFilter] = useState<
     "PENDING" | "ALL" | "COMPLETED" | "REJECTED"
   >("PENDING")
@@ -28,7 +30,8 @@ export const AdminWithdrawals: React.FC<AdminWithdrawalsProps> = ({ initialWithd
 
   const [broadcastTxHash, setBroadcastTxHash] = useState("")
   const [rejectReason, setRejectReason] = useState("")
-  const [allWithdrawals, setAllWithdrawals] = useState<Withdrawal[]>(initialWithdrawals)
+  const [allWithdrawals, setAllWithdrawals] =
+    useState<Withdrawal[]>(initialWithdrawals)
 
   const { success, error: toastError } = useToast()
 

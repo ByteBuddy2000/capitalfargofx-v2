@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react"
 import {
   ShieldCheck,
@@ -115,7 +116,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                 <span className="text-base font-extrabold tracking-tight text-white">
                   CapitalsFargoFX<span className="text-amber-400">Admin</span>
                 </span>
-                <span className="ml-2 hidden rounded-md border border-amber-800 bg-amber-950 px-2 py-0.5 text-[10px] font-bold tracking-wider text-amber-300 uppercase ">
+                <span className="ml-2 hidden rounded-md border border-amber-800 bg-amber-950 px-2 py-0.5 text-[10px] font-bold tracking-wider text-amber-300 uppercase">
                   Institutional Security Suite
                 </span>
               </div>
@@ -181,7 +182,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                     <span>{item.label}</span>
                   </div>
 
-                    {/* Badge rendering removed */}
+                  {/* Badge rendering removed */}
                 </button>
               )
             })}

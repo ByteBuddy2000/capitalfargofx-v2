@@ -33,7 +33,7 @@ const depositSchema: Schema<IDeposit> = new mongoose.Schema(
       ref: "Plan",
       required: true,
     },
-    
+
     amount: { type: Number, required: true, min: 0.01 },
     asset: { type: String, enum: ["BTC", "ETH", "USDT"], required: true },
     network: { type: String, required: true, trim: true, minlength: 2 },

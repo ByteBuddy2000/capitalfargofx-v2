@@ -44,9 +44,7 @@ export async function changeAdminPassword(
 
     await connectToDB()
 
-    const user = await User.findById(admin.id)
-      .select("+passwordHash")
-      .exec()
+    const user = await User.findById(admin.id).select("+passwordHash").exec()
 
     if (!user) {
       return {
@@ -79,8 +77,7 @@ export async function changeAdminPassword(
     if (error instanceof z.ZodError) {
       return {
         success: false,
-        message:
-          error.issues[0]?.message || "Invalid password payload.",
+        message: error.issues[0]?.message || "Invalid password payload.",
       }
     }
 

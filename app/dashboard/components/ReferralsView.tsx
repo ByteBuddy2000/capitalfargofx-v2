@@ -26,14 +26,23 @@ export const ReferralsView: React.FC<ReferralsViewProps> = ({
   const { success } = useToast()
 
   const referrals: Referral[] = initialReferrals.map((record) => {
-    const referred = record.referredUserId as { _id?: string; username?: string; fullName?: string } | string | undefined
+    const referred = record.referredUserId as
+      | { _id?: string; username?: string; fullName?: string }
+      | string
+      | undefined
     return {
       id: String(record.id || ""),
       referrerId: currentUser.id,
       referrerUsername: currentUser.username,
-      referredUserId: String(typeof referred === "object" ? referred?._id : referred || ""),
-      referredUsername: String(typeof referred === "object" ? referred?.username : ""),
-      referredFullName: String(typeof referred === "object" ? referred?.fullName : ""),
+      referredUserId: String(
+        typeof referred === "object" ? referred?._id : referred || ""
+      ),
+      referredUsername: String(
+        typeof referred === "object" ? referred?.username : ""
+      ),
+      referredFullName: String(
+        typeof referred === "object" ? referred?.fullName : ""
+      ),
       level: Number(record.level || 1),
       totalDeposits: Number(record.totalDeposits || 0),
       commissionsEarned: Number(record.commissionsEarned || 0),
@@ -191,8 +200,8 @@ export const ReferralsView: React.FC<ReferralsViewProps> = ({
             </span>
             <p className="text-base font-bold text-slate-900">
               {currentUser.uplineUsername
-                  ? `@${currentUser.uplineUsername}`
-                  : "Direct Investor (No Upline)"}
+                ? `@${currentUser.uplineUsername}`
+                : "Direct Investor (No Upline)"}
             </p>
             <p className="text-xs text-slate-500">
               {currentUser.uplineUsername

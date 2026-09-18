@@ -17,10 +17,7 @@ async function requireAdminSession() {
   const session = await getServerSession(authOptions)
   const admin = session?.user
 
-  if (
-    !admin?.id ||
-    (admin.role !== "admin" && admin.role !== "super admin")
-  ) {
+  if (!admin?.id || (admin.role !== "admin" && admin.role !== "super admin")) {
     return null
   }
 

@@ -112,12 +112,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   const [copiedRef, setCopiedRef] = useState(false)
   const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>("30D")
 
-  const [investments, setInvestments] = useState<Investment[]>(initialInvestments)
+  const [investments, setInvestments] =
+    useState<Investment[]>(initialInvestments)
   const transactions = initialTransactions.slice(0, 5)
-  const pendingWithdrawals =
-    initialWithdrawals
-      .filter((withdrawal) => withdrawal.status === "PENDING")
-      .reduce((sum, withdrawal) => sum + Number(withdrawal.amount || 0), 0)
+  const pendingWithdrawals = initialWithdrawals
+    .filter((withdrawal) => withdrawal.status === "PENDING")
+    .reduce((sum, withdrawal) => sum + Number(withdrawal.amount || 0), 0)
   const cryptoPrices = {
     BTC: 64000,
     ETH: 3400,
@@ -387,17 +387,22 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     try {
       setSettlingInvestmentId(investmentId)
 
-      const settledInvestment = investments.find((item) => item.id === investmentId)
+      const settledInvestment = investments.find(
+        (item) => item.id === investmentId
+      )
       if (!settledInvestment) return
 
       const result = await settleUserInvestment(investmentId)
-      if (!result.success || !result.investment) throw new Error(result.message || "Unable to settle investment.")
+      if (!result.success || !result.investment)
+        throw new Error(result.message || "Unable to settle investment.")
       const updatedInvestment = {
         ...result.investment,
         id: String(result.investment._id || result.investment.id),
       } as Investment
       setInvestments((current) =>
-        current.map((item) => (item.id === investmentId ? updatedInvestment : item))
+        current.map((item) =>
+          item.id === investmentId ? updatedInvestment : item
+        )
       )
       success(
         "Investment Settled",
@@ -484,7 +489,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
             <button
               type="button"
-              onClick={() => onNavigateTab('investments')}
+              onClick={() => onNavigateTab("investments")}
               className="cursor-pointer text-[11px] font-bold text-[#2563EB] hover:underline"
             >
               Details →

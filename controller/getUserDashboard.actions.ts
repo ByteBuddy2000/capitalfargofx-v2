@@ -32,8 +32,13 @@ export async function getUserReferrals() {
 export async function getUserPlatformSettings() {
   try {
     await connectToDB()
-    const settings = await PlatformSettings.findOne({}).sort({ updatedAt: -1 }).lean()
-    return { success: true, settings: settings ? JSON.parse(JSON.stringify(settings)) : null }
+    const settings = await PlatformSettings.findOne({})
+      .sort({ updatedAt: -1 })
+      .lean()
+    return {
+      success: true,
+      settings: settings ? JSON.parse(JSON.stringify(settings)) : null,
+    }
   } catch (error) {
     console.error("Failed to load platform settings:", error)
     return { success: false, settings: null }
@@ -46,7 +51,9 @@ export async function getUserSupportTickets() {
 
   try {
     await connectToDB()
-    const tickets = await SupportTicket.find({ userId: session.user.id }).sort({ createdAt: -1 }).lean()
+    const tickets = await SupportTicket.find({ userId: session.user.id })
+      .sort({ createdAt: -1 })
+      .lean()
     return { success: true, tickets: JSON.parse(JSON.stringify(tickets)) }
   } catch (error) {
     console.error("Failed to load support tickets:", error)
@@ -61,14 +68,22 @@ export async function createUserSupportTicket(data: {
   message: string
 }) {
   const session = await getServerSession(authOptions)
-  if (!session?.user?.id) return { success: false, message: "Authentication required." }
+  if (!session?.user?.id)
+    return { success: false, message: "Authentication required." }
 
   try {
     await connectToDB()
-    const user = await User.findById(session.user.id).select("fullName email").lean()
+    const user = await User.findById(session.user.id)
+      .select("fullName email")
+      .lean()
     if (!user) return { success: false, message: "User not found." }
 
-    const ticket = await SupportTicket.create({ ...data, userId: user._id, userFullName: user.fullName, userEmail: user.email })
+    const ticket = await SupportTicket.create({
+      ...data,
+      userId: user._id,
+      userFullName: user.fullName,
+      userEmail: user.email,
+    })
     return { success: true, ticket: JSON.parse(JSON.stringify(ticket)) }
   } catch (error) {
     console.error("Failed to create support ticket:", error)
@@ -82,7 +97,8 @@ export async function updateUserProfile(data: {
   usdtWallet: string
 }) {
   const session = await getServerSession(authOptions)
-  if (!session?.user?.id) return { success: false, message: "Authentication required." }
+  if (!session?.user?.id)
+    return { success: false, message: "Authentication required." }
 
   try {
     await connectToDB()
@@ -90,7 +106,9 @@ export async function updateUserProfile(data: {
       session.user.id,
       { $set: data },
       { new: true, runValidators: true }
-    ).select("-passwordHash").lean()
+    )
+      .select("-passwordHash")
+      .lean()
 
     return user
       ? { success: true, user: JSON.parse(JSON.stringify(user)) }
@@ -106,12 +124,16 @@ export async function changeUserPassword(data: {
   newPassword: string
 }) {
   const session = await getServerSession(authOptions)
-  if (!session?.user?.id) return { success: false, message: "Authentication required." }
+  if (!session?.user?.id)
+    return { success: false, message: "Authentication required." }
 
   try {
     await connectToDB()
     const user = await User.findById(session.user.id).select("+passwordHash")
-    if (!user || !(await bcrypt.compare(data.currentPassword, user.passwordHash))) {
+    if (
+      !user ||
+      !(await bcrypt.compare(data.currentPassword, user.passwordHash))
+    ) {
       return { success: false, message: "Current password is incorrect." }
     }
 

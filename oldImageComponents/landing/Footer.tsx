@@ -146,7 +146,8 @@ export const Footer: React.FC<FooterProps> = ({
                   href={`mailto:${currentSettings.supportEmail || "support@CapitalsFargofx.com"}`}
                   className="transition-colors hover:text-white"
                 >
-                  {currentSettings.supportEmail || "support@CapitalsFargofx.com"}
+                  {currentSettings.supportEmail ||
+                    "support@CapitalsFargofx.com"}
                 </a>
               </li>
               <li className="flex items-center gap-2">

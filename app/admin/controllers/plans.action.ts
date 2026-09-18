@@ -42,10 +42,7 @@ async function requireAdminSession() {
   const session = await getServerSession(authOptions)
   const admin = session?.user
 
-  if (
-    !admin?.id ||
-    (admin.role !== "admin" && admin.role !== "super admin")
-  ) {
+  if (!admin?.id || (admin.role !== "admin" && admin.role !== "super admin")) {
     return null
   }
 
@@ -66,9 +63,7 @@ export async function getAdminPlans(): Promise<AdminPlansResponse> {
 
     await connectToDB()
 
-    const plans = await Plan.find({})
-      .sort({ minimumAmount: 1 })
-      .lean()
+    const plans = await Plan.find({}).sort({ minimumAmount: 1 }).lean()
 
     return {
       success: true,
@@ -115,9 +110,7 @@ export async function saveAdminPlan(
     const maximumAmount = Number(body.maximumAmount || 0)
 
     const referralPercentage = Number(
-      body.referralPercentage ??
-        body.referralCommissionRate ??
-        0
+      body.referralPercentage ?? body.referralCommissionRate ?? 0
     )
 
     const principalReturn = Boolean(body.principalReturn)

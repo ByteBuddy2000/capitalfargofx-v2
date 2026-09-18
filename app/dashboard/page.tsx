@@ -62,7 +62,9 @@ const getFulfilledRecords = <T,>(
 
   const records = result.value[key]
   return Array.isArray(records)
-    ? records.map((record) => normalizeRecord(record as DashboardRecord)) as T[]
+    ? (records.map((record) =>
+        normalizeRecord(record as DashboardRecord)
+      ) as T[])
     : []
 }
 
@@ -136,19 +138,37 @@ export default async function DashboardPage() {
   const dashboardData: DashboardInitialData = {
     assets,
     deposits: getFulfilledRecords<DashboardRecord>(depositsResult, "deposits"),
-    investments: getFulfilledRecords<Investment>(investmentsResult, "investments"),
-    ledgerEntries: getFulfilledRecords<DashboardRecord>(ledgerResult, "entries"),
-    notifications: getFulfilledRecords<DashboardRecord>(notificationsResult, "notifications"),
+    investments: getFulfilledRecords<Investment>(
+      investmentsResult,
+      "investments"
+    ),
+    ledgerEntries: getFulfilledRecords<DashboardRecord>(
+      ledgerResult,
+      "entries"
+    ),
+    notifications: getFulfilledRecords<DashboardRecord>(
+      notificationsResult,
+      "notifications"
+    ),
     plans: getFulfilledRecords<InvestmentPlan>(plansResult, "plans"),
-    transactions: getFulfilledRecords<Transaction>(transactionsResult, "transactions"),
-    withdrawals: getFulfilledRecords<Withdrawal>(withdrawalsResult, "withdrawals"),
+    transactions: getFulfilledRecords<Transaction>(
+      transactionsResult,
+      "transactions"
+    ),
+    withdrawals: getFulfilledRecords<Withdrawal>(
+      withdrawalsResult,
+      "withdrawals"
+    ),
     wallets: getFulfilledRecords<CryptoWalletConfig>(walletsResult, "wallets"),
     referrals: getFulfilledRecords<Referral>(referralsResult, "referrals"),
     settings:
       settingsResult.status === "fulfilled" && settingsResult.value.success
         ? (settingsResult.value.settings as PlatformSettings | null)
         : null,
-    supportTickets: getFulfilledRecords<SupportTicket>(supportTicketsResult, "tickets"),
+    supportTickets: getFulfilledRecords<SupportTicket>(
+      supportTicketsResult,
+      "tickets"
+    ),
   }
 
   return <DashboardClient currentUser={user} initialData={dashboardData} />

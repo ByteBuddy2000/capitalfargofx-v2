@@ -1,4 +1,5 @@
 // AdminUsers.tsx
+"use client"
 import React, { useState } from "react"
 import { Users, Search } from "lucide-react"
 import { User, UserStatus } from "@/types"
@@ -52,7 +53,10 @@ const normalizeUser = (value: unknown): User => {
   }
 }
 
-export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser, initialUsers = [] }) => {
+export const AdminUsers: React.FC<AdminUsersProps> = ({
+  currentUser,
+  initialUsers = [],
+}) => {
   const [searchTerm, setSearchTerm] = useState("")
 
   // Balance adjustment modal
@@ -180,24 +184,20 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser, initialUser
           <div className="min-w-350">
             <table className="w-full table-auto text-left text-xs text-slate-300">
               <thead className="sticky top-0 z-10">
-                <tr className="border-b border-slate-800 bg-slate-950 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  <th className="whitespace-nowrap px-6 py-4">Investor</th>
-                  <th className="whitespace-nowrap px-4 py-4">
+                <tr className="border-b border-slate-800 bg-slate-950 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                  <th className="px-6 py-4 whitespace-nowrap">Investor</th>
+                  <th className="px-4 py-4 whitespace-nowrap">
                     Available Balance
                   </th>
-                  <th className="whitespace-nowrap px-4 py-4">
+                  <th className="px-4 py-4 whitespace-nowrap">
                     Locked In Plans
                   </th>
-                  <th className="whitespace-nowrap px-4 py-4">
+                  <th className="px-4 py-4 whitespace-nowrap">
                     Upline Sponsor
                   </th>
-                  <th className="whitespace-nowrap px-4 py-4">
-                    Role & Status
-                  </th>
-                  <th className="whitespace-nowrap px-4 py-4">
-                    Registered
-                  </th>
-                  <th className="whitespace-nowrap px-6 py-4 text-right">
+                  <th className="px-4 py-4 whitespace-nowrap">Role & Status</th>
+                  <th className="px-4 py-4 whitespace-nowrap">Registered</th>
+                  <th className="px-6 py-4 text-right whitespace-nowrap">
                     Management Actions
                   </th>
                 </tr>
@@ -209,7 +209,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser, initialUser
                     key={u.id}
                     className="transition-colors hover:bg-slate-800/50"
                   >
-                    <td className="whitespace-nowrap px-6 py-4">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2.5">
                         <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-blue-700 bg-blue-900/60 text-xs font-bold text-blue-300">
                           {u.fullName.charAt(0)}
@@ -227,52 +227,51 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser, initialUser
                       </div>
                     </td>
 
-                    <td className="whitespace-nowrap px-4 py-4 font-mono text-sm font-bold text-emerald-400">
+                    <td className="px-4 py-4 font-mono text-sm font-bold whitespace-nowrap text-emerald-400">
                       $
                       {(u?.availableBalance || 0).toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                       })}
                     </td>
 
-                    <td className="whitespace-nowrap px-4 py-4 font-mono text-slate-300">
+                    <td className="px-4 py-4 font-mono whitespace-nowrap text-slate-300">
                       $
                       {(u?.earningBalance || 0).toLocaleString(undefined, {
                         minimumFractionDigits: 2,
                       })}
                     </td>
 
-                    <td className="whitespace-nowrap px-4 py-4 font-mono text-[11px] text-slate-400">
+                    <td className="px-4 py-4 font-mono text-[11px] whitespace-nowrap text-slate-400">
                       {u.uplineUsername
                         ? `@${u.uplineUsername}`
                         : "Direct (None)"}
                     </td>
 
-                    <td className="whitespace-nowrap px-4 py-4">
+                    <td className="px-4 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <span
-                          className={`rounded px-2 py-0.5 text-[10px] font-black uppercase ${u.role === "admin" || u.role === "super admin"
+                          className={`rounded px-2 py-0.5 text-[10px] font-black uppercase ${
+                            u.role === "admin" || u.role === "super admin"
                               ? "border border-amber-800 bg-amber-950 text-amber-300"
                               : "bg-slate-800 text-slate-300"
-                            }`}
+                          }`}
                         >
                           {u.role}
                         </span>
 
                         <Badge
-                          variant={
-                            u.status === "ACTIVE" ? "success" : "danger"
-                          }
+                          variant={u.status === "ACTIVE" ? "success" : "danger"}
                         >
                           {u.status}
                         </Badge>
                       </div>
                     </td>
 
-                    <td className="whitespace-nowrap px-4 py-4 font-mono text-[11px] text-slate-400">
+                    <td className="px-4 py-4 font-mono text-[11px] whitespace-nowrap text-slate-400">
                       {new Date(u.createdAt).toLocaleDateString()}
                     </td>
 
-                    <td className="whitespace-nowrap px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-2">
                         <Button
                           size="sm"
@@ -313,7 +312,6 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser, initialUser
           <span>
             Showing {filtered.length} of {visibleUsers.length} users
           </span>
-
         </div>
       </div>
 

@@ -9,12 +9,7 @@ import { InvestmentPlansSection } from "@/components/sections/InvestmentPlansSec
 import { YieldSimulator } from "@/components/simulator/YieldSimulator"
 import { FinalCtaSection } from "@/components/sections/FinalCtaSection"
 import type { IPlan } from "@/models/Plan"
-import {
-  Layers,
-  Check,
-  ArrowRight,
-  Info,
-} from "lucide-react"
+import { Layers, Check, ArrowRight, Info } from "lucide-react"
 
 interface InvestmentPlansPageProps {
   plans: IPlan[]

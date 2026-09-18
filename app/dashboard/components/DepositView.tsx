@@ -53,9 +53,7 @@ export const DepositView: React.FC<DepositViewProps> = ({
       initialPlan?.id ||
       "plan-gold"
   )
-  const selectedPlan =
-    plans.find((p) => p.id === selectedPlanId) ||
-    plans[0]
+  const selectedPlan = plans.find((p) => p.id === selectedPlanId) || plans[0]
 
   const [amount, setAmount] = useState<number>(() =>
     preselectedPlan
@@ -183,7 +181,8 @@ export const DepositView: React.FC<DepositViewProps> = ({
         receivingAddress: activeWalletConfig.address,
         txHash: trimmedHash,
       })
-      if (!result.success || !result.deposit) throw new Error(result.message || "Unable to submit deposit.")
+      if (!result.success || !result.deposit)
+        throw new Error(result.message || "Unable to submit deposit.")
       setSubmittedDeposit({
         ...result.deposit,
         id: String(result.deposit._id || result.deposit.id),

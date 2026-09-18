@@ -92,20 +92,14 @@ export async function updateAdminWithdrawal(
 
     const status = data.status
 
-    if (
-      !status ||
-      !["PROCESSING", "COMPLETED", "REJECTED"].includes(status)
-    ) {
+    if (!status || !["PROCESSING", "COMPLETED", "REJECTED"].includes(status)) {
       return {
         success: false,
         message: "Invalid withdrawal status.",
       }
     }
 
-    const normalizedStatus = status as
-      | "PROCESSING"
-      | "COMPLETED"
-      | "REJECTED"
+    const normalizedStatus = status as "PROCESSING" | "COMPLETED" | "REJECTED"
 
     await connectToDB()
 
@@ -163,12 +157,10 @@ export async function updateAdminWithdrawal(
           referenceType: "WITHDRAWAL",
           referenceId: withdrawal._id,
           balanceBefore:
-            Number(user.availableBalance || 0) -
-            Number(withdrawal.amount),
+            Number(user.availableBalance || 0) - Number(withdrawal.amount),
           balanceAfter: Number(user.availableBalance || 0),
           description:
-            withdrawal.adminNotes ||
-            "Withdrawal rejected and refunded",
+            withdrawal.adminNotes || "Withdrawal rejected and refunded",
         })
       }
     }

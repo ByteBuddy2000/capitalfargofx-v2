@@ -15,7 +15,10 @@ import { useToast } from "@/components/ui/Toast"
 import { Input } from "@/components/ui/Input"
 import { Button } from "@/components/ui/Button"
 import { User } from "@/types"
-import { changeUserPassword, updateUserProfile } from "@/controller/getUserDashboard.actions"
+import {
+  changeUserPassword,
+  updateUserProfile,
+} from "@/controller/getUserDashboard.actions"
 
 interface AccountViewProps {
   currentUser: User
@@ -133,13 +136,27 @@ export const AccountView: React.FC<AccountViewProps> = ({
 
     setIsSavingWallets(true)
     try {
-      const result = await updateUserProfile({ btcWallet: btc, ethWallet: eth, usdtWallet: usdt })
-      if (!result.success || !result.user) throw new Error(result.message || "Unable to update profile.")
-      const updatedUser = { ...currentUser, ...result.user, id: String(result.user._id || result.user.id) } as User
-      success("Wallets Updated", "Your receiving crypto addresses have been securely stored.")
+      const result = await updateUserProfile({
+        btcWallet: btc,
+        ethWallet: eth,
+        usdtWallet: usdt,
+      })
+      if (!result.success || !result.user)
+        throw new Error(result.message || "Unable to update profile.")
+      const updatedUser = {
+        ...currentUser,
+        ...result.user,
+        id: String(result.user._id || result.user.id),
+      } as User
+      success(
+        "Wallets Updated",
+        "Your receiving crypto addresses have been securely stored."
+      )
       onUpdateUser(updatedUser)
     } catch (error) {
-      setPasswordError(error instanceof Error ? error.message : "Unable to update profile.")
+      setPasswordError(
+        error instanceof Error ? error.message : "Unable to update profile."
+      )
     } finally {
       setIsSavingWallets(false)
     }
@@ -167,13 +184,16 @@ export const AccountView: React.FC<AccountViewProps> = ({
     setIsChangingPassword(true)
     try {
       const result = await changeUserPassword({ currentPassword, newPassword })
-      if (!result.success) throw new Error(result.message || "Unable to update password.")
+      if (!result.success)
+        throw new Error(result.message || "Unable to update password.")
       setCurrentPassword("")
       setNewPassword("")
       setConfirmPassword("")
       success("Password Changed", "Your account credentials have been updated.")
     } catch (error) {
-      setPasswordError(error instanceof Error ? error.message : "Unable to update password.")
+      setPasswordError(
+        error instanceof Error ? error.message : "Unable to update password."
+      )
     } finally {
       setIsChangingPassword(false)
     }

@@ -1,8 +1,5 @@
 import React, { useState } from "react"
-import {
-  TrendingUp,
-  Activity,
-} from "lucide-react"
+import { TrendingUp, Activity } from "lucide-react"
 
 export const AlphaTrackerCard: React.FC = () => {
   const [activeEpoch, setActiveEpoch] = useState<"24h" | "72h">("72h")

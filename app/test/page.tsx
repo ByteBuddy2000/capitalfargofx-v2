@@ -14,7 +14,9 @@ export default async function Page() {
   } catch (error) {
     dbStatus = "Database connection failed"
     dbMessage =
-      error instanceof Error ? error.message : "Unknown MongoDB connection error."
+      error instanceof Error
+        ? error.message
+        : "Unknown MongoDB connection error."
   }
 
   return (

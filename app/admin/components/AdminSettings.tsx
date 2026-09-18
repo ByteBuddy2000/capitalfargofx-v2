@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react"
 import {
   Settings,
@@ -14,7 +15,10 @@ import { User, PlatformSettings } from "@/types"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { useToast } from "@/components/ui/Toast"
-import { updateAdminSettings, getAdminSettings } from "../controllers/settings.action"
+import {
+  updateAdminSettings,
+  getAdminSettings,
+} from "../controllers/settings.action"
 import { changeAdminPassword } from "../controllers/security.action"
 
 interface AdminSettingsProps {
@@ -22,8 +26,9 @@ interface AdminSettingsProps {
   initialSettings?: PlatformSettings | null
 }
 
-export const AdminSettings: React.FC<AdminSettingsProps> = ({ initialSettings = null }) => {
-
+export const AdminSettings: React.FC<AdminSettingsProps> = ({
+  initialSettings = null,
+}) => {
   const [currentPassword, setCurrentPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -50,15 +55,21 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ initialSettings = 
       .then((saved) => {
         if (!saved.success || !saved.settings) return
         setSettings(saved.settings as unknown as PlatformSettings)
-        success("Settings Saved", "Platform parameters and public display metrics updated.")
+        success(
+          "Settings Saved",
+          "Platform parameters and public display metrics updated."
+        )
       })
-      .catch((error) => info("Settings Error", error instanceof Error ? error.message : "Unable to save settings."))
+      .catch((error) =>
+        info(
+          "Settings Error",
+          error instanceof Error ? error.message : "Unable to save settings."
+        )
+      )
       .finally(() => setIsSaving(false))
   }
 
-  const handleUpdatePassword = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleUpdatePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!currentPassword || !newPassword || !confirmPassword) {
@@ -72,10 +83,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ initialSettings = 
     }
 
     if (newPassword.length < 8) {
-      info(
-        "Validation Error",
-        "Password must be at least 8 characters long."
-      )
+      info("Validation Error", "Password must be at least 8 characters long.")
       return
     }
 
@@ -98,9 +106,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ initialSettings = 
     } catch (error) {
       info(
         "Password Update Failed",
-        error instanceof Error
-          ? error.message
-          : "Unable to update password."
+        error instanceof Error ? error.message : "Unable to update password."
       )
     } finally {
       setIsUpdatingPassword(false)
@@ -121,7 +127,6 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ initialSettings = 
             environment parameters.
           </p>
         </div>
-
       </div>
 
       <form onSubmit={handleSaveSettings} className="space-y-8">
@@ -198,11 +203,19 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ initialSettings = 
                 <button
                   type="button"
                   onClick={() => setShowCurrentPassword((visible) => !visible)}
-                  aria-label={showCurrentPassword ? "Hide current password" : "Show current password"}
+                  aria-label={
+                    showCurrentPassword
+                      ? "Hide current password"
+                      : "Show current password"
+                  }
                   aria-pressed={showCurrentPassword}
-                  className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                  className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none"
                 >
-                  {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showCurrentPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </button>
               }
               required
@@ -218,11 +231,17 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ initialSettings = 
                 <button
                   type="button"
                   onClick={() => setShowNewPassword((visible) => !visible)}
-                  aria-label={showNewPassword ? "Hide new password" : "Show new password"}
+                  aria-label={
+                    showNewPassword ? "Hide new password" : "Show new password"
+                  }
                   aria-pressed={showNewPassword}
-                  className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                  className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none"
                 >
-                  {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showNewPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </button>
               }
               required
@@ -238,17 +257,25 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ initialSettings = 
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword((visible) => !visible)}
-                  aria-label={showConfirmPassword ? "Hide confirmed password" : "Show confirmed password"}
+                  aria-label={
+                    showConfirmPassword
+                      ? "Hide confirmed password"
+                      : "Show confirmed password"
+                  }
                   aria-pressed={showConfirmPassword}
-                  className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                  className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none"
                 >
-                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showConfirmPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
                 </button>
               }
               required
             />
 
-            <div className="lg:col-span-3 flex justify-end">
+            <div className="flex justify-end lg:col-span-3">
               <Button
                 type="submit"
                 variant="outline"
@@ -264,8 +291,8 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ initialSettings = 
           <div className="rounded-2xl border border-amber-900/40 bg-amber-950/20 p-4">
             <p className="text-xs text-amber-300">
               For security reasons, administrator password changes require your
-              current password. After updating, you may be asked to sign in again
-              on other active sessions.
+              current password. After updating, you may be asked to sign in
+              again on other active sessions.
             </p>
           </div>
         </div>

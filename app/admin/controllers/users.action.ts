@@ -66,9 +66,7 @@ export async function getAdminUsers(): Promise<AdminUsersResponse> {
 
     return {
       success: true,
-      users: users.map((user) =>
-        publicUser(user as Record<string, unknown>)
-      ),
+      users: users.map((user) => publicUser(user as Record<string, unknown>)),
     }
   } catch (error: unknown) {
     console.error("Failed to load admin users:", error)
@@ -136,22 +134,17 @@ export async function updateAdminUser(data: {
       ) {
         return {
           success: false,
-          message:
-            "Balance type, operation, amount, and reason are required.",
+          message: "Balance type, operation, amount, and reason are required.",
         }
       }
 
       const field =
-        data.balanceType === "available"
-          ? "availableBalance"
-          : "earningBalance"
+        data.balanceType === "available" ? "availableBalance" : "earningBalance"
 
       const before = Number(user[field] || 0)
 
       const after =
-        data.operation === "CREDIT"
-          ? before + amount
-          : before - amount
+        data.operation === "CREDIT" ? before + amount : before - amount
 
       if (after < 0) {
         return {
@@ -171,8 +164,7 @@ export async function updateAdminUser(data: {
         type: "ADJUSTMENT",
         amount,
         asset: "USD",
-        direction:
-          data.operation === "CREDIT" ? "CREDIT" : "DEBIT",
+        direction: data.operation === "CREDIT" ? "CREDIT" : "DEBIT",
         referenceType: "ADMIN_ADJUSTMENT",
         referenceId,
         balanceBefore: before,
@@ -197,9 +189,7 @@ export async function updateAdminUser(data: {
 
     return {
       success: true,
-      user: publicUser(
-        user.toObject() as unknown as Record<string, unknown>
-      ),
+      user: publicUser(user.toObject() as unknown as Record<string, unknown>),
     }
   } catch (error: unknown) {
     console.error("Failed to update admin user:", error)

@@ -72,7 +72,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       createdAt: String(notification.createdAt || ""),
     }))
   )
-  const unreadCount = notifications.filter((notification) => !notification.read).length
+  const unreadCount = notifications.filter(
+    (notification) => !notification.read
+  ).length
 
   const markNotificationAsRead = (id: string) => {
     void markNotificationRead(id).then((result) => {
@@ -223,16 +225,15 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               <button
                 key={item.id}
                 onClick={() => onTabChange(item.id)}
-                className={`flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left text-sm font-medium transition-colors ${isActive
-                  ? "rounded-r-md border-l-4 border-[#2563EB] bg-[#2563EB]/10 text-white"
-                  : "rounded-md text-[#64748B] hover:bg-white/3 hover:text-white"
-                  }`}
+                className={`flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left text-sm font-medium transition-colors ${
+                  isActive
+                    ? "rounded-r-md border-l-4 border-[#2563EB] bg-[#2563EB]/10 text-white"
+                    : "rounded-md text-[#64748B] hover:bg-white/3 hover:text-white"
+                }`}
               >
                 <div className="flex items-center gap-3">
                   <span
-                    className={
-                      isActive ? "text-blue-400" : "text-slate-400"
-                    }
+                    className={isActive ? "text-blue-400" : "text-slate-400"}
                   >
                     {item.icon}
                   </span>
@@ -260,7 +261,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             <div className="mb-2.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
               <div className="h-full w-3/4 rounded-full bg-linear-to-r from-emerald-500 to-teal-400 shadow-sm transition-all duration-500" />
             </div>
-            <p className="text-[11px] text-slate-400">75% Progress to VIP Gold</p>
+            <p className="text-[11px] text-slate-400">
+              75% Progress to VIP Gold
+            </p>
           </div>
 
           <div className="flex items-center justify-between pt-1 text-xs">
@@ -294,7 +297,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             </button>
 
             <div>
-              <h1 className="text-sm lg:text-lg font-bold tracking-tight text-[#0F172A]">
+              <h1 className="text-sm font-bold tracking-tight text-[#0F172A] lg:text-lg">
                 {pageInfo.title}
               </h1>
               <p className="text-xs text-slate-400 sm:text-sm">
@@ -359,10 +362,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                         <div
                           key={notif.id}
                           onClick={() => markNotificationAsRead(notif.id)}
-                          className={`cursor-pointer rounded-xl border p-2.5 text-xs transition-colors ${notif.read
-                            ? "border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]"
-                            : "border-blue-200 bg-blue-50/60 font-medium text-[#0F172A]"
-                            }`}
+                          className={`cursor-pointer rounded-xl border p-2.5 text-xs transition-colors ${
+                            notif.read
+                              ? "border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]"
+                              : "border-blue-200 bg-blue-50/60 font-medium text-[#0F172A]"
+                          }`}
                         >
                           <div className="mb-1 flex items-center justify-between">
                             <span className="font-bold text-white">
@@ -387,7 +391,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             </div>
 
             {/* Admin Switcher */}
-            {(currentUser.role === "admin" || currentUser.role === "super admin") && (
+            {(currentUser.role === "admin" ||
+              currentUser.role === "super admin") && (
               <Button
                 size="sm"
                 variant="dark"
@@ -429,7 +434,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                       {currentUser.email}
                     </p>
                   </div>
- 
+
                   <button
                     onClick={() => {
                       setUserDropdownOpen(false)
@@ -441,7 +446,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                     Account Settings
                   </button>
 
-                  {(currentUser.role === "admin" || currentUser.role === "super admin") && (
+                  {(currentUser.role === "admin" ||
+                    currentUser.role === "super admin") && (
                     <button
                       onClick={() => {
                         setUserDropdownOpen(false)
@@ -512,10 +518,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                       onTabChange(item.id)
                       setMobileDrawerOpen(false)
                     }}
-                    className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-xs font-medium transition-colors ${activeTab === item.id
-                      ? "border-l-4 border-[#2563EB] bg-[#2563EB]/10 text-white"
-                      : "text-[#64748B] hover:bg-white/5 hover:text-white"
-                      }`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-xs font-medium transition-colors ${
+                      activeTab === item.id
+                        ? "border-l-4 border-[#2563EB] bg-[#2563EB]/10 text-white"
+                        : "text-[#64748B] hover:bg-white/5 hover:text-white"
+                    }`}
                   >
                     {item.icon}
                     <span>{item.label}</span>
@@ -538,14 +545,15 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       )}
 
       {/* Mobile Bottom Navigation Bar */}
-      <div className="hidden fixed right-0 bottom-0 left-0 z-30 items-center justify-around border-t border-[#E2E8F0] bg-white px-3 py-2 shadow-lg lg:hidden">
-      {/* <div className="hidden fixed right-0 bottom-0 left-0 z-30 flex items-center justify-around border-t border-[#E2E8F0] bg-white px-3 py-2 shadow-lg lg:hidden"> */}
+      <div className="fixed right-0 bottom-0 left-0 z-30 hidden items-center justify-around border-t border-[#E2E8F0] bg-white px-3 py-2 shadow-lg lg:hidden">
+        {/* <div className="hidden fixed right-0 bottom-0 left-0 z-30 flex items-center justify-around border-t border-[#E2E8F0] bg-white px-3 py-2 shadow-lg lg:hidden"> */}
         <button
           onClick={() => onTabChange("overview")}
-          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${activeTab === "overview"
-            ? "font-bold text-[#2563EB]"
-            : "text-[#64748B]"
-            }`}
+          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${
+            activeTab === "overview"
+              ? "font-bold text-[#2563EB]"
+              : "text-[#64748B]"
+          }`}
         >
           <LayoutDashboard className="h-5 w-5" />
           <span>Dashboard</span>
@@ -553,10 +561,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
         <button
           onClick={() => onTabChange("deposit")}
-          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${activeTab === "deposit"
-            ? "font-bold text-[#2563EB]"
-            : "text-[#64748B]"
-            }`}
+          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${
+            activeTab === "deposit"
+              ? "font-bold text-[#2563EB]"
+              : "text-[#64748B]"
+          }`}
         >
           <ArrowDownToLine className="h-5 w-5 text-emerald-400" />
           <span>Deposit</span>
@@ -564,10 +573,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
         <button
           onClick={() => onTabChange("withdraw")}
-          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${activeTab === "withdraw"
-            ? "font-bold text-[#2563EB]"
-            : "text-[#64748B]"
-            }`}
+          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${
+            activeTab === "withdraw"
+              ? "font-bold text-[#2563EB]"
+              : "text-[#64748B]"
+          }`}
         >
           <ArrowUpFromLine className="h-5 w-5" />
           <span>Withdraw</span>
@@ -575,10 +585,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
         <button
           onClick={() => onTabChange("investments")}
-          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${activeTab === "investments"
-            ? "font-bold text-[#2563EB]"
-            : "text-[#64748B]"
-            }`}
+          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${
+            activeTab === "investments"
+              ? "font-bold text-[#2563EB]"
+              : "text-[#64748B]"
+          }`}
         >
           <Layers className="h-5 w-5" />
           <span>Invest</span>
@@ -586,10 +597,11 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
         <button
           onClick={() => onTabChange("account")}
-          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${activeTab === "account"
-            ? "font-bold text-[#2563EB]"
-            : "text-[#64748B]"
-            }`}
+          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${
+            activeTab === "account"
+              ? "font-bold text-[#2563EB]"
+              : "text-[#64748B]"
+          }`}
         >
           <UserIcon className="h-5 w-5" />
           <span>Account</span>

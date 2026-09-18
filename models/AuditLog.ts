@@ -32,4 +32,5 @@ const auditLogSchema: Schema<IAuditLog> = new mongoose.Schema(
 )
 
 export const AuditLog: Model<IAuditLog> =
-  mongoose.models.AuditLog || mongoose.model<IAuditLog>("AuditLog", auditLogSchema)
+  mongoose.models.AuditLog ||
+  mongoose.model<IAuditLog>("AuditLog", auditLogSchema)

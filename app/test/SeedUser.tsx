@@ -37,9 +37,7 @@ export default function SeedUser() {
         throw new Error(data.message || "Failed to seed test user.")
       }
 
-      setMessage(
-        `Test user "${data.user?.username}" created successfully.`
-      )
+      setMessage(`Test user "${data.user?.username}" created successfully.`)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to seed test user.")
     } finally {

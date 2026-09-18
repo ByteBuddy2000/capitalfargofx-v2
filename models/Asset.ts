@@ -1,7 +1,15 @@
+// models/Asset.ts
 import mongoose, { type Model, type Schema, type Types } from "mongoose"
 
 export const ASSET_SYMBOLS = ["BTC", "ETH", "USDT"] as const
+
 export type AssetSymbol = (typeof ASSET_SYMBOLS)[number]
+
+export const ASSET_IMAGES: Record<AssetSymbol, string> = {
+  BTC: "/bitcoin.png",
+  ETH: "/ethereum.png",
+  USDT: "/usdt.png",
+}
 
 export interface IAsset extends mongoose.Document {
   _id: Types.ObjectId

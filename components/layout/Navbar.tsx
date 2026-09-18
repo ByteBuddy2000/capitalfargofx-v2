@@ -1,35 +1,29 @@
 // Navbar.tsx
-"use client";
+"use client"
 
-import React, { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import {
-  Menu,
-  X,
-  ChevronRight,
-  Lock,
-  ArrowUpRight,
-} from "lucide-react";
-import Logo from "../Logo/Logo";
-import Link from "next/link";
+import React, { useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
+import { Menu, X, ChevronRight, Lock, ArrowUpRight } from "lucide-react"
+import Logo from "../Logo/Logo"
+import Link from "next/link"
 
 export const Navbar: React.FC = () => {
-  const currentPage = usePathname();
+  const currentPage = usePathname()
 
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
+      setIsScrolled(window.scrollY > 20)
+    }
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true })
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
 
   const navItems: { label: string; route: string }[] = [
     { label: "Home", route: "/" },
@@ -39,22 +33,22 @@ export const Navbar: React.FC = () => {
     { label: "Assets", route: "/fiat-assets" },
     { label: "FAQ", route: "/faq" },
     { label: "Contact", route: "/contact" },
-  ];
+  ]
 
   return (
     <header
       id="main-navigation"
-      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${isScrolled
+      className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
+        isScrolled
           ? "border-b border-slate-800/80 bg-slate-950/90 py-3.5 shadow-lg shadow-black/20 backdrop-blur-md"
           : "bg-linear-to-b from-slate-950/80 to-transparent py-5"
-        }`}
+      }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* ---------------------------------------------------------------- */}
         {/* Brand Logo                                                       */}
         {/* ---------------------------------------------------------------- */}
         <Logo />
-      
 
         {/* ---------------------------------------------------------------- */}
         {/* Desktop Navigation                                               */}
@@ -66,21 +60,22 @@ export const Navbar: React.FC = () => {
           className="hidden items-center gap-1.5 rounded-full border border-slate-800 bg-slate-900/60 p-1.5 backdrop-blur-md lg:flex"
         >
           {navItems.map((item) => {
-            const isActive = currentPage === item.route;
+            const isActive = currentPage === item.route
 
             return (
               <Link
                 key={item.route}
                 href={item.route}
-                className={`cursor-pointer rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${isActive
+                className={`cursor-pointer rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
+                  isActive
                     ? "bg-slate-800/80 text-white shadow-sm"
                     : "text-slate-300 hover:bg-slate-800/70 hover:text-white"
-                  }`}
+                }`}
                 aria-current={isActive ? "page" : undefined}
               >
                 {item.label}
               </Link>
-            );
+            )
           })}
         </nav>
 
@@ -89,9 +84,7 @@ export const Navbar: React.FC = () => {
         {/* ---------------------------------------------------------------- */}
 
         <div className="hidden items-center gap-3 sm:flex">
-      
-
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden items-center gap-2 lg:flex">
             {/* Login */}
 
             <Link
@@ -112,7 +105,7 @@ export const Navbar: React.FC = () => {
             >
               <span>Sign Up</span>
 
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
           </div>
         </div>
@@ -143,7 +136,7 @@ export const Navbar: React.FC = () => {
             >
               <span>Sign Up</span>
 
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
           </div>
           <button
@@ -151,9 +144,7 @@ export const Navbar: React.FC = () => {
             onClick={() => setMobileMenuOpen((previous) => !previous)}
             className="cursor-pointer rounded-xl border border-slate-800 bg-slate-900 p-2 text-slate-300 transition-colors hover:text-white"
             aria-label={
-              mobileMenuOpen
-                ? "Close navigation menu"
-                : "Open navigation menu"
+              mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"
             }
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-navigation"
@@ -174,37 +165,38 @@ export const Navbar: React.FC = () => {
       {mobileMenuOpen && (
         <div
           id="mobile-navigation"
-          className="border-b border-slate-800 bg-slate-950 px-4 pb-6 pt-3 shadow-2xl lg:hidden"
+          className="border-b border-slate-800 bg-slate-950 px-4 pt-3 pb-6 shadow-2xl lg:hidden"
         >
           <div className="mx-auto max-w-7xl">
             {/* Mobile Navigation Links */}
 
             <div className="mb-4 flex flex-col gap-1">
               {navItems.map((item) => {
-                const isActive = currentPage === item.route;
+                const isActive = currentPage === item.route
 
                 return (
                   <Link
                     key={item.route}
                     href={item.route}
-                    className={`flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors ${isActive
+                    className={`flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors ${
+                      isActive
                         ? "bg-slate-900 text-white"
                         : "text-slate-300 hover:bg-slate-900 hover:text-white"
-                      }`}
+                    }`}
                     aria-current={isActive ? "page" : undefined}
                   >
                     <span>{item.label}</span>
 
                     <ChevronRight
-                      className={`h-4 w-4 ${isActive ? "text-emerald-400" : "text-slate-600"
-                        }`}
+                      className={`h-4 w-4 ${
+                        isActive ? "text-emerald-400" : "text-slate-600"
+                      }`}
                     />
                   </Link>
-                );
+                )
               })}
             </div>
 
-        
             {/* Mobile Authentication */}
 
             <div className="grid grid-cols-2 gap-2 border-t border-slate-800/80 pt-4">
@@ -229,12 +221,12 @@ export const Navbar: React.FC = () => {
 
             {/* Mobile Trust Statement */}
 
-            <div className="pt-4 text-center text-[10px] font-medium uppercase tracking-wider text-slate-600">
+            <div className="pt-4 text-center text-[10px] font-medium tracking-wider text-slate-600 uppercase">
               Audited Multi-Asset Settlement Engine
             </div>
           </div>
         </div>
       )}
     </header>
-  );
-};
+  )
+}
