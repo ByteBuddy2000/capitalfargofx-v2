@@ -32,7 +32,7 @@ const publicUser = (user: Record<string, unknown>) => ({
       : user.updatedAt,
 })
 
-type UserStatus = "ACTIVE" | "SUSPENDED" | "BANNED"
+type UserStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED" | "BANNED"
 type BalanceType = "available" | "earning"
 type Operation = "CREDIT" | "DEBIT"
 
