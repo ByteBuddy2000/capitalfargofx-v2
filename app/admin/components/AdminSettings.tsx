@@ -1,3 +1,4 @@
+// app/admin/components/AdminSettings.tsx
 "use client"
 import React, { useState } from "react"
 import {
@@ -16,8 +17,7 @@ import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { useToast } from "@/components/ui/Toast"
 import {
-  updateAdminSettings,
-  getAdminSettings,
+  updateAdminSettings
 } from "../controllers/settings.action"
 import { changeAdminPassword } from "../controllers/security.action"
 
@@ -129,6 +129,123 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
         </div>
       </div>
 
+      {/* Security & Password Management */}
+      <div className="space-y-6 rounded-3xl border border-slate-800 bg-slate-900 p-6 sm:p-8">
+        <div className="flex items-center gap-2 border-b border-slate-800 pb-4">
+          <KeyRound className="h-5 w-5 text-rose-400" />
+          <h3 className="text-base font-bold text-white">
+            Security & Password Management
+          </h3>
+        </div>
+
+        <form
+          onSubmit={handleUpdatePassword}
+          className="grid grid-cols-1 gap-4 lg:grid-cols-3"
+        >
+          <Input
+            label="Current Password"
+            type={showCurrentPassword ? "text" : "password"}
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            leftIcon={<Lock className="h-4 w-4" />}
+            rightIcon={
+              <button
+                type="button"
+                onClick={() => setShowCurrentPassword((visible) => !visible)}
+                aria-label={
+                  showCurrentPassword
+                    ? "Hide current password"
+                    : "Show current password"
+                }
+                aria-pressed={showCurrentPassword}
+                className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none"
+              >
+                {showCurrentPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            }
+            required
+          />
+
+          <Input
+            label="New Password"
+            type={showNewPassword ? "text" : "password"}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            leftIcon={<Lock className="h-4 w-4" />}
+            rightIcon={
+              <button
+                type="button"
+                onClick={() => setShowNewPassword((visible) => !visible)}
+                aria-label={
+                  showNewPassword ? "Hide new password" : "Show new password"
+                }
+                aria-pressed={showNewPassword}
+                className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none"
+              >
+                {showNewPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            }
+            required
+          />
+
+          <Input
+            label="Confirm New Password"
+            type={showConfirmPassword ? "text" : "password"}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            leftIcon={<Lock className="h-4 w-4" />}
+            rightIcon={
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((visible) => !visible)}
+                aria-label={
+                  showConfirmPassword
+                    ? "Hide confirmed password"
+                    : "Show confirmed password"
+                }
+                aria-pressed={showConfirmPassword}
+                className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none"
+              >
+                {showConfirmPassword ? (
+                  <EyeOff className="h-4 w-4" />
+                ) : (
+                  <Eye className="h-4 w-4" />
+                )}
+              </button>
+            }
+            required
+          />
+
+          <div className="flex justify-end lg:col-span-3">
+            <Button
+              type="submit"
+              variant="outline"
+              isLoading={isUpdatingPassword}
+              leftIcon={<ShieldAlert className="h-4 w-4" />}
+              className="border-rose-700 bg-rose-950 text-rose-300 hover:bg-rose-900"
+            >
+              Update Password
+            </Button>
+          </div>
+        </form>
+
+        <div className="rounded-2xl border border-amber-900/40 bg-amber-950/20 p-4">
+          <p className="text-xs text-amber-300">
+            For security reasons, administrator password changes require your
+            current password. After updating, you may be asked to sign in
+            again on other active sessions.
+          </p>
+        </div>
+      </div>
+
       <form onSubmit={handleSaveSettings} className="space-y-8">
         {/* Public Identity & Contacts */}
         <div className="space-y-6 rounded-3xl border border-slate-800 bg-slate-900 p-6 sm:p-8">
@@ -180,122 +297,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
           </div>
         </div>
 
-        {/* Security & Password Management */}
-        <div className="space-y-6 rounded-3xl border border-slate-800 bg-slate-900 p-6 sm:p-8">
-          <div className="flex items-center gap-2 border-b border-slate-800 pb-4">
-            <KeyRound className="h-5 w-5 text-rose-400" />
-            <h3 className="text-base font-bold text-white">
-              Security & Password Management
-            </h3>
-          </div>
 
-          <form
-            onSubmit={handleUpdatePassword}
-            className="grid grid-cols-1 gap-4 lg:grid-cols-3"
-          >
-            <Input
-              label="Current Password"
-              type={showCurrentPassword ? "text" : "password"}
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              leftIcon={<Lock className="h-4 w-4" />}
-              rightIcon={
-                <button
-                  type="button"
-                  onClick={() => setShowCurrentPassword((visible) => !visible)}
-                  aria-label={
-                    showCurrentPassword
-                      ? "Hide current password"
-                      : "Show current password"
-                  }
-                  aria-pressed={showCurrentPassword}
-                  className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none"
-                >
-                  {showCurrentPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </button>
-              }
-              required
-            />
-
-            <Input
-              label="New Password"
-              type={showNewPassword ? "text" : "password"}
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              leftIcon={<Lock className="h-4 w-4" />}
-              rightIcon={
-                <button
-                  type="button"
-                  onClick={() => setShowNewPassword((visible) => !visible)}
-                  aria-label={
-                    showNewPassword ? "Hide new password" : "Show new password"
-                  }
-                  aria-pressed={showNewPassword}
-                  className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none"
-                >
-                  {showNewPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </button>
-              }
-              required
-            />
-
-            <Input
-              label="Confirm New Password"
-              type={showConfirmPassword ? "text" : "password"}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              leftIcon={<Lock className="h-4 w-4" />}
-              rightIcon={
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword((visible) => !visible)}
-                  aria-label={
-                    showConfirmPassword
-                      ? "Hide confirmed password"
-                      : "Show confirmed password"
-                  }
-                  aria-pressed={showConfirmPassword}
-                  className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none"
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </button>
-              }
-              required
-            />
-
-            <div className="flex justify-end lg:col-span-3">
-              <Button
-                type="submit"
-                variant="outline"
-                isLoading={isUpdatingPassword}
-                leftIcon={<ShieldAlert className="h-4 w-4" />}
-                className="border-rose-700 bg-rose-950 text-rose-300 hover:bg-rose-900"
-              >
-                Update Password
-              </Button>
-            </div>
-          </form>
-
-          <div className="rounded-2xl border border-amber-900/40 bg-amber-950/20 p-4">
-            <p className="text-xs text-amber-300">
-              For security reasons, administrator password changes require your
-              current password. After updating, you may be asked to sign in
-              again on other active sessions.
-            </p>
-          </div>
-        </div>
 
         {/* Public Landing Metrics Customizer */}
         <div className="space-y-6 rounded-3xl border border-slate-800 bg-slate-900 p-6 sm:p-8">
