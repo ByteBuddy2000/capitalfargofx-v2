@@ -37,6 +37,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     if (!rawError) return "Unable to sign you in. Please try again."
 
     if (
+      rawError === "EMAIL_NOT_VERIFIED" ||
+      rawError.toLowerCase().includes("not verified")
+    ) {
+      return "Please verify your email address before signing in."
+    }
+
+    if (
       rawError === "CredentialsSignin" ||
       rawError.toLowerCase().includes("invalid") ||
       rawError.toLowerCase().includes("incorrect")

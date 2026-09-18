@@ -19,8 +19,9 @@ export const authOptions: NextAuthOptions = {
         await connectToDB()
 
         // 1. Select passwordHash because it is excluded by default in the model.
+        const identifier = credentials.email.toLowerCase().trim()
         const user = await User.findOne({
-          email: credentials.email.toLowerCase().trim(),
+          $or: [{ email: identifier }, { username: identifier }],
         }).select("+passwordHash")
 
         if (!user) return null
@@ -31,6 +32,10 @@ export const authOptions: NextAuthOptions = {
           user.passwordHash
         )
         if (!passwordMatch) return null
+
+        if (user.status === "INACTIVE") {
+          throw new Error("EMAIL_NOT_VERIFIED")
+        }
 
         // 3. Return user object that matches your next-auth.d.ts definitions
         return {

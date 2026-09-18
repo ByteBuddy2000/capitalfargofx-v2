@@ -109,7 +109,10 @@ export async function POST(request: Request) {
 
     const passwordHash = await bcrypt.hash(data.password, 12)
 
-    const token = generateVerificationToken();
+    const token = generateVerificationToken()
+    const emailVerificationExpires = new Date(
+      Date.now() + 24 * 60 * 60 * 1000
+    )
 
     const createdUser = await User.create({
       fullName: data.fullName,
@@ -123,6 +126,8 @@ export async function POST(request: Request) {
       uplineUsername: upline?.username || null,
       role: data.role,
       status: "INACTIVE",
+      emailVerificationToken: token,
+      emailVerificationExpires,
     })
 
     const verifyURL = `${BASE_URL}/api/verify?token=${token}`;
