@@ -1,13 +1,17 @@
+// app/page.tsx
 import React from "react"
 import { HomePage } from "./home/HomePage"
 import { Navbar } from "@/components/layout/Navbar"
 import { Footer } from "@/components/layout/Footer"
+import { getInvestmentPlans } from "@/controller/investmentplans.actions"
 
-const page = () => {
+const page = async () => {
+  const plans = await getInvestmentPlans()
+
   return (
     <div>
       <Navbar />
-      <HomePage />
+      <HomePage plans={plans} />
       <Footer />
     </div>
   )

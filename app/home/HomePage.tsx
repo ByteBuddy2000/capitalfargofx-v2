@@ -17,8 +17,13 @@ import { DiversifiedCategoriesSection } from "@/components/sections/DiversifiedC
 import { AlternativeAssetsSection } from "@/components/sections/AlternativeAssetsSection"
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection"
 import { FinalCtaSection } from "@/components/sections/FinalCtaSection"
+import type { IPlan } from "@/models/Plan"
 
-export const HomePage: React.FC = () => {
+interface HomePageProps {
+  plans: IPlan[]
+}
+
+export const HomePage: React.FC<HomePageProps> = ({ plans }) => {
   const router = useRouter()
   const onOpenAuth = (mode: "signin" | "signup") =>
     router.push(`/${mode === "signin" ? "login" : "register"}`)
@@ -46,7 +51,7 @@ export const HomePage: React.FC = () => {
       <WhyUsSection />
 
       {/* 6. Investment Plans Preview with Horizontal Scroll */}
-      <InvestmentPlansSection onOpenInvestModal={onOpenInvestModal} />
+      <InvestmentPlansSection plans={plans} onOpenInvestModal={onOpenInvestModal} />
 
       {/* 7. Interactive Live Yield Simulator */}
       <YieldSimulator

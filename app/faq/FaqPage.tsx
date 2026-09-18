@@ -9,10 +9,8 @@ import {
   Search,
   ChevronDown,
   ChevronUp,
-  MessageSquare,
   ArrowRight,
-  Send,
-  Mail,
+
 } from "lucide-react"
 
 export const FaqPage: React.FC = () => {

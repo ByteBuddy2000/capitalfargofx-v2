@@ -16,15 +16,22 @@ export async function getActivePlans(): Promise<PlansResponse> {
   try {
     await connectToDB()
 
-    const plans = await Plan.find({ status: "ACTIVE" })
-      .sort({ featured: -1, minimumAmount: 1 })
-      .lean()
+    const plans = await Plan.find({
+      status: "ACTIVE",
+    }).lean()
+
+    const sortedPlans = plans.sort((a, b) => {
+      const levelA = Number(String(a.name).match(/\d+/)?.[0] ?? 999)
+      const levelB = Number(String(b.name).match(/\d+/)?.[0] ?? 999)
+
+      return levelA - levelB
+    })
 
     return {
       success: true,
-      plans: JSON.parse(JSON.stringify(plans)),
+      plans: JSON.parse(JSON.stringify(sortedPlans)),
     }
-  } catch (error: unknown) {
+  } catch (error) {
     console.error("Failed to load active plans:", error)
 
     return {

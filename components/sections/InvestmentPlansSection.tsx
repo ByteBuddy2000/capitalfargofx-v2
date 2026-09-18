@@ -82,14 +82,14 @@ export const InvestmentPlansSection: React.FC<
                 <div
                   key={plan.slug}
                   id={`plan-card-${plan.slug}`}
-                  className={`relative flex w-[290px] flex-shrink-0 snap-center flex-col justify-between rounded-3xl p-6 transition-all duration-300 sm:w-[320px] sm:p-7 md:w-auto ${isFeatured
-                    ? "border-2 border-blue-500/60 bg-gradient-to-b from-blue-950 via-slate-900 to-slate-950 text-white shadow-2xl md:-translate-y-2"
+                  className={`relative flex w-72.5 shrink-0 snap-center flex-col justify-between rounded-3xl p-6 transition-all duration-300 sm:w-[320px] sm:p-7 md:w-auto ${isFeatured
+                    ? "border-2 border-blue-500/60 bg-linear-to-b from-blue-950 via-slate-900 to-slate-950 text-white shadow-2xl md:-translate-y-2"
                     : "border border-slate-800 bg-slate-900/85 text-slate-100 shadow-sm backdrop-blur-md hover:border-blue-500/50 hover:shadow-xl"
                     }`}
                 >
                   {/* Featured Badge */}
                   {isFeatured && (
-                    <div className="absolute -top-3.5 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-blue-400/40 bg-gradient-to-r from-blue-600 to-indigo-600 px-3.5 py-1 text-[10px] font-black tracking-widest text-white uppercase shadow-md">
+                    <div className="absolute -top-3.5 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-blue-400/40 bg-linear-to-r from-blue-600 to-indigo-600 px-3.5 py-1 text-[10px] font-black tracking-widest text-white uppercase shadow-md">
                       <Sparkles className="h-3 w-3 text-cyan-300" />
                       <span>Featured Tier</span>
                     </div>
@@ -197,7 +197,7 @@ export const InvestmentPlansSection: React.FC<
                       id={`btn-invest-${plan.slug}`}
                       onClick={() => onOpenInvestModal(plan.slug)}
                       className={`group flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${isFeatured
-                        ? "bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 hover:from-cyan-400 hover:to-indigo-500"
+                        ? "bg-linear-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 hover:from-cyan-400 hover:to-indigo-500"
                         : "bg-blue-600 text-white shadow-sm hover:bg-blue-500"
                         }`}
                     >

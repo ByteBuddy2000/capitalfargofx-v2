@@ -1,3 +1,4 @@
+// app/investment-plans/InvestmentPlansPage.tsx
 "use client"
 
 import React from "react"
@@ -7,15 +8,21 @@ import { formatCurrency } from "@/lib/plans"
 import { InvestmentPlansSection } from "@/components/sections/InvestmentPlansSection"
 import { YieldSimulator } from "@/components/simulator/YieldSimulator"
 import { FinalCtaSection } from "@/components/sections/FinalCtaSection"
+import type { IPlan } from "@/models/Plan"
 import {
   Layers,
   Check,
   ArrowRight,
   Info,
 } from "lucide-react"
-import { CURRENT_PLANS } from "@/lib/defaultPlans"
 
-export const InvestmentPlansPage: React.FC = () => {
+interface InvestmentPlansPageProps {
+  plans: IPlan[]
+}
+
+export const InvestmentPlansPage: React.FC<InvestmentPlansPageProps> = ({
+  plans,
+}) => {
   const router = useRouter()
   const onOpenAuth = (mode: "signin" | "signup") =>
     router.push(`/${mode === "signin" ? "login" : "register"}`)
@@ -53,6 +60,7 @@ export const InvestmentPlansPage: React.FC = () => {
 
       {/* Primary Plans Cards Section (Includes Mobile Horizontal Scroll) */}
       <InvestmentPlansSection
+        plans={plans}
         onOpenInvestModal={onOpenInvestModal}
         showAllHeading={false}
       />
@@ -87,7 +95,7 @@ export const InvestmentPlansPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800 text-sm">
-                {CURRENT_PLANS.map((plan) => {
+                {plans.map((plan) => {
                   const isFeatured = plan.featured
                   const maxLabel =
                     plan.maximumAmount === 0
