@@ -50,6 +50,21 @@ const walletSymbolImages: Record<string, string> = {
   USDT: "/usdt.png",
 }
 
+const walletAssets = [
+  { value: "BTC", label: "Bitcoin" },
+  { value: "ETH", label: "Ethereum" },
+  { value: "USDT", label: "Tether USD" },
+] as const
+
+const walletNetworks = ["Bitcoin", "ERC-20", "TRC-20"] as const
+
+const normalizeWalletNetwork = (network: string) => {
+  if (network === "TRC-20 (TRON)") return "TRC-20"
+  return walletNetworks.includes(network as (typeof walletNetworks)[number])
+    ? network
+    : "Bitcoin"
+}
+
 export const AdminWallets: React.FC<AdminWalletsProps> = ({
   initialWallets = [],
 }) => {
@@ -64,7 +79,7 @@ export const AdminWallets: React.FC<AdminWalletsProps> = ({
   const { success } = useToast()
 
   const handleOpenEdit = (w: CryptoWalletConfig) => {
-    setEditingWallet({ ...w })
+    setEditingWallet({ ...w, network: normalizeWalletNetwork(w.network) })
     setEditModalOpen(true)
   }
 
@@ -246,30 +261,63 @@ export const AdminWallets: React.FC<AdminWalletsProps> = ({
       {editingWallet && (
         <Modal
           isOpen={editModalOpen}
-          onClose={() => setEditModalOpen(false)}
+          onClose={() => {
+            setEditModalOpen(false)
+            setEditingWallet(null)
+          }}
           title={`Edit Receiving Address (${editingWallet.symbol})`}
           description="Update cryptocurrency receiving address and blockchain network parameter."
           maxWidth="md"
         >
           <form onSubmit={handleSaveWallet} className="space-y-4">
-            <Input
-              label="Asset Label / Name"
-              value={editingWallet.name}
-              onChange={(e) =>
-                setEditingWallet({ ...editingWallet, name: e.target.value })
-              }
-              required
-            />
+            <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
+              Asset Label / Name
+              <select
+                value={editingWallet.symbol.toUpperCase()}
+                onChange={(e) => {
+                  const selectedAsset = walletAssets.find(
+                    (asset) => asset.value === e.target.value
+                  )
+                  if (!selectedAsset) return
 
-            <Input
-              label="Blockchain Network"
-              value={editingWallet.network}
-              onChange={(e) =>
-                setEditingWallet({ ...editingWallet, network: e.target.value })
-              }
-              helperText="e.g. ERC-20, TRC-20, Native SegWit"
-              required
-            />
+                  setEditingWallet({
+                    ...editingWallet,
+                    asset: selectedAsset.value,
+                    symbol: selectedAsset.value,
+                    name: selectedAsset.label,
+                  })
+                }}
+                className="mt-1 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm font-medium text-slate-900 focus:border-blue-500 focus:outline-none"
+                required
+              >
+                {walletAssets.map((asset) => (
+                  <option key={asset.value} value={asset.value}>
+                    {asset.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="block text-xs font-bold tracking-wider text-slate-700 uppercase">
+              Blockchain Network
+              <select
+                value={editingWallet.network}
+                onChange={(e) =>
+                  setEditingWallet({
+                    ...editingWallet,
+                    network: e.target.value,
+                  })
+                }
+                className="mt-1 w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm font-medium text-slate-900 focus:border-blue-500 focus:outline-none"
+                required
+              >
+                {walletNetworks.map((network) => (
+                  <option key={network} value={network}>
+                    {network}
+                  </option>
+                ))}
+              </select>
+            </label>
 
             <Input
               label="Destination Wallet Address"
@@ -277,7 +325,6 @@ export const AdminWallets: React.FC<AdminWalletsProps> = ({
               onChange={(e) =>
                 setEditingWallet({ ...editingWallet, address: e.target.value })
               }
-              helperText="Double-check the address carefully before saving."
               required
             />
 
@@ -297,7 +344,14 @@ export const AdminWallets: React.FC<AdminWalletsProps> = ({
             </label>
 
             <div className="flex justify-end gap-2 border-t border-slate-100 pt-4">
-              <Button variant="outline" onClick={() => setEditModalOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setEditModalOpen(false)
+                  setEditingWallet(null)
+                }}
+              >
                 Cancel
               </Button>
               <Button
