@@ -23,7 +23,7 @@ export default function RootLayout({
         <SessionWrapper>
           {children}
         </SessionWrapper>
-        <Tawk />
+        {/* <Tawk /> */}
       </body>
     </html>
   )
