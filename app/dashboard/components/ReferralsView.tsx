@@ -90,7 +90,7 @@ export const ReferralsView: React.FC<ReferralsViewProps> = ({
       </div>
 
       {/* Referral Link Hero Banner */}
-      <div className="space-y-6 rounded-3xl border border-purple-800 bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 p-6 text-white shadow-xl sm:p-8">
+      <div className="space-y-6 rounded-3xl border border-purple-800 bg-linear-to-r from-purple-900 via-indigo-900 to-slate-900 p-6 text-white shadow-xl sm:p-8">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
             <span className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-purple-700 bg-purple-950/80 px-3 py-1 text-xs font-bold tracking-wider text-purple-300 uppercase">

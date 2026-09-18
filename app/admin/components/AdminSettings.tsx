@@ -26,6 +26,43 @@ interface AdminSettingsProps {
   initialSettings?: PlatformSettings | null
 }
 
+const defaultSettings: PlatformSettings = {
+  platformName: "CapitalsFargoFX",
+  siteName: "CapitalsFargoFX",
+  supportEmail: "",
+  telegramChannel: "",
+  companyAddress: "",
+  activeInvestorsDisplay: "",
+  statsActiveInvestors: "",
+  totalDepositsDisplay: "",
+  statsTotalDeposited: "",
+  totalWithdrawalsDisplay: "",
+  statsTotalWithdrawn: "",
+  supportedAssetsDisplay: "",
+  statsCountriesSupported: "",
+  maintenanceMode: false,
+  isMaintenanceMode: false,
+  updatedAt: "",
+}
+
+const normalizeSettings = (
+  value: PlatformSettings | null | undefined
+): PlatformSettings => ({
+  ...defaultSettings,
+  ...value,
+  platformName: value?.platformName ?? defaultSettings.platformName,
+  siteName: value?.siteName ?? defaultSettings.siteName,
+  supportEmail: value?.supportEmail ?? "",
+  telegramChannel: value?.telegramChannel ?? "",
+  companyAddress: value?.companyAddress ?? "",
+  statsActiveInvestors: value?.statsActiveInvestors ?? "",
+  statsTotalDeposited: value?.statsTotalDeposited ?? "",
+  statsTotalWithdrawn: value?.statsTotalWithdrawn ?? "",
+  statsCountriesSupported: value?.statsCountriesSupported ?? "",
+  isMaintenanceMode: value?.isMaintenanceMode ?? value?.maintenanceMode ?? false,
+  updatedAt: value?.updatedAt ?? "",
+})
+
 export const AdminSettings: React.FC<AdminSettingsProps> = ({
   initialSettings = null,
 }) => {
@@ -37,36 +74,55 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false)
 
-  const [settings, setSettings] = useState<PlatformSettings>(
-    (initialSettings as PlatformSettings) || {
-      platformName: "CapitalsFargoFX",
-      supportEmail: "",
-      telegramChannel: "",
-      updatedAt: "",
-    }
+  const [settings, setSettings] = useState<PlatformSettings>(() =>
+    normalizeSettings(initialSettings)
   )
   const [isSaving, setIsSaving] = useState(false)
   const { success, info } = useToast()
 
-  const handleSaveSettings = (e: React.FormEvent) => {
+  const handleSaveSettings = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (
+      !settings.platformName?.trim() ||
+      !settings.supportEmail.trim() ||
+      !settings.telegramChannel.trim() ||
+      !settings.companyAddress?.trim() ||
+      !settings.statsActiveInvestors?.trim() ||
+      !settings.statsTotalDeposited?.trim() ||
+      !settings.statsTotalWithdrawn?.trim() ||
+      !settings.statsCountriesSupported?.trim()
+    ) {
+      info("Validation Error", "Complete all platform settings fields before saving.")
+      return
+    }
+
     setIsSaving(true)
-    void updateAdminSettings(settings as unknown as Record<string, unknown>)
-      .then((saved) => {
-        if (!saved.success || !saved.settings) return
-        setSettings(saved.settings as unknown as PlatformSettings)
-        success(
-          "Settings Saved",
-          "Platform parameters and public display metrics updated."
-        )
-      })
-      .catch((error) =>
-        info(
-          "Settings Error",
-          error instanceof Error ? error.message : "Unable to save settings."
-        )
+    try {
+      const saved = await updateAdminSettings(
+        settings as unknown as Record<string, unknown>
       )
-      .finally(() => setIsSaving(false))
+
+      if (!saved.success || !saved.settings) {
+        info("Settings Error", saved.message || "Unable to save settings.")
+        return
+      }
+
+      setSettings(
+        normalizeSettings(saved.settings as unknown as PlatformSettings)
+      )
+      success(
+        "Settings Saved",
+        "Platform parameters and public display metrics updated."
+      )
+    } catch (error) {
+      info(
+        "Settings Error",
+        error instanceof Error ? error.message : "Unable to save settings."
+      )
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const handleUpdatePassword = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -259,7 +315,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Input
               label="Platform Name"
-              value={settings.platformName}
+              value={settings.platformName ?? ""}
               onChange={(e) =>
                 setSettings({ ...settings, platformName: e.target.value })
               }
@@ -268,7 +324,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
 
             <Input
               label="Support Desk Email"
-              value={settings.supportEmail}
+              value={settings.supportEmail ?? ""}
               onChange={(e) =>
                 setSettings({ ...settings, supportEmail: e.target.value })
               }
@@ -279,7 +335,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Input
               label="Telegram VIP Broadcast Channel"
-              value={settings.telegramChannel}
+              value={settings.telegramChannel ?? ""}
               onChange={(e) =>
                 setSettings({ ...settings, telegramChannel: e.target.value })
               }
@@ -288,7 +344,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
 
             <Input
               label="Institutional Address"
-              value={settings.companyAddress}
+              value={settings.companyAddress ?? ""}
               onChange={(e) =>
                 setSettings({ ...settings, companyAddress: e.target.value })
               }
@@ -311,7 +367,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Input
               label="Active Investors Display"
-              value={settings.statsActiveInvestors}
+              value={settings.statsActiveInvestors ?? ""}
               onChange={(e) =>
                 setSettings({
                   ...settings,
@@ -323,7 +379,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
 
             <Input
               label="Total Deposits Display"
-              value={settings.statsTotalDeposited}
+              value={settings.statsTotalDeposited ?? ""}
               onChange={(e) =>
                 setSettings({
                   ...settings,
@@ -335,7 +391,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
 
             <Input
               label="Total Paid Out Display"
-              value={settings.statsTotalWithdrawn}
+              value={settings.statsTotalWithdrawn ?? ""}
               onChange={(e) =>
                 setSettings({
                   ...settings,
@@ -347,7 +403,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
 
             <Input
               label="Countries Display"
-              value={settings.statsCountriesSupported}
+              value={settings.statsCountriesSupported ?? ""}
               onChange={(e) =>
                 setSettings({
                   ...settings,
@@ -372,7 +428,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
             <label className="flex cursor-pointer items-center gap-2.5 text-xs font-bold text-slate-300">
               <input
                 type="checkbox"
-                checked={settings.isMaintenanceMode}
+                checked={settings.isMaintenanceMode ?? false}
                 onChange={(e) =>
                   setSettings({
                     ...settings,

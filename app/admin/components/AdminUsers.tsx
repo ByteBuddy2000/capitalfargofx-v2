@@ -78,9 +78,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({
   const [allUsers, setAllUsers] = useState<User[]>(initialUsers)
 
   const visibleUsers = allUsers.filter((u) => {
-    const userRole = u.role
-
-    return userRole !== "super admin"
+    return u.role === "user" || u.role === "admin"
   })
 
   const filtered = visibleUsers.filter((u) => {

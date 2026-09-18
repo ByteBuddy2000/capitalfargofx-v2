@@ -13,6 +13,27 @@ export type AdminSettingsResponse = {
   settings?: Record<string, unknown>
 }
 
+const settingFields = [
+  "platformName",
+  "siteName",
+  "supportEmail",
+  "telegramChannel",
+  "companyAddress",
+  "minWithdrawalAmount",
+  "maxWithdrawalDaily",
+  "withdrawalFeePercentage",
+  "activeInvestorsDisplay",
+  "statsActiveInvestors",
+  "totalDepositsDisplay",
+  "statsTotalDeposited",
+  "totalWithdrawalsDisplay",
+  "statsTotalWithdrawn",
+  "supportedAssetsDisplay",
+  "statsCountriesSupported",
+  "maintenanceMode",
+  "isMaintenanceMode",
+] as const
+
 async function requireAdminSession() {
   const session = await getServerSession(authOptions)
   const admin = session?.user
@@ -77,7 +98,13 @@ export async function updateAdminSettings(
 
     await connectToDB()
 
-    const settings = await PlatformSettings.findOneAndUpdate({}, data, {
+    const updates = Object.fromEntries(
+      settingFields
+        .filter((field) => data[field] !== undefined)
+        .map((field) => [field, data[field]])
+    )
+
+    const settings = await PlatformSettings.findOneAndUpdate({}, updates, {
       new: true,
       upsert: true,
       runValidators: true,
