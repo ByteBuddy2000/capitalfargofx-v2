@@ -1,13 +1,16 @@
 "use client"
 import React, { useState } from "react"
-import { Layers, Plus, Edit2 } from "lucide-react"
+import { Layers, Plus, Edit2, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Badge } from "@/components/ui/Badge"
 import { Modal } from "@/components/ui/Modal"
 import { InvestmentPlan, User } from "@/types"
 import { useToast } from "@/components/ui/Toast"
-import { saveAdminPlan } from "../controllers/plans.action"
+import {
+  deleteAdminPlan,
+  saveAdminPlan,
+} from "../controllers/plans.action"
 
 interface AdminPlansProps {
   currentUser: User
@@ -48,11 +51,13 @@ const normalizePlan = (value: unknown): InvestmentPlan => {
 export const AdminPlans: React.FC<AdminPlansProps> = ({
   initialPlans = [],
 }) => {
-  const [plans, setPlans] = useState<InvestmentPlan[]>(initialPlans)
+  const [plans, setPlans] = useState<InvestmentPlan[]>(
+    initialPlans.map(normalizePlan)
+  )
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [editingPlan, setEditingPlan] = useState<InvestmentPlan | null>(null)
 
-  const { success } = useToast()
+  const { success, error: toastError } = useToast()
 
   const handleOpenEdit = (plan: InvestmentPlan) => {
     setEditingPlan({ ...plan })
@@ -61,7 +66,7 @@ export const AdminPlans: React.FC<AdminPlansProps> = ({
 
   const handleOpenCreate = () => {
     const newPlan: InvestmentPlan = {
-      id: `plan-${Date.now()}`,
+      id: "",
       name: "Diamond VIP Tier",
       slug: "diamond-tier",
       description:
@@ -86,7 +91,13 @@ export const AdminPlans: React.FC<AdminPlansProps> = ({
 
     void saveAdminPlan(editingPlan)
       .then((savedPlan) => {
-        if (!savedPlan.success || !savedPlan.plan) return
+        if (!savedPlan.success || !savedPlan.plan) {
+          toastError(
+            "Plan Save Failed",
+            savedPlan.message || "Unable to save plan."
+          )
+          return
+        }
         const saved = normalizePlan(savedPlan.plan)
         setPlans((current) => {
           const exists = current.some((plan) => plan.id === saved.id)
@@ -96,8 +107,34 @@ export const AdminPlans: React.FC<AdminPlansProps> = ({
         })
         success("Plan Configuration Saved", `${saved.name} is now updated.`)
         setEditModalOpen(false)
+        setEditingPlan(null)
       })
-      .catch(() => undefined)
+      .catch((error) => {
+        toastError(
+          "Plan Save Failed",
+          error instanceof Error ? error.message : "Unable to save plan."
+        )
+      })
+  }
+
+  const handleDeletePlan = async (plan: InvestmentPlan) => {
+    if (!plan.id || !window.confirm(`Delete ${plan.name}?`)) return
+
+    try {
+      const result = await deleteAdminPlan(plan.id)
+      if (!result.success) {
+        toastError("Plan Delete Failed", result.message || "Unable to delete plan.")
+        return
+      }
+
+      setPlans((current) => current.filter((item) => item.id !== plan.id))
+      success("Plan Deleted", `${plan.name} was deleted.`)
+    } catch (error) {
+      toastError(
+        "Plan Delete Failed",
+        error instanceof Error ? error.message : "Unable to delete plan."
+      )
+    }
   }
 
   return (
@@ -178,13 +215,22 @@ export const AdminPlans: React.FC<AdminPlansProps> = ({
               </div>
             </div>
 
-            <Button
-              onClick={() => handleOpenEdit(plan)}
-              leftIcon={<Edit2 className="h-4 w-4" />}
-              className="w-full justify-center border-slate-700 bg-slate-900 font-bold text-slate-200 hover:bg-slate-700"
-            >
-              Edit Plan Parameters
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => handleOpenEdit(plan)}
+                leftIcon={<Edit2 className="h-4 w-4" />}
+                className="flex-1 justify-center border-slate-700 bg-slate-900 font-bold text-slate-200 hover:bg-slate-700"
+              >
+                Update Plan
+              </Button>
+              <Button
+                onClick={() => handleDeletePlan(plan)}
+                aria-label={`Delete ${plan.name}`}
+                className="bg-red-600 px-3 text-white hover:bg-red-700"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         ))}
       </div>
@@ -321,7 +367,14 @@ export const AdminPlans: React.FC<AdminPlansProps> = ({
             </div>
 
             <div className="flex justify-end gap-2 border-t border-slate-100 pt-4">
-              <Button variant="outline" onClick={() => setEditModalOpen(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setEditModalOpen(false)
+                  setEditingPlan(null)
+                }}
+              >
                 Cancel
               </Button>
               <Button
@@ -329,7 +382,7 @@ export const AdminPlans: React.FC<AdminPlansProps> = ({
                 variant="primary"
                 className="bg-blue-600 font-bold hover:bg-blue-700"
               >
-                Save Plan Changes
+                Update Plan
               </Button>
             </div>
           </form>

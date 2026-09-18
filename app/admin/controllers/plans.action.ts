@@ -21,6 +21,11 @@ export type SavePlanResponse = {
   adminId?: string
 }
 
+export type DeletePlanResponse = {
+  success: boolean
+  message?: string
+}
+
 type PlanInput = {
   id?: string
   name?: string
@@ -151,6 +156,18 @@ export async function saveAdminPlan(
       featured,
     }
 
+    const duplicate = await Plan.findOne({
+      slug,
+      ...(id && mongoose.isValidObjectId(id) ? { _id: { $ne: id } } : {}),
+    }).lean()
+
+    if (duplicate) {
+      return {
+        success: false,
+        message: "A plan with this name already exists.",
+      }
+    }
+
     const plan =
       id && mongoose.isValidObjectId(id)
         ? await Plan.findByIdAndUpdate(id, values, {
@@ -177,6 +194,51 @@ export async function saveAdminPlan(
     return {
       success: false,
       message: "Unable to save plan.",
+    }
+  }
+}
+
+export async function deleteAdminPlan(
+  planId: string
+): Promise<DeletePlanResponse> {
+  try {
+    const admin = await requireAdminSession()
+
+    if (!admin) {
+      return {
+        success: false,
+        message: "Administrator access required.",
+      }
+    }
+
+    if (!mongoose.isValidObjectId(planId)) {
+      return {
+        success: false,
+        message: "Invalid plan ID.",
+      }
+    }
+
+    await connectToDB()
+
+    const plan = await Plan.findByIdAndDelete(planId).lean()
+
+    if (!plan) {
+      return {
+        success: false,
+        message: "Plan not found.",
+      }
+    }
+
+    return {
+      success: true,
+      message: "Plan deleted successfully.",
+    }
+  } catch (error: unknown) {
+    console.error("Failed to delete admin plan:", error)
+
+    return {
+      success: false,
+      message: "Unable to delete plan.",
     }
   }
 }
