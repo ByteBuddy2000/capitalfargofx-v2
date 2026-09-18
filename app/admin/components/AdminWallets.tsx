@@ -53,7 +53,9 @@ const walletSymbolImages: Record<string, string> = {
 export const AdminWallets: React.FC<AdminWalletsProps> = ({
   initialWallets = [],
 }) => {
-  const [wallets, setWallets] = useState<CryptoWalletConfig[]>(initialWallets)
+  const [wallets, setWallets] = useState<CryptoWalletConfig[]>(
+    initialWallets.map(normalizeWallet)
+  )
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [editingWallet, setEditingWallet] = useState<CryptoWalletConfig | null>(
     null
@@ -221,10 +223,9 @@ export const AdminWallets: React.FC<AdminWalletsProps> = ({
               </div>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex justify-between gap-2">
               <Button
                 onClick={() => handleOpenEdit(w)}
-                // leftIcon={<Edit2 className="h-4 w-4" />}
                 className="bg-slate-800 font-bold text-slate-200 hover:bg-slate-700"
               >
                 <Edit2 className="h-4 w-4" />

@@ -1,14 +1,14 @@
 // AdminUsers.tsx
 "use client"
 import React, { useState } from "react"
-import { Users, Search } from "lucide-react"
+import { Users, Search, Trash2 } from "lucide-react"
 import { User, UserStatus } from "@/types"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Badge } from "@/components/ui/Badge"
 import { Modal } from "@/components/ui/Modal"
 import { useToast } from "@/components/ui/Toast"
-import { updateAdminUser } from "../controllers/users.action"
+import { deleteUser, updateAdminUser } from "../controllers/users.action"
 
 interface AdminUsersProps {
   currentUser: User
@@ -148,6 +148,26 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({
     }
   }
 
+  const handleDeleteUser = async (u: User) => {
+    if (!window.confirm(`Delete ${u.fullName} and all related records?`)) return
+
+    try {
+      const result = await deleteUser(u.id)
+      if (!result.success) {
+        toastError("Delete Failed", result.message || "Unable to delete user.")
+        return
+      }
+
+      setAllUsers((users) => users.filter((user) => user.id !== u.id))
+      success("User Deleted", `${u.fullName} and related records were deleted.`)
+    } catch (error) {
+      toastError(
+        "Delete Failed",
+        error instanceof Error ? error.message : "Unable to delete user."
+      )
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* Top Header */}
@@ -283,20 +303,30 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({
                         </Button>
 
                         {u.id !== currentUser.id && (
-                          <select
-                            value={u.status}
-                            onChange={(e) =>
-                              handleToggleStatus(
-                                u,
-                                e.target.value as UserStatus
-                              )
-                            }
-                            className="rounded-lg border border-slate-800 bg-slate-950 px-2 py-1 text-xs font-semibold text-slate-300 focus:outline-none"
-                          >
-                            <option value="ACTIVE">ACTIVE</option>
-                            <option value="SUSPENDED">SUSPENDED</option>
-                            <option value="BANNED">BANNED</option>
-                          </select>
+                          <>
+                            <select
+                              value={u.status}
+                              onChange={(e) =>
+                                handleToggleStatus(
+                                  u,
+                                  e.target.value as UserStatus
+                                )
+                              }
+                              className="rounded-lg border border-slate-800 bg-slate-950 px-2 py-1 text-xs font-semibold text-slate-300 focus:outline-none"
+                            >
+                              <option value="ACTIVE">ACTIVE</option>
+                              <option value="SUSPENDED">SUSPENDED</option>
+                              <option value="BANNED">BANNED</option>
+                            </select>
+                            <Button
+                              size="sm"
+                              onClick={() => handleDeleteUser(u)}
+                              aria-label={`Delete ${u.fullName}`}
+                              className="bg-red-600 px-2.5 py-1 text-white hover:bg-red-700"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </>
                         )}
                       </div>
                     </td>

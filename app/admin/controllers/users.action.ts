@@ -1,6 +1,7 @@
 // app/admin/controllers/users.actions.ts
 "use server"
 
+import mongoose from "mongoose"
 import { getServerSession } from "next-auth"
 
 import { authOptions } from "@/auth"
@@ -8,6 +9,12 @@ import { connectToDB } from "@/lib/connectToDB"
 import { User } from "@/models/User"
 import { LedgerEntry } from "@/models/LedgerEntry"
 import { Transaction } from "@/models/Transaction"
+import { Deposit } from "@/models/Deposit"
+import { Investment } from "@/models/Investment"
+import { SupportTicket } from "@/models/SupportTicket"
+import { Withdrawal } from "@/models/Withdrawal"
+import { AuditLog } from "@/models/AuditLog"
+import { Notification } from "@/models/Notification"
 
 const publicUser = (user: Record<string, unknown>) => ({
   ...user,
@@ -39,6 +46,11 @@ export type UpdateAdminUserResponse = {
   success: boolean
   message?: string
   user?: Record<string, unknown>
+}
+
+export type DeleteUserResponse = {
+  success: boolean
+  message?: string
 }
 
 export async function getAdminUsers(): Promise<AdminUsersResponse> {
@@ -197,6 +209,65 @@ export async function updateAdminUser(data: {
     return {
       success: false,
       message: "Unable to update user.",
+    }
+  }
+}
+
+export async function deleteUser(userId: string): Promise<DeleteUserResponse> {
+  try {
+    const session = await getServerSession(authOptions)
+    const admin = session?.user
+
+    if (
+      !admin?.id ||
+      (admin.role !== "admin" && admin.role !== "super admin")
+    ) {
+      return {
+        success: false,
+        message: "Administrator access required.",
+      }
+    }
+
+    if (!mongoose.isValidObjectId(userId) || userId === admin.id) {
+      return {
+        success: false,
+        message: "A valid user other than the current administrator is required.",
+      }
+    }
+
+    await connectToDB()
+
+    const user = await User.findById(userId).select("_id").lean()
+
+    if (!user) {
+      return {
+        success: false,
+        message: "User not found.",
+      }
+    }
+
+    await Promise.all([
+      Deposit.deleteMany({ userId }),
+      Investment.deleteMany({ userId }),
+      SupportTicket.deleteMany({ userId }),
+      Transaction.deleteMany({ userId }),
+      Withdrawal.deleteMany({ userId }),
+      Notification.deleteMany({ userId }),
+      AuditLog.deleteMany({ $or: [{ actorId: userId }, { entityId: userId }] }),
+    ])
+
+    await User.deleteOne({ _id: userId })
+
+    return {
+      success: true,
+      message: "User and related records deleted successfully.",
+    }
+  } catch (error: unknown) {
+    console.error("Failed to delete user:", error)
+
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Unable to delete user.",
     }
   }
 }
