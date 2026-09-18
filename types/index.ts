@@ -2,7 +2,7 @@
 export type Role = "user" | "admin" | "super admin"
 export type UserRole = Role
 
-export type UserStatus = "ACTIVE" | "SUSPENDED" | "BANNED"
+export type UserStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED" | "BANNED"
 
 export interface User {
   id: string

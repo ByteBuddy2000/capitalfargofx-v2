@@ -166,7 +166,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       )}
 
       {/* Upline Card */}
-      <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-slate-50 p-3">
+      <div className="hidden items-center justify-between rounded-xl border border-slate-200/80 bg-slate-50 p-3">
+      {/* <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-slate-50 p-3"> */}
         <div className="flex items-center gap-2">
           <Users className="h-4 w-4 text-blue-600" />
           <span className="text-xs font-semibold text-slate-700">
