@@ -1,19 +1,58 @@
 // AdminUsers.tsx
 import React, { useState } from "react"
 import { Users, Search } from "lucide-react"
-import { User, UserStatus } from "../../types"
-import { authApi } from "../../lib/api"
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
-import { Badge } from "../ui/Badge"
-import { Modal } from "../ui/Modal"
-import { useToast } from "../ui/Toast"
+import { User, UserStatus } from "@/types"
+import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
+import { Badge } from "@/components/ui/Badge"
+import { Modal } from "@/components/ui/Modal"
+import { useToast } from "@/components/ui/Toast"
+import { updateAdminUser } from "../controllers/users.action"
 
 interface AdminUsersProps {
   currentUser: User
+  initialUsers?: User[]
 }
 
-export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser }) => {
+const normalizeUser = (value: unknown): User => {
+  const record: Record<string, unknown> =
+    value && typeof value === "object" ? Object(value) : {}
+
+  return {
+    id: String(record.id || record._id || ""),
+    fullName: String(record.fullName || ""),
+    username: String(record.username || ""),
+    email: String(record.email || ""),
+    role:
+      record.role === "admin" || record.role === "super admin"
+        ? record.role
+        : "user",
+    status:
+      record.status === "SUSPENDED" || record.status === "BANNED"
+        ? record.status
+        : "ACTIVE",
+    btcWallet: String(record.btcWallet || ""),
+    ethWallet: String(record.ethWallet || ""),
+    usdtWallet: String(record.usdtWallet || ""),
+    uplineId: record.uplineId ? String(record.uplineId) : null,
+    uplineUsername: record.uplineUsername
+      ? String(record.uplineUsername)
+      : null,
+    availableBalance: Number(record.availableBalance || 0),
+    earningBalance: Number(record.earningBalance || 0),
+    totalDeposits: Number(record.totalDeposits || 0),
+    totalWithdrawals: Number(record.totalWithdrawals || 0),
+    referralEarnings: Number(record.referralEarnings || 0),
+    kycStatus:
+      record.kycStatus === "VERIFIED" || record.kycStatus === "UNVERIFIED"
+        ? record.kycStatus
+        : "PENDING",
+    createdAt: String(record.createdAt || ""),
+    updatedAt: String(record.updatedAt || ""),
+  }
+}
+
+export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser, initialUsers = [] }) => {
   const [searchTerm, setSearchTerm] = useState("")
 
   // Balance adjustment modal
@@ -32,19 +71,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser }) => {
 
   const { success, error: toastError } = useToast()
 
-  const [allUsers, setAllUsers] = useState<User[]>([])
-
-  React.useEffect(() => {
-    void authApi
-      .adminUsers()
-      .then(setAllUsers)
-      .catch((error) =>
-        toastError(
-          "Loading Error",
-          error instanceof Error ? error.message : "Unable to load users."
-        )
-      )
-  }, [toastError])
+  const [allUsers, setAllUsers] = useState<User[]>(initialUsers)
 
   const visibleUsers = allUsers.filter((u) => {
     const userRole = u.role
@@ -72,15 +99,17 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser }) => {
   const handleConfirmAdjust = async () => {
     if (!targetUser) return
     try {
-      const updatedUser = await authApi.updateAdminUser({
+      const updatedUser = await updateAdminUser({
         userId: targetUser.id,
         balanceType,
         operation: adjustOperation,
         amount: Number(adjustAmount),
         reason: adjustReason,
       })
+      if (!updatedUser.success || !updatedUser.user) return
+      const savedUser = normalizeUser(updatedUser.user)
       setAllUsers((users) =>
-        users.map((user) => (user.id === updatedUser.id ? updatedUser : user))
+        users.map((user) => (user.id === savedUser.id ? savedUser : user))
       )
       success(
         "Balance Adjusted",
@@ -97,12 +126,14 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser }) => {
 
   const handleToggleStatus = async (u: User, newStatus: UserStatus) => {
     try {
-      const updatedUser = await authApi.updateAdminUser({
+      const updatedUser = await updateAdminUser({
         userId: u.id,
         status: newStatus,
       })
+      if (!updatedUser.success || !updatedUser.user) return
+      const savedUser = normalizeUser(updatedUser.user)
       setAllUsers((users) =>
-        users.map((user) => (user.id === updatedUser.id ? updatedUser : user))
+        users.map((user) => (user.id === savedUser.id ? savedUser : user))
       )
       success("Status Updated", `${u.fullName} is now ${newStatus}`)
     } catch (error) {
@@ -146,7 +177,7 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({ currentUser }) => {
       {/* Users DataTable */}
       <div className="rounded-3xl border border-slate-800 bg-slate-900 shadow-sm">
         <div className="overflow-x-auto">
-          <div className="min-w-[1400px]">
+          <div className="min-w-350">
             <table className="w-full table-auto text-left text-xs text-slate-300">
               <thead className="sticky top-0 z-10">
                 <tr className="border-b border-slate-800 bg-slate-950 text-[10px] font-bold uppercase tracking-wider text-slate-400">

@@ -9,23 +9,23 @@ import {
   TrendingUp,
   Users,
 } from "lucide-react"
-import { User, TransactionType } from "../../types"
-import { storage } from "../../lib/storage"
-import { Badge } from "../ui/Badge"
+import { User, Transaction, TransactionType } from "@/types"
+import { Badge } from "@/components/ui/Badge"
+// import { Badge } from "../ui/Badge"
 
 interface TransactionsViewProps {
   currentUser: User
+  initialTransactions: Transaction[]
 }
 
 export const TransactionsView: React.FC<TransactionsViewProps> = ({
-  currentUser,
+  initialTransactions,
 }) => {
   const [activeTypeTab, setActiveTypeTab] = useState<string>("ALL")
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("ALL")
 
-  const allTransactions =
-    storage.getTransactionsByUser(currentUser?.id || "") || []
+  const allTransactions = initialTransactions
 
   const filtered = allTransactions.filter((tx) => {
     if (!tx) return false

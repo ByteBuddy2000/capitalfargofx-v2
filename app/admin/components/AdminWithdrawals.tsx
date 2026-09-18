@@ -1,18 +1,19 @@
 import React, { useState } from "react"
 import { ArrowUpFromLine, Search } from "lucide-react"
-import { User, Withdrawal } from "../../types"
-import { authApi } from "../../lib/api"
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
-import { Badge } from "../ui/Badge"
-import { Modal } from "../ui/Modal"
-import { useToast } from "../ui/Toast"
+import { User, Withdrawal } from "@/types"
+import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
+import { Badge } from "@/components/ui/Badge"
+import { Modal } from "@/components/ui/Modal"
+import { useToast } from "@/components/ui/Toast"
+import { updateAdminWithdrawal } from "../controllers/withdrawal.action"
 
 interface AdminWithdrawalsProps {
   currentUser: User
+  initialWithdrawals?: Withdrawal[]
 }
 
-export const AdminWithdrawals: React.FC<AdminWithdrawalsProps> = () => {
+export const AdminWithdrawals: React.FC<AdminWithdrawalsProps> = ({ initialWithdrawals = [] }) => {
   const [filter, setFilter] = useState<
     "PENDING" | "ALL" | "COMPLETED" | "REJECTED"
   >("PENDING")
@@ -27,21 +28,9 @@ export const AdminWithdrawals: React.FC<AdminWithdrawalsProps> = () => {
 
   const [broadcastTxHash, setBroadcastTxHash] = useState("")
   const [rejectReason, setRejectReason] = useState("")
-  const [allWithdrawals, setAllWithdrawals] = useState<Withdrawal[]>([])
+  const [allWithdrawals, setAllWithdrawals] = useState<Withdrawal[]>(initialWithdrawals)
 
   const { success, error: toastError } = useToast()
-
-  React.useEffect(() => {
-    authApi
-      .adminWithdrawals()
-      .then(setAllWithdrawals)
-      .catch((error) =>
-        toastError(
-          "Loading Error",
-          error instanceof Error ? error.message : "Unable to load withdrawals."
-        )
-      )
-  }, [toastError])
 
   const filtered = allWithdrawals.filter((w) => {
     if (filter !== "ALL" && w.status !== filter) return false
@@ -66,11 +55,14 @@ export const AdminWithdrawals: React.FC<AdminWithdrawalsProps> = () => {
   const handleConfirmApprove = async () => {
     if (!targetWithdrawal) return
     try {
-      await authApi.updateWithdrawal(
-        targetWithdrawal.id,
-        "COMPLETED",
-        broadcastTxHash
-      )
+      const result = await updateAdminWithdrawal(targetWithdrawal.id, {
+        status: "COMPLETED",
+        txHash: broadcastTxHash,
+        adminNotes: "Approved by admin console and broadcasted.",
+      })
+      if (!result.success) {
+        throw new Error(result.message || "Unable to process withdrawal.")
+      }
       setAllWithdrawals((withdrawals) =>
         withdrawals.map((item) =>
           item.id === targetWithdrawal.id
@@ -100,12 +92,13 @@ export const AdminWithdrawals: React.FC<AdminWithdrawalsProps> = () => {
   const handleConfirmReject = async () => {
     if (!targetWithdrawal) return
     try {
-      await authApi.updateWithdrawal(
-        targetWithdrawal.id,
-        "REJECTED",
-        "",
-        rejectReason
-      )
+      const result = await updateAdminWithdrawal(targetWithdrawal.id, {
+        status: "REJECTED",
+        adminNotes: rejectReason,
+      })
+      if (!result.success) {
+        throw new Error(result.message || "Unable to reject withdrawal.")
+      }
       setAllWithdrawals((withdrawals) =>
         withdrawals.map((item) =>
           item.id === targetWithdrawal.id
@@ -223,7 +216,7 @@ export const AdminWithdrawals: React.FC<AdminWithdrawalsProps> = () => {
                     <td className="max-w-xs py-4 font-mono text-[11px] break-all text-slate-300">
                       {w.destinationAddress}
                     </td>
-                    <td className="max-w-[150px] truncate py-4 font-mono text-[11px] text-emerald-400">
+                    <td className="max-w-40 truncate py-4 font-mono text-[11px] text-emerald-400">
                       {w.transactionHash || "—"}
                     </td>
                     <td className="py-4">

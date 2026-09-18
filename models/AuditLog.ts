@@ -1,3 +1,4 @@
+// models/AuditLog.ts
 import mongoose, { Schema, type Model, type Types } from "mongoose"
 
 export interface IAuditLog extends mongoose.Document {

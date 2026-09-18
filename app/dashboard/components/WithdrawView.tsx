@@ -1,5 +1,5 @@
 // WithdrawView.tsx
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import {
   ArrowUpFromLine,
   Wallet,
@@ -8,14 +8,13 @@ import {
   CheckCircle2,
   ArrowRight,
 } from "lucide-react"
-import { User, Withdrawal } from "../../types"
-import { authApi } from "../../lib/api"
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
-import { Badge } from "../ui/Badge"
-import { useToast } from "../ui/Toast"
-import { createWithdrawalAction } from "../../app/actions"
-import Image from "next/image";
+import { User, Withdrawal } from "@/types"
+import { createUserWithdrawal } from "@/controller/userMutations.actions"
+import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
+import { Badge } from "@/components/ui/Badge"
+import { useToast } from "@/components/ui/Toast"
+import Image from "next/image"
 
 interface WithdrawViewProps {
   currentUser: User
@@ -44,18 +43,11 @@ export const WithdrawView: React.FC<WithdrawViewProps> = ({
   const [errorMsg, setErrorMsg] = useState("")
   const [submittedWithdrawal, setSubmittedWithdrawal] =
     useState<Withdrawal | null>(null)
-  const [prices, setPrices] = useState({ BTC: 64000, ETH: 3400, USDT: 1 })
+  const prices = { BTC: 64000, ETH: 3400, USDT: 1 }
 
   const { success, error: toastError } = useToast()
 
   const minWithdrawal = 50
-
-  useEffect(() => {
-    void authApi
-      .prices()
-      .then(setPrices)
-      .catch(() => undefined)
-  }, [])
 
   const selectedPrice = prices[selectedCrypto]
   const cryptoAmount = amount > 0 ? amount / selectedPrice : 0
@@ -101,21 +93,21 @@ export const WithdrawView: React.FC<WithdrawViewProps> = ({
 
     setIsSubmitting(true)
     try {
-      const actionResult = await createWithdrawalAction({
+      const result = await createUserWithdrawal({
         amount: Number(amount),
         asset: selectedCrypto,
-        network:
-          selectedCrypto === "BTC"
-            ? "Bitcoin Native"
-            : selectedCrypto === "ETH"
-              ? "ERC-20"
-              : "ERC-20 / TRC-20",
+        network: selectedCrypto === "BTC" ? "Bitcoin Native" : selectedCrypto === "ETH" ? "ERC-20" : "ERC-20 / TRC-20",
         destinationAddress: destinationAddress.trim(),
       })
-      if (!actionResult.success) {
-        throw new Error(actionResult.error)
-      }
-      setSubmittedWithdrawal(actionResult.data.withdrawal)
+      if (!result.success || !result.withdrawal) throw new Error(result.message || "Unable to submit withdrawal.")
+      setSubmittedWithdrawal({
+        ...result.withdrawal,
+        id: String(result.withdrawal._id || result.withdrawal.id),
+        userId: currentUser.id,
+        userFullName: currentUser.fullName,
+        userEmail: currentUser.email,
+        cryptoCurrency: selectedCrypto,
+      } as Withdrawal)
       success(
         "Withdrawal Request Submitted",
         `$${amount.toLocaleString()} scheduled for blockchain broadcast.`
@@ -254,7 +246,7 @@ export const WithdrawView: React.FC<WithdrawViewProps> = ({
                     <button
                       key={c.symbol}
                       type="button"
-                      onClick={() => setSelectedCrypto(c.symbol)}
+                      onClick={() => handleCryptoChange(c.symbol)}
                       className={`cursor-pointer rounded-2xl border-2 p-3 text-center transition-all ${
                         selectedCrypto === c.symbol
                           ? `${c.color} font-black shadow-xs ring-1`

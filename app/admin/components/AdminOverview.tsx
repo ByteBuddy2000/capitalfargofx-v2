@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import {
   Users,
   ArrowDownToLine,
@@ -6,28 +6,36 @@ import {
   Layers,
   ShieldCheck,
 } from "lucide-react"
-import { User, Deposit, Withdrawal } from "../../types"
-import { authApi } from "../../lib/api"
-import { Button } from "../ui/Button"
-import { useToast } from "../ui/Toast"
+import { User, Deposit, Withdrawal } from "@/types"
+import { Button } from "@/components/ui/Button"
+import { useToast } from "@/components/ui/Toast"
 import { AdminTab } from "./AdminLayout"
+import { approveAdminDeposit, rejectAdminDeposit } from "../controllers/deposit.actions"
+import { updateAdminWithdrawal } from "../controllers/withdrawal.action"
 
 interface AdminOverviewProps {
   currentUser: User
   onNavigateTab: (tab: AdminTab) => void
+  overview?: {
+    users: User[]
+    deposits: Deposit[]
+    withdrawals: Withdrawal[]
+    investments: Array<{ amount: number; status: string }>
+  } | null
 }
 
 export const AdminOverview: React.FC<AdminOverviewProps> = ({
   onNavigateTab,
+  overview,
 }) => {
   const { success, error: toastError } = useToast()
 
-  const [users, setUsers] = useState<User[]>([])
-  const [deposits, setDeposits] = useState<Deposit[]>([])
-  const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([])
+  const [users, setUsers] = useState<User[]>(overview?.users ?? [])
+  const [deposits, setDeposits] = useState<Deposit[]>(overview?.deposits ?? [])
+  const [withdrawals, setWithdrawals] = useState<Withdrawal[]>(overview?.withdrawals ?? [])
   const [investments, setInvestments] = useState<
     Array<{ amount: number; status: string }>
-  >([])
+  >(overview?.investments ?? [])
   const auditLogs: Array<{
     id: string
     action: string
@@ -38,69 +46,8 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({
     timestamp: string
   }> = []
 
-  useEffect(() => {
-    void authApi
-      .adminOverview()
-      .then((data) => {
-        setUsers(
-          (data.users as unknown as User[]).filter(
-            (user) => user.role === "user"
-          )
-        )
-        setDeposits(
-          data.deposits.map((deposit) => ({
-            ...deposit,
-            userId:
-              typeof deposit.userId === "string"
-                ? deposit.userId
-                : deposit.userId?._id || "",
-            planId:
-              typeof deposit.planId === "string"
-                ? deposit.planId
-                : deposit.planId?._id || "",
-            userFullName:
-              deposit.userFullName ||
-              (typeof deposit.userId === "object"
-                ? deposit.userId.fullName || ""
-                : ""),
-            planName:
-              deposit.planName ||
-              (typeof deposit.planId === "object"
-                ? deposit.planId.name || ""
-                : ""),
-          }))
-        )
-        setWithdrawals(data.withdrawals as unknown as Withdrawal[])
-        setInvestments(
-          data.investments as Array<{ amount: number; status: string }>
-        )
-      })
-      .catch((error) =>
-        toastError(
-          "Loading Error",
-          error instanceof Error ? error.message : "Unable to load overview."
-        )
-      )
-  }, [toastError])
-
-  const pendingDeposits = deposits.filter((d) => d.status === "PENDING")
-  const pendingWithdrawals = withdrawals.filter((w) => w.status === "PENDING")
-
-  const totalDepositsVolume = deposits
-    .filter((d) => d.status === "COMPLETED")
-    .reduce((sum, d) => sum + d.amount, 0)
-
-  const totalWithdrawalsVolume = withdrawals
-    .filter((w) => w.status === "COMPLETED")
-    .reduce((sum, w) => sum + w.amount, 0)
-
-  const totalActiveCapital = investments
-    .filter((i) => i.status === "ACTIVE")
-    .reduce((sum, i) => sum + i.amount, 0)
-
   const handleQuickApproveDeposit = (deposit: Deposit) => {
-    void authApi
-      .approveDeposit(deposit.id)
+    void approveAdminDeposit(deposit.id)
       .then(() => {
         setDeposits((current) =>
           current.filter((item) => item.id !== deposit.id)
@@ -119,8 +66,7 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({
   }
 
   const handleQuickApproveWithdrawal = (withdrawal: Withdrawal) => {
-    void authApi
-      .updateWithdrawal(withdrawal.id, "COMPLETED")
+    void updateAdminWithdrawal(withdrawal.id, { status: "COMPLETED" })
       .then(() => {
         setWithdrawals((current) =>
           current.filter((item) => item.id !== withdrawal.id)
@@ -139,6 +85,21 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({
         )
       )
   }
+
+  const pendingDeposits = deposits.filter((d) => d.status === "PENDING")
+  const pendingWithdrawals = withdrawals.filter((w) => w.status === "PENDING")
+
+  const totalDepositsVolume = deposits
+    .filter((d) => d.status === "COMPLETED")
+    .reduce((sum, d) => sum + d.amount, 0)
+
+  const totalWithdrawalsVolume = withdrawals
+    .filter((w) => w.status === "COMPLETED")
+    .reduce((sum, w) => sum + w.amount, 0)
+
+  const totalActiveCapital = investments
+    .filter((i) => i.status === "ACTIVE")
+    .reduce((sum, i) => sum + i.amount, 0)
 
   return (
     <div className="space-y-8">

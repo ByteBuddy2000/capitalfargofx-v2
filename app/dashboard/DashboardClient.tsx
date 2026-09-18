@@ -1,45 +1,37 @@
+// /dashboard/DashboardClient.tsx
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { signOut } from "next-auth/react"
-import {
-  DashboardLayout,
-  type DashboardTab,
-} from "@/components/dashboard/DashboardLayout"
-import { DashboardOverview } from "@/components/dashboard/DashboardOverview"
-import { DepositView } from "@/components/dashboard/DepositView"
-import { WithdrawView } from "@/components/dashboard/WithdrawView"
-import { InvestmentsView } from "@/components/dashboard/InvestmentsView"
-import { TransactionsView } from "@/components/dashboard/TransactionsView"
-import { ReferralsView } from "@/components/dashboard/ReferralsView"
-import { AccountView } from "@/components/dashboard/AccountView"
-import { SupportView } from "@/components/dashboard/SupportView"
+import { useRouter } from "next/navigation"
 import { ToastProvider } from "@/components/ui/Toast"
 import type { User } from "@/types"
-import { authApi } from "@/lib/api"
+import type { DashboardInitialData } from "./page"
+import { DashboardLayout, DashboardTab } from "./components/DashboardLayout"
+import { DashboardOverview } from "./components/DashboardOverview"
+import { DepositView } from "./components/DepositView"
+import { WithdrawView } from "./components/WithdrawView"
+import { InvestmentsView } from "./components/InvestmentsView"
+import { TransactionsView } from "./components/TransactionsView"
+import { ReferralsView } from "./components/ReferralsView"
+import { AccountView } from "./components/AccountView"
+import { SupportView } from "./components/SupportView"
 
 interface DashboardClientProps {
   currentUser: User
+  initialData: DashboardInitialData
 }
 
 export default function DashboardClient({
   currentUser: initialUser,
+  initialData,
 }: DashboardClientProps) {
+  const router = useRouter()
   const [currentUser, setCurrentUser] = useState(initialUser)
   const [activeTab, setActiveTab] = useState<DashboardTab>("overview")
 
-  useEffect(() => {
-    void authApi
-      .me()
-      .then(setCurrentUser)
-      .catch(() => undefined)
-  }, [])
-
   const refreshUser = () => {
-    void authApi
-      .me()
-      .then(setCurrentUser)
-      .catch(() => undefined)
+    router.refresh()
   }
 
   const logout = async () => {
@@ -55,16 +47,22 @@ export default function DashboardClient({
         onLogout={logout}
         onNavigateAdmin={() => window.location.assign("/admin")}
         onNavigateLanding={() => window.location.assign("/")}
+        notifications={initialData.notifications}
       >
         {activeTab === "overview" && (
           <DashboardOverview
             currentUser={currentUser}
             onNavigateTab={setActiveTab}
+            initialInvestments={initialData.investments}
+            initialTransactions={initialData.transactions}
+            initialWithdrawals={initialData.withdrawals}
           />
         )}
         {activeTab === "deposit" && (
           <DepositView
             currentUser={currentUser}
+            initialPlans={initialData.plans}
+            initialWallets={initialData.wallets}
             onDepositSuccess={refreshUser}
             onNavigateTransactions={() => setActiveTab("transactions")}
           />
@@ -80,14 +78,21 @@ export default function DashboardClient({
         {activeTab === "investments" && (
           <InvestmentsView
             currentUser={currentUser}
+            initialInvestments={initialData.investments}
             onNavigateDeposit={() => setActiveTab("deposit")}
           />
         )}
         {activeTab === "transactions" && (
-          <TransactionsView currentUser={currentUser} />
+          <TransactionsView
+            currentUser={currentUser}
+            initialTransactions={initialData.transactions}
+          />
         )}
         {activeTab === "referrals" && (
-          <ReferralsView currentUser={currentUser} />
+          <ReferralsView
+            currentUser={currentUser}
+            initialReferrals={initialData.referrals}
+          />
         )}
         {activeTab === "account" && (
           <AccountView
@@ -95,7 +100,13 @@ export default function DashboardClient({
             onUpdateUser={setCurrentUser}
           />
         )}
-        {activeTab === "support" && <SupportView currentUser={currentUser} />}
+        {activeTab === "support" && (
+          <SupportView
+            currentUser={currentUser}
+            initialSettings={initialData.settings}
+            initialTickets={initialData.supportTickets}
+          />
+        )}
       </DashboardLayout>
     </ToastProvider>
   )

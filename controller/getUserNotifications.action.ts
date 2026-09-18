@@ -1,4 +1,4 @@
-// controllers/me.actions.ts
+// controllers/getUserNotifications.action.ts
 "use server"
 
 import mongoose from "mongoose"

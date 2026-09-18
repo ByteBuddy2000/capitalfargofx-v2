@@ -1,40 +1,28 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { Users, Search, TrendingUp, Gift } from "lucide-react"
-import { Referral, User } from "../../types"
-import { authApi } from "../../lib/api"
-import { Badge } from "../ui/Badge"
+import { Referral, User } from "@/types"
+import { Badge } from "@/components/ui/Badge"
 
 interface AdminReferralsProps {
   currentUser: User
+  initialReferrals?: Referral[]
 }
 
-export const AdminReferrals: React.FC<AdminReferralsProps> = () => {
+export const AdminReferrals: React.FC<AdminReferralsProps> = ({ initialReferrals = [] }) => {
   const [searchTerm, setSearchTerm] = useState("")
-  const [allReferrals, setAllReferrals] = useState<Referral[]>([])
-
-  useEffect(() => {
-    void authApi.adminReferrals().then((records) => {
-      setAllReferrals(
-        records.map((record) => {
-          const referrer = record.referrerId as { _id?: string; username?: string } | string | undefined
-          const referred = record.referredUserId as { _id?: string; username?: string; fullName?: string } | string | undefined
-          return {
-          id: String(record._id || record.id),
-          referrerId: String(typeof referrer === "object" ? referrer?._id : referrer || ""),
-          referrerUsername: String(typeof referrer === "object" ? referrer?.username : ""),
-          referredUserId: String(typeof referred === "object" ? referred?._id : referred || ""),
-          referredUsername: String(typeof referred === "object" ? referred?.username : ""),
-          referredFullName: String(typeof referred === "object" ? referred?.fullName : ""),
-          level: Number(record.level || 1),
-          totalDeposits: Number(record.totalDeposits || 0),
-          commissionsEarned: Number(record.commissionsEarned || 0),
-          status: record.status === "INACTIVE" ? "INACTIVE" : "ACTIVE",
-          createdAt: String(record.createdAt || ""),
-          }
-        })
-      )
-    }).catch(() => undefined)
-  }, [])
+  const [allReferrals, setAllReferrals] = useState<Referral[]>(() =>
+    initialReferrals.map((record) => ({
+      ...record,
+      id: String(record.id || ""),
+      referrerUsername: record.referrerUsername || "unknown",
+      referredUsername: record.referredUsername || "unknown",
+      referredFullName: record.referredFullName || "Unknown Investor",
+      totalDeposits: Number(record.totalDeposits || 0),
+      commissionsEarned: Number(record.commissionsEarned || 0),
+      status: record.status === "INACTIVE" ? "INACTIVE" : "ACTIVE",
+      createdAt: record.createdAt || new Date().toISOString(),
+    }))
+  )
   const filtered = allReferrals.filter((r) => {
     if (!searchTerm.trim()) return true
     const q = searchTerm.toLowerCase()

@@ -11,9 +11,7 @@ import {
   CheckCircle2,
 } from "lucide-react"
 import { signIn } from "next-auth/react"
-import { registerUserAction } from "../../app/actions"
-import { storage } from "../../lib/storage"
-import { User } from "../../types"
+import { User } from "@/types"
 import { Input } from "../ui/Input"
 import { Button } from "../ui/Button"
 import { useToast } from "../ui/Toast"
@@ -55,10 +53,6 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const [referralCode] = useState(() =>
     getReferralCodeFromURL(initialReferralCode)
   )
-  const [uplineUser] = useState<User | null>(() => {
-    const code = getReferralCodeFromURL(initialReferralCode)
-    return code.trim() ? storage.getUserByUsername(code.trim()) || null : null
-  })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -105,18 +99,28 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
     setIsLoading(true)
     try {
-      const result = await registerUserAction({
-        fullName: fullName.trim(),
-        username: username.trim(),
-        email: email.trim().toLowerCase(),
-        password,
-        btcWallet: btcWallet.trim(),
-        ethWallet: ethWallet.trim(),
-        usdtWallet: usdtWallet.trim(),
-        referralCode: referralCode.trim(),
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: fullName.trim(),
+          username: username.trim(),
+          email: email.trim().toLowerCase(),
+          password,
+          btcWallet: btcWallet.trim(),
+          ethWallet: ethWallet.trim(),
+          usdtWallet: usdtWallet.trim(),
+          referralCode: referralCode.trim(),
+        }),
       })
-      if (!result.success) {
-        throw new Error(result.error)
+
+      const result = (await response.json().catch(() => ({}))) as {
+        user?: User
+        message?: string
+      }
+
+      if (!response.ok || !result.user) {
+        throw new Error(result.message || "Unable to create your account.")
       }
 
       const signInResult = await signIn("credentials", {
@@ -132,9 +136,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
       success(
         "Account Created Successfully",
-        `Welcome to CapitalFargoFX, ${result.data.user.fullName}!`
+        `Welcome to CapitalFargoFX, ${result.user.fullName}!`
       )
-      onSuccess(result.data.user as User)
+      onSuccess(result.user)
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -170,10 +174,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           </span>
         </div>
         <div className="text-xs font-bold">
-          {uplineUser ? (
+          {referralCode.trim() ? (
             <span className="flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-emerald-700">
               <CheckCircle2 className="h-3.5 w-3.5" />
-              {uplineUser.fullName} (@{uplineUser.username})
+              @{referralCode.trim()}
             </span>
           ) : (
             <span className="font-mono text-slate-500">

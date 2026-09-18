@@ -1,96 +1,84 @@
-"use client"
+import AdminPage, { type AdminPageState } from "./AdminPage"
+import { getAdminOverview } from "./controllers/overview.action"
+import { getAdminDeposits } from "./controllers/deposit.actions"
+import { getAdminWithdrawals } from "./controllers/withdrawal.action"
+import { getAdminUsers } from "./controllers/users.action"
+import { getAdminPlans } from "./controllers/plans.action"
+import { getAdminReferrals } from "./controllers/referrals.action"
+import { getAdminWallets } from "./controllers/wallet.action"
+import { getAdminSettings } from "./controllers/settings.action"
+import { getAdminAuditLogs } from "./controllers/audit.action"
 
-import { useEffect, useState } from "react"
-import { signOut } from "next-auth/react"
-import { AdminLayout, type AdminTab } from "@/components/admin/AdminLayout"
-import { AdminOverview } from "@/components/admin/AdminOverview"
-import { AdminDeposits } from "@/components/admin/AdminDeposits"
-import { AdminWithdrawals } from "@/components/admin/AdminWithdrawals"
-import { AdminUsers } from "@/components/admin/AdminUsers"
-import { AdminPlans } from "@/components/admin/AdminPlans"
-import { AdminReferrals } from "@/components/admin/AdminReferrals"
-import { AdminWallets } from "@/components/admin/AdminWallets"
-import { AdminSettings } from "@/components/admin/AdminSettings"
-import { AdminAuditLogs } from "@/components/admin/AdminAuditLogs"
-import { ToastProvider } from "@/components/ui/Toast"
-import type { User } from "@/types"
-import { authApi } from "@/lib/api"
-
-const emptyAdminUser: User = {
-  id: "admin",
-  fullName: "Administrator",
-  username: "admin",
-  email: "",
-  role: "admin",
-  status: "ACTIVE",
-  btcWallet: "",
-  ethWallet: "",
-  usdtWallet: "",
-  uplineId: null,
-  availableBalance: 0,
-  earningBalance: 0,
-  totalDeposits: 0,
-  totalWithdrawals: 0,
-  referralEarnings: 0,
-  createdAt: "",
-  updatedAt: "",
+const emptyAdminState: AdminPageState = {
+  overview: null,
+  deposits: [],
+  withdrawals: [],
+  users: [],
+  plans: [],
+  referrals: [],
+  wallets: [],
+  settings: null,
+  auditLogs: [],
 }
 
-export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<AdminTab>("overview")
-  const [adminUser, setAdminUser] = useState<User>(emptyAdminUser)
+type AdminActionResult = PromiseSettledResult<{
+  success: boolean
+  [key: string]: unknown
+}>
 
-  useEffect(() => {
-    void authApi
-      .me()
-      .then((user) => {
-        if (user.role === "admin" || user.role === "super admin") {
-          setAdminUser(user)
-        }
-      })
-      .catch(() => undefined)
-  }, [])
+const getRecords = <T,>(result: AdminActionResult, key: string): T[] => {
+  if (result.status !== "fulfilled" || !result.value.success) return []
 
-  const logout = async () => {
-    await signOut({ callbackUrl: "/login" })
+  const records = result.value[key]
+  return Array.isArray(records) ? (records as T[]) : []
+}
+
+export default async function AdminRoute() {
+  const [
+    overview,
+    deposits,
+    withdrawals,
+    users,
+    plans,
+    referrals,
+    wallets,
+    settings,
+    auditLogs,
+  ] = await Promise.allSettled([
+    getAdminOverview(),
+    getAdminDeposits(),
+    getAdminWithdrawals(),
+    getAdminUsers(),
+    getAdminPlans(),
+    getAdminReferrals(),
+    getAdminWallets(),
+    getAdminSettings(),
+    getAdminAuditLogs(),
+  ])
+
+  const initialData: AdminPageState = {
+    ...emptyAdminState,
+    overview:
+      overview.status === "fulfilled" && overview.value.success
+        ? {
+            users: getRecords(overview, "users"),
+            deposits: getRecords(overview, "deposits"),
+            withdrawals: getRecords(overview, "withdrawals"),
+            investments: getRecords(overview, "investments"),
+          }
+        : null,
+    deposits: getRecords(deposits, "deposits"),
+    withdrawals: getRecords(withdrawals, "withdrawals"),
+    users: getRecords(users, "users"),
+    plans: getRecords(plans, "plans"),
+    referrals: getRecords(referrals, "referrals"),
+    wallets: getRecords(wallets, "wallets"),
+    settings:
+      settings.status === "fulfilled" && settings.value.success
+        ? (settings.value.settings as unknown as AdminPageState["settings"])
+        : null,
+    auditLogs: getRecords(auditLogs, "logs"),
   }
 
-  const renderTab = () => {
-    switch (activeTab) {
-      case "deposits":
-        return <AdminDeposits currentUser={adminUser} />
-      case "withdrawals":
-        return <AdminWithdrawals currentUser={adminUser} />
-      case "users":
-        return <AdminUsers currentUser={adminUser} />
-      case "plans":
-        return <AdminPlans currentUser={adminUser} />
-      case "referrals":
-        return <AdminReferrals currentUser={adminUser} />
-      case "wallets":
-        return <AdminWallets currentUser={adminUser} />
-      case "settings":
-        return <AdminSettings currentUser={adminUser} />
-      case "audit":
-        return <AdminAuditLogs currentUser={adminUser} />
-      default:
-        return (
-          <AdminOverview currentUser={adminUser} onNavigateTab={setActiveTab} />
-        )
-    }
-  }
-
-  return (
-    <ToastProvider>
-      <AdminLayout
-        currentUser={adminUser}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        onNavigateDashboard={() => window.location.assign("/dashboard")}
-        onLogout={logout}
-      >
-        {renderTab()}
-      </AdminLayout>
-    </ToastProvider>
-  )
+  return <AdminPage initialData={initialData} />
 }

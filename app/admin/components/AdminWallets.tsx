@@ -1,32 +1,48 @@
-import React, { useEffect, useState } from "react"
+import React, {  useState } from "react"
 import { Wallet, Edit2, Plus } from "lucide-react"
-import { User, CryptoWalletConfig } from "../../types"
-import { authApi } from "../../lib/api"
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
-import { Badge } from "../ui/Badge"
-import { CryptoQRCode } from "../ui/CryptoQRCode"
-import { Modal } from "../ui/Modal"
-import { useToast } from "../ui/Toast"
+import { User, CryptoWalletConfig } from "@/types"
+import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
+import { Badge } from "@/components/ui/Badge"
+import { CryptoQRCode } from "@/components/ui/CryptoQRCode"
+import { Modal } from "@/components/ui/Modal"
+import { useToast } from "@/components/ui/Toast"
+import { saveAdminWallet } from "../controllers/wallet.action"
 
 interface AdminWalletsProps {
   currentUser: User
+  initialWallets?: CryptoWalletConfig[]
 }
 
-export const AdminWallets: React.FC<AdminWalletsProps> = () => {
-  const [wallets, setWallets] = useState<CryptoWalletConfig[]>([])
+const normalizeWallet = (value: unknown): CryptoWalletConfig => {
+  const record: Record<string, unknown> =
+    value && typeof value === "object" ? Object(value) : {}
+
+  return {
+    id: String(record.id || record._id || ""),
+    asset: record.asset === "BTC" || record.asset === "ETH" || record.asset === "USDT"
+      ? record.asset
+      : undefined,
+    name: String(record.name || ""),
+    symbol: String(record.symbol || record.asset || ""),
+    network: String(record.network || ""),
+    address: String(record.address || ""),
+    qrCodeUrl: String(record.qrCodeUrl || ""),
+    minDeposit: Number(record.minDeposit || 0),
+    depositFee: String(record.depositFee || "0.00%"),
+    isActive: record.isActive !== false,
+    updatedAt: String(record.updatedAt || new Date().toISOString()),
+  }
+}
+
+export const AdminWallets: React.FC<AdminWalletsProps> = ({ initialWallets = [] }) => {
+  const [wallets, setWallets] = useState<CryptoWalletConfig[]>(initialWallets)
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [editingWallet, setEditingWallet] = useState<CryptoWalletConfig | null>(
     null
   )
 
   const { success } = useToast()
-
-  useEffect(() => {
-    void authApi.adminWallets().then((records) => {
-      setWallets(records as CryptoWalletConfig[])
-    }).catch(() => undefined)
-  }, [])
 
   const handleOpenEdit = (w: CryptoWalletConfig) => {
     setEditingWallet({ ...w })
@@ -51,19 +67,31 @@ export const AdminWallets: React.FC<AdminWalletsProps> = () => {
     e.preventDefault()
     if (!editingWallet) return
 
-    void authApi
-      .saveAdminWallet(editingWallet as unknown as Record<string, unknown>)
+    void saveAdminWallet({
+      ...editingWallet,
+      id: editingWallet.id || undefined,
+      active: editingWallet.isActive,
+      isActive: editingWallet.isActive,
+    })
       .then((savedWallet) => {
+        if (!savedWallet.success || !savedWallet.wallet) {
+          throw new Error(savedWallet.message || "Unable to save wallet.")
+        }
+
+        const normalizedWallet = normalizeWallet(savedWallet.wallet)
         setWallets((current) => {
-          const exists = current.some((wallet) => wallet.id === savedWallet.id)
+          const exists = current.some((wallet) => wallet.id === normalizedWallet.id)
           return exists
-            ? current.map((wallet) => (wallet.id === savedWallet.id ? savedWallet as CryptoWalletConfig : wallet))
-            : [...current, savedWallet as CryptoWalletConfig]
+            ? current.map((wallet) => (wallet.id === normalizedWallet.id ? normalizedWallet : wallet))
+            : [...current, normalizedWallet]
         })
         success("Wallet Address Updated", `Deposit receiving address for ${editingWallet.name} saved.`)
         setEditModalOpen(false)
       })
-      .catch(() => undefined)
+      .catch((error) => {
+        const message = error instanceof Error ? error.message : "Unable to save wallet."
+        success("Wallet Save Failed", message)
+      })
   }
 
   return (

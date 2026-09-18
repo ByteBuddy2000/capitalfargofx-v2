@@ -1,36 +1,27 @@
 import React, { useState } from "react"
 import { Layers, ArrowRight, Play, ShieldCheck } from "lucide-react"
-import { User, Investment } from "../../types"
-import { authApi } from "../../lib/api"
-import { Button } from "../ui/Button"
-import { Badge } from "../ui/Badge"
-import { useToast } from "../ui/Toast"
-import { settleInvestmentAction } from "../../app/actions"
+import { User, Investment } from "@/types"
+import { settleUserInvestment } from "@/controller/userMutations.actions"
+// import { Button } from "../ui/Button"
+import { Badge } from "@/components/ui/Badge"
+import { useToast } from "@/components/ui/Toast"
+import { Button } from "@/components/ui/Button"
 
 interface InvestmentsViewProps {
   currentUser: User
+  initialInvestments: Investment[]
   onNavigateDeposit: () => void
 }
 
 export const InvestmentsView: React.FC<InvestmentsViewProps> = ({
+  initialInvestments,
   onNavigateDeposit,
 }) => {
   const [currentTime] = useState(() => Date.now())
   const [filter, setFilter] = useState<"ALL" | "ACTIVE" | "COMPLETED">("ALL")
-  const [allInvestments, setAllInvestments] = useState<Investment[]>([])
+  const [allInvestments, setAllInvestments] = useState<Investment[]>(initialInvestments)
   const { success, info } = useToast()
 
-  React.useEffect(() => {
-    authApi
-      .investments()
-      .then(setAllInvestments)
-      .catch((error) =>
-        info(
-          "Unable to load investments",
-          error instanceof Error ? error.message : "Please try again."
-        )
-      )
-  }, [info])
   const filtered = allInvestments.filter((i) => {
     if (!i) return false
     if (filter === "ACTIVE") return i.status === "ACTIVE"
@@ -48,20 +39,21 @@ export const InvestmentsView: React.FC<InvestmentsViewProps> = ({
 
   const handleSettle = async (invId: string) => {
     try {
-      const actionResult = await settleInvestmentAction(invId)
-      if (!actionResult.success) {
-        throw new Error(actionResult.error)
-      }
-      setAllInvestments((investments) =>
-        investments.map((investment) =>
-          investment.id === actionResult.data.investment.id
-            ? actionResult.data.investment
-            : investment
-        )
+      const investment = allInvestments.find((item) => item.id === invId)
+      if (!investment) return
+
+      const result = await settleUserInvestment(invId)
+      if (!result.success || !result.investment) throw new Error(result.message || "Unable to settle investment.")
+      const settledInvestment = {
+        ...result.investment,
+        id: String(result.investment._id || result.investment.id),
+      } as Investment
+      setAllInvestments((current) =>
+        current.map((item) => (item.id === invId ? settledInvestment : item))
       )
       success(
         "Contract Matured & Settled",
-        `Principal and $${actionResult.data.investment.expectedProfit.toLocaleString()} profit deposited!`
+        `Principal and $${settledInvestment.expectedProfit.toLocaleString()} profit deposited!`
       )
     } catch (error) {
       info(
@@ -276,7 +268,7 @@ export const InvestmentsView: React.FC<InvestmentsViewProps> = ({
                         className={`h-full transition-all duration-500 ${
                           inv.status === "COMPLETED"
                             ? "bg-emerald-500"
-                            : "bg-gradient-to-r from-blue-600 to-emerald-500"
+                            : "bg-linear-to-r from-blue-600 to-emerald-500"
                         }`}
                         style={{ width: `${progress}%` }}
                       />

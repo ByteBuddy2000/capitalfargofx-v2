@@ -1,27 +1,55 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { Layers, Plus, Edit2 } from "lucide-react"
-import { User, InvestmentPlan } from "../../types"
-import { authApi } from "../../lib/api"
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
-import { Badge } from "../ui/Badge"
-import { Modal } from "../ui/Modal"
-import { useToast } from "../ui/Toast"
+import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
+import { Badge } from "@/components/ui/Badge"
+import { Modal } from "@/components/ui/Modal"
+import { InvestmentPlan, User } from "@/types"
+import { useToast } from "@/components/ui/Toast"
+import { saveAdminPlan } from "../controllers/plans.action"
 
 interface AdminPlansProps {
   currentUser: User
+  initialPlans?: InvestmentPlan[]
 }
 
-export const AdminPlans: React.FC<AdminPlansProps> = () => {
-  const [plans, setPlans] = useState<InvestmentPlan[]>([])
+const normalizePlan = (value: unknown): InvestmentPlan => {
+  const record: Record<string, unknown> =
+    value && typeof value === "object" ? Object(value) : {}
+
+  const normalizedPlan: InvestmentPlan = {
+    id: String(record.id || record._id || ""),
+    name: String(record.name || ""),
+    slug: String(record.slug || ""),
+    description: String(record.description || ""),
+    minimumAmount: Number(record.minimumAmount || 0),
+    maximumAmount: Number(record.maximumAmount || 0),
+    returnPercentage: Number(record.returnPercentage || 0),
+    durationHours: Number(record.durationHours || 0),
+    referralPercentage: Number(record.referralPercentage || 0),
+    referralCommissionRate: Number(
+      record.referralCommissionRate || record.referralPercentage || 0
+    ),
+    principalReturn: Boolean(record.principalReturn),
+    isActive:
+      typeof record.isActive === "boolean"
+        ? record.isActive
+        : record.status === "ACTIVE",
+    status: record.status === "INACTIVE" ? "INACTIVE" : "ACTIVE",
+    featured: Boolean(record.featured),
+    createdAt: String(record.createdAt || new Date().toISOString()),
+    updatedAt: String(record.updatedAt || new Date().toISOString()),
+  }
+
+  return normalizedPlan
+}
+
+export const AdminPlans: React.FC<AdminPlansProps> = ({ initialPlans = [] }) => {
+  const [plans, setPlans] = useState<InvestmentPlan[]>(initialPlans)
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [editingPlan, setEditingPlan] = useState<InvestmentPlan | null>(null)
 
   const { success } = useToast()
-
-  useEffect(() => {
-    void authApi.adminPlans().then(setPlans).catch(() => undefined)
-  }, [])
 
   const handleOpenEdit = (plan: InvestmentPlan) => {
     setEditingPlan({ ...plan })
@@ -53,16 +81,17 @@ export const AdminPlans: React.FC<AdminPlansProps> = () => {
     e.preventDefault()
     if (!editingPlan) return
 
-    void authApi
-      .saveAdminPlan(editingPlan)
+    void saveAdminPlan(editingPlan)
       .then((savedPlan) => {
+        if (!savedPlan.success || !savedPlan.plan) return
+        const saved = normalizePlan(savedPlan.plan)
         setPlans((current) => {
-          const exists = current.some((plan) => plan.id === savedPlan.id)
+          const exists = current.some((plan) => plan.id === saved.id)
           return exists
-            ? current.map((plan) => (plan.id === savedPlan.id ? savedPlan : plan))
-            : [...current, savedPlan]
+            ? current.map((plan) => (plan.id === saved.id ? saved : plan))
+            : [...current, saved]
         })
-        success("Plan Configuration Saved", `${savedPlan.name} is now updated.`)
+        success("Plan Configuration Saved", `${saved.name} is now updated.`)
         setEditModalOpen(false)
       })
       .catch(() => undefined)

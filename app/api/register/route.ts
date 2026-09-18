@@ -1,3 +1,4 @@
+// app/api/register/route.ts
 import bcrypt from "bcryptjs"
 import { NextResponse } from "next/server"
 import { z } from "zod"

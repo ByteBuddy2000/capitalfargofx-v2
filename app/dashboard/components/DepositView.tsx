@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import {
   ArrowDownToLine,
   Check,
@@ -10,31 +10,34 @@ import {
   CheckCircle2,
   Clock,
 } from "lucide-react"
-import { User, InvestmentPlan, Deposit } from "../../types"
-import { storage } from "../../lib/storage"
-import { authApi } from "../../lib/api"
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
-import { Badge } from "../ui/Badge"
-import { CryptoQRCode } from "../ui/CryptoQRCode"
-import { useToast } from "../ui/Toast"
-import { createDepositAction } from "../../app/actions"
-import Image from "next/image";
+import { User, InvestmentPlan, Deposit, CryptoWalletConfig } from "@/types"
+import { createUserDeposit } from "@/controller/userMutations.actions"
+import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
+import { Badge } from "@/components/ui/Badge"
+import { CryptoQRCode } from "@/components/ui/CryptoQRCode"
+import { useToast } from "@/components/ui/Toast"
+import Image from "next/image"
 
 interface DepositViewProps {
   currentUser: User
+  initialPlans: InvestmentPlan[]
+  initialWallets: CryptoWalletConfig[]
   preselectedPlan?: InvestmentPlan | null
   onDepositSuccess: () => void
   onNavigateTransactions: () => void
 }
 
 export const DepositView: React.FC<DepositViewProps> = ({
+  currentUser,
+  initialPlans,
+  initialWallets,
   preselectedPlan,
   onDepositSuccess,
   onNavigateTransactions,
 }) => {
-  const [plans, setPlans] = useState<InvestmentPlan[]>(() => storage.getPlans())
-  const wallets = storage.getCryptoWallets()
+  const [plans] = useState<InvestmentPlan[]>(initialPlans)
+  const wallets = initialWallets
   const { success, error: toastError } = useToast()
 
   const [step, setStep] = useState<"CONFIGURE" | "PAYMENT" | "SUCCESS">(
@@ -42,18 +45,17 @@ export const DepositView: React.FC<DepositViewProps> = ({
   )
 
   // Selection States
-  const initialPlan = storage.getPlans()[0]
+  const initialPlan = initialPlans[0]
   const [selectedPlanId, setSelectedPlanId] = useState<string>(
     () =>
       preselectedPlan?.id ||
-      storage.getPlans()[1]?.id ||
+      initialPlans[1]?.id ||
       initialPlan?.id ||
       "plan-gold"
   )
   const selectedPlan =
     plans.find((p) => p.id === selectedPlanId) ||
-    plans[0] ||
-    storage.getPlans()[0]
+    plans[0]
 
   const [amount, setAmount] = useState<number>(() =>
     preselectedPlan
@@ -63,7 +65,7 @@ export const DepositView: React.FC<DepositViewProps> = ({
   const [selectedCrypto, setSelectedCrypto] = useState<"BTC" | "ETH" | "USDT">(
     "USDT"
   )
-  const [prices, setPrices] = useState({ BTC: 64000, ETH: 3400, USDT: 1 })
+  const prices = { BTC: 64000, ETH: 3400, USDT: 1 }
 
   // Confirmation state
   const [transactionHash, setTransactionHash] = useState<string>("")
@@ -72,32 +74,6 @@ export const DepositView: React.FC<DepositViewProps> = ({
 
   const [copiedWallet, setCopiedWallet] = useState(false)
   const [errorMsg, setErrorMsg] = useState("")
-
-  useEffect(() => {
-    void authApi
-      .prices()
-      .then(setPrices)
-      .catch(() => undefined)
-  }, [])
-
-  React.useEffect(() => {
-    const fallbackPlans = storage.getPlans()
-
-    authApi
-      .plans()
-      .then((loadedPlans) => {
-        const nextPlans = loadedPlans.length > 0 ? loadedPlans : fallbackPlans
-        setPlans(nextPlans)
-      })
-      .catch((error) => {
-        setErrorMsg(
-          error instanceof Error
-            ? error.message
-            : "Unable to load investment plans."
-        )
-        setPlans(fallbackPlans)
-      })
-  }, [])
 
   // Selected wallet from admin config
   const activeWalletConfig =
@@ -199,18 +175,23 @@ export const DepositView: React.FC<DepositViewProps> = ({
     setErrorMsg("")
     setIsSubmitting(true)
     try {
-      const result = await createDepositAction({
-        planId: selectedPlan.id,
+      const result = await createUserDeposit({
+        planId: selectedPlan.id || selectedPlan.slug,
         amount: Number(amount),
         asset: selectedCrypto,
-        network: activeWalletConfig?.network || "Default Network",
-        receivingAddress: activeWalletConfig?.address || "",
+        network: activeWalletConfig.network,
+        receivingAddress: activeWalletConfig.address,
         txHash: trimmedHash,
       })
-      if (!result.success) {
-        throw new Error(result.error)
-      }
-      setSubmittedDeposit(result.data.deposit)
+      if (!result.success || !result.deposit) throw new Error(result.message || "Unable to submit deposit.")
+      setSubmittedDeposit({
+        ...result.deposit,
+        id: String(result.deposit._id || result.deposit.id),
+        planName: selectedPlan.name,
+        userId: currentUser.id,
+        userFullName: currentUser.fullName,
+        userEmail: currentUser.email,
+      } as Deposit)
       setStep("SUCCESS")
       success(
         "Deposit Submitted",

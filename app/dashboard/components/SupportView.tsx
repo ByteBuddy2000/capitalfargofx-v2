@@ -1,17 +1,23 @@
 import React, { useState } from "react"
 import { Headphones, Mail, Send, ArrowRight } from "lucide-react"
-import { User, SupportTicket } from "../../types"
-import { storage } from "../../lib/storage"
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
-import { Badge } from "../ui/Badge"
-import { useToast } from "../ui/Toast"
+import { PlatformSettings, SupportTicket, User } from "@/types"
+import { createUserSupportTicket } from "@/controller/getUserDashboard.actions"
+import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
+import { Badge } from "@/components/ui/Badge"
+import { useToast } from "@/components/ui/Toast"
 
 interface SupportViewProps {
   currentUser: User
+  initialSettings: PlatformSettings | null
+  initialTickets: SupportTicket[]
 }
 
-export const SupportView: React.FC<SupportViewProps> = ({ currentUser }) => {
+export const SupportView: React.FC<SupportViewProps> = ({
+  currentUser,
+  initialSettings,
+  initialTickets,
+}) => {
   const [subject, setSubject] = useState("")
   const [category, setCategory] = useState("Deposits & Blockchain Verification")
   const [priority, setPriority] = useState<"LOW" | "MEDIUM" | "HIGH">("MEDIUM")
@@ -19,53 +25,30 @@ export const SupportView: React.FC<SupportViewProps> = ({ currentUser }) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { success } = useToast()
-  const settings = storage.getPlatformSettings()
-  const tickets = (storage.getSupportTickets() || []).filter(
-    (t) => t && currentUser && t.userId === currentUser.id
-  )
+  const settings = initialSettings || { supportEmail: "", telegramChannel: "", updatedAt: "" }
+  const [tickets, setTickets] = useState<SupportTicket[]>(initialTickets)
 
-  const handleSubmitTicket = (e: React.FormEvent) => {
+  const handleSubmitTicket = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!subject.trim() || !message.trim()) return
 
     setIsSubmitting(true)
-
-    setTimeout(() => {
-      setIsSubmitting(false)
-
-      const newTicket: SupportTicket = {
-        id: `ticket-${Date.now()}`,
-        userId: currentUser?.id || "guest",
-        userFullName: currentUser?.fullName || "Investor",
-        userEmail: currentUser?.email || "investor@example.com",
-        subject: subject.trim(),
-        category,
-        priority,
-        message: message.trim(),
-        status: "OPEN",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      }
-
-      const allTickets = storage.getSupportTickets() || []
-      storage.saveSupportTickets([newTicket, ...allTickets])
-
-      storage.addAuditLog({
-        actorId: currentUser.id,
-        actorUsername: currentUser.username,
-        action: "SUPPORT_TICKET_CREATED",
-        entity: "SupportTicket",
-        entityId: newTicket.id,
-        notes: `Ticket created: ${subject}`,
-      })
-
+    try {
+      const result = await createUserSupportTicket({ subject: subject.trim(), category, priority, message: message.trim() })
+      if (!result.success || !result.ticket) throw new Error(result.message || "Unable to submit support inquiry.")
+      const ticket = result.ticket as unknown as SupportTicket
+      setTickets((current) => [ticket, ...current])
       setSubject("")
       setMessage("")
       success(
         "Ticket Submitted",
         "Our institutional investor support desk will review your inquiry promptly."
       )
-    }, 450)
+    } catch (error) {
+      success("Ticket Error", error instanceof Error ? error.message : "Unable to submit support inquiry.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (

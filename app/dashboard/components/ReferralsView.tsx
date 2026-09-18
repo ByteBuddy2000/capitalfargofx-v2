@@ -8,26 +8,39 @@ import {
   DollarSign,
   Gift,
 } from "lucide-react"
-import { User } from "../../types"
-import { storage } from "../../lib/storage"
-import { Button } from "../ui/Button"
-import { Badge } from "../ui/Badge"
-import { useToast } from "../ui/Toast"
+import { Referral, User } from "@/types"
+import { Button } from "@/components/ui/Button"
+import { Badge } from "@/components/ui/Badge"
+import { useToast } from "@/components/ui/Toast"
 
 interface ReferralsViewProps {
   currentUser: User
+  initialReferrals: Referral[]
 }
 
 export const ReferralsView: React.FC<ReferralsViewProps> = ({
   currentUser,
+  initialReferrals,
 }) => {
   const [copied, setCopied] = useState(false)
   const { success } = useToast()
 
-  const referrals = storage.getReferralsByReferrer(currentUser?.id || "") || []
-  const upline = currentUser?.uplineId
-    ? storage.getUserById(currentUser.uplineId)
-    : null
+  const referrals: Referral[] = initialReferrals.map((record) => {
+    const referred = record.referredUserId as { _id?: string; username?: string; fullName?: string } | string | undefined
+    return {
+      id: String(record.id || ""),
+      referrerId: currentUser.id,
+      referrerUsername: currentUser.username,
+      referredUserId: String(typeof referred === "object" ? referred?._id : referred || ""),
+      referredUsername: String(typeof referred === "object" ? referred?.username : ""),
+      referredFullName: String(typeof referred === "object" ? referred?.fullName : ""),
+      level: Number(record.level || 1),
+      totalDeposits: Number(record.totalDeposits || 0),
+      commissionsEarned: Number(record.commissionsEarned || 0),
+      status: record.status === "INACTIVE" ? "INACTIVE" : "ACTIVE",
+      createdAt: String(record.createdAt || ""),
+    }
+  })
 
   const referralLink =
     typeof window !== "undefined"
@@ -177,14 +190,12 @@ export const ReferralsView: React.FC<ReferralsViewProps> = ({
               Your Upline Sponsor
             </span>
             <p className="text-base font-bold text-slate-900">
-              {upline
-                ? `${upline.fullName} (@${upline.username})`
-                : currentUser.uplineUsername
+              {currentUser.uplineUsername
                   ? `@${currentUser.uplineUsername}`
                   : "Direct Investor (No Upline)"}
             </p>
             <p className="text-xs text-slate-500">
-              {upline
+              {currentUser.uplineUsername
                 ? "Verified Active Partner"
                 : "Registered directly via platform portal"}
             </p>

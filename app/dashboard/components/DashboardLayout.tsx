@@ -15,10 +15,10 @@ import {
   Menu,
   ChevronRight,
 } from "lucide-react"
-import { User } from "../../types"
-import { storage } from "../../lib/storage"
-import { Button } from "../ui/Button"
 import Image from "next/image"
+import type { User } from "@/types"
+import { markNotificationAsRead as markNotificationRead } from "@/controller/getUserNotifications.action"
+import { Button } from "@/components/ui/Button"
 
 export type DashboardTab =
   | "overview"
@@ -37,7 +37,16 @@ interface DashboardLayoutProps {
   onLogout: () => void
   onNavigateAdmin: () => void
   onNavigateLanding: () => void
+  notifications: Array<Record<string, unknown>>
   children: React.ReactNode
+}
+
+interface DashboardNotification {
+  id: string
+  title: string
+  message: string
+  read: boolean
+  createdAt: string
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
@@ -47,31 +56,47 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   onLogout,
   onNavigateAdmin,
   onNavigateLanding,
+  notifications: initialNotifications,
   children,
 }) => {
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [userDropdownOpen, setUserDropdownOpen] = useState(false)
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
 
-  const notifications = (storage.getNotifications() || []).filter(
-    (n) => n && currentUser && n.userId === currentUser.id
+  const [notifications, setNotifications] = useState<DashboardNotification[]>(
+    initialNotifications.map((notification) => ({
+      id: String(notification.id || ""),
+      title: String(notification.title || ""),
+      message: String(notification.message || ""),
+      read: Boolean(notification.read),
+      createdAt: String(notification.createdAt || ""),
+    }))
   )
-  const unreadCount = (notifications || []).filter((n) => n && !n.read).length
+  const unreadCount = notifications.filter((notification) => !notification.read).length
 
   const markNotificationAsRead = (id: string) => {
-    const notifs = storage.getNotifications() || []
-    const target = notifs.find((n) => n && n.id === id)
-    if (target) {
-      target.read = true
-      storage.saveNotifications([...notifs])
-    }
+    void markNotificationRead(id).then((result) => {
+      if (!result.success) return
+      setNotifications((current) =>
+        current.map((notification) =>
+          String(notification.id) === id
+            ? { ...notification, read: true }
+            : notification
+        )
+      )
+    })
   }
 
   const markAllAsRead = () => {
-    const notifs = (storage.getNotifications() || []).map((n) =>
-      n && currentUser && n.userId === currentUser.id ? { ...n, read: true } : n
-    )
-    storage.saveNotifications(notifs)
+    void Promise.all(
+      notifications
+        .filter((notification) => !notification.read)
+        .map((notification) => markNotificationRead(String(notification.id)))
+    ).then(() => {
+      setNotifications((current) =>
+        current.map((notification) => ({ ...notification, read: true }))
+      )
+    })
   }
 
   const navigationItems = [
@@ -464,7 +489,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             <div>
               <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
                 <div className="flex items-center gap-2.5">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-blue-600 to-purple-600">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-tr from-blue-600 to-purple-600">
                     <div className="h-3.5 w-3.5 rotate-45 transform rounded-xs border-2 border-white" />
                   </div>
                   <span className="text-lg font-bold text-white">

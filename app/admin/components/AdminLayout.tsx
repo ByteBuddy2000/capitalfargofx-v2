@@ -14,7 +14,7 @@ import {
   Menu,
   X,
 } from "lucide-react"
-import { User } from "../../types"
+import { User } from "@/types"
 
 export type AdminTab =
   | "overview"

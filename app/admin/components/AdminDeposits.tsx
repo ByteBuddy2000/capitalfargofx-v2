@@ -1,17 +1,18 @@
 import React, { useState } from "react"
 import { ArrowDownToLine, Search } from "lucide-react"
-import { User, Deposit } from "../../types"
-import { authApi } from "../../lib/api"
-import { Button } from "../ui/Button"
-import { Badge } from "../ui/Badge"
-import { Modal } from "../ui/Modal"
-import { useToast } from "../ui/Toast"
+import { User, Deposit } from "@/types"
+import { useToast } from "@/components/ui/Toast"
+import { Button } from "@/components/ui/Button"
+import { Badge } from "@/components/ui/Badge"
+import { Modal } from "@/components/ui/Modal"
+import { approveAdminDeposit, rejectAdminDeposit } from "../controllers/deposit.actions"
 
 interface AdminDepositsProps {
   currentUser: User
+  initialDeposits?: Deposit[]
 }
 
-export const AdminDeposits: React.FC<AdminDepositsProps> = () => {
+export const AdminDeposits: React.FC<AdminDepositsProps> = ({ initialDeposits = [] }) => {
   const [filter, setFilter] = useState<
     "ALL" | "PENDING" | "APPROVED" | "REJECTED"
   >("PENDING")
@@ -21,21 +22,9 @@ export const AdminDeposits: React.FC<AdminDepositsProps> = () => {
   const [rejectModalOpen, setRejectModalOpen] = useState(false)
   const [targetDeposit, setTargetDeposit] = useState<Deposit | null>(null)
   const [rejectReason, setRejectReason] = useState("")
-  const [allDeposits, setAllDeposits] = useState<Deposit[]>([])
+  const [allDeposits, setAllDeposits] = useState<Deposit[]>(initialDeposits)
 
   const { success, error: toastError } = useToast()
-
-  React.useEffect(() => {
-    authApi
-      .adminDeposits()
-      .then(setAllDeposits)
-      .catch((error) =>
-        toastError(
-          "Loading Error",
-          error instanceof Error ? error.message : "Unable to load deposits."
-        )
-      )
-  }, [toastError])
 
   const filtered = allDeposits.filter((d) => {
     if (filter !== "ALL" && d.status !== filter) return false
@@ -53,7 +42,10 @@ export const AdminDeposits: React.FC<AdminDepositsProps> = () => {
 
   const handleApprove = async (deposit: Deposit) => {
     try {
-      await authApi.approveDeposit(deposit.id)
+      const result = await approveAdminDeposit(deposit.id)
+      if (!result.success) {
+        throw new Error(result.message || "Unable to approve deposit.")
+      }
       setAllDeposits((deposits) =>
         deposits.map((item) =>
           item.id === deposit.id ? { ...item, status: "APPROVED" } : item
@@ -82,7 +74,10 @@ export const AdminDeposits: React.FC<AdminDepositsProps> = () => {
   const handleConfirmReject = async () => {
     if (!targetDeposit) return
     try {
-      await authApi.rejectDeposit(targetDeposit.id, rejectReason)
+      const result = await rejectAdminDeposit(targetDeposit.id, { reason: rejectReason })
+      if (!result.success) {
+        throw new Error(result.message || "Unable to reject deposit.")
+      }
       success(
         "Deposit Rejected",
         `Deposit #${targetDeposit.id.substring(0, 10)} marked as rejected.`

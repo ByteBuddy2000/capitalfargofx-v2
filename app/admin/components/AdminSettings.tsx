@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import {
   Settings,
   Save,
@@ -10,18 +10,19 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react"
-import { User, PlatformSettings } from "../../types"
-import { authApi } from "../../lib/api"
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
-import { useToast } from "../ui/Toast"
-
+import { User, PlatformSettings } from "@/types"
+import { Button } from "@/components/ui/Button"
+import { Input } from "@/components/ui/Input"
+import { useToast } from "@/components/ui/Toast"
+import { updateAdminSettings, getAdminSettings } from "../controllers/settings.action"
+import { changeAdminPassword } from "../controllers/security.action"
 
 interface AdminSettingsProps {
   currentUser: User
+  initialSettings?: PlatformSettings | null
 }
 
-export const AdminSettings: React.FC<AdminSettingsProps> = () => {
+export const AdminSettings: React.FC<AdminSettingsProps> = ({ initialSettings = null }) => {
 
   const [currentPassword, setCurrentPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
@@ -31,28 +32,24 @@ export const AdminSettings: React.FC<AdminSettingsProps> = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false)
 
-  const [settings, setSettings] = useState<PlatformSettings>({
-    platformName: "CapitalsFargoFX",
-    supportEmail: "",
-    telegramChannel: "",
-    updatedAt: "",
-  })
+  const [settings, setSettings] = useState<PlatformSettings>(
+    (initialSettings as PlatformSettings) || {
+      platformName: "CapitalsFargoFX",
+      supportEmail: "",
+      telegramChannel: "",
+      updatedAt: "",
+    }
+  )
   const [isSaving, setIsSaving] = useState(false)
   const { success, info } = useToast()
-
-  useEffect(() => {
-    void authApi.adminSettings().then((loaded) => {
-      if (loaded) setSettings(loaded as unknown as PlatformSettings)
-    }).catch(() => undefined)
-  }, [])
 
   const handleSaveSettings = (e: React.FormEvent) => {
     e.preventDefault()
     setIsSaving(true)
-    void authApi
-      .saveAdminSettings(settings as unknown as Record<string, unknown>)
+    void updateAdminSettings(settings as unknown as Record<string, unknown>)
       .then((saved) => {
-        setSettings(saved as unknown as PlatformSettings)
+        if (!saved.success || !saved.settings) return
+        setSettings(saved.settings as unknown as PlatformSettings)
         success("Settings Saved", "Platform parameters and public display metrics updated.")
       })
       .catch((error) => info("Settings Error", error instanceof Error ? error.message : "Unable to save settings."))
@@ -85,7 +82,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = () => {
     setIsUpdatingPassword(true)
 
     try {
-      await authApi.changePassword({
+      await changeAdminPassword({
         currentPassword,
         newPassword,
       })

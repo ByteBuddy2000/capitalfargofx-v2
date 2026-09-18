@@ -10,12 +10,12 @@ import {
   Mail,
   Calendar,
 } from "lucide-react"
-import { User } from "../../types"
-import { storage } from "../../lib/storage"
-import { Button } from "../ui/Button"
-import { Input } from "../ui/Input"
-import { useToast } from "../ui/Toast"
 import Image from "next/image"
+import { useToast } from "@/components/ui/Toast"
+import { Input } from "@/components/ui/Input"
+import { Button } from "@/components/ui/Button"
+import { User } from "@/types"
+import { changeUserPassword, updateUserProfile } from "@/controller/getUserDashboard.actions"
 
 interface AccountViewProps {
   currentUser: User
@@ -93,7 +93,7 @@ export const AccountView: React.FC<AccountViewProps> = ({
   /* Save Wallets                                                             */
   /* ------------------------------------------------------------------------ */
 
-  const handleSaveWallets = (e: React.FormEvent) => {
+  const handleSaveWallets = async (e: React.FormEvent) => {
     e.preventDefault()
 
     const btc = btcWallet.trim()
@@ -132,67 +132,27 @@ export const AccountView: React.FC<AccountViewProps> = ({
     }
 
     setIsSavingWallets(true)
-
-    setTimeout(() => {
-      setIsSavingWallets(false)
-
-      const users = storage.getUsers()
-
-      const updatedUser: User = {
-        ...currentUser,
-        btcWallet: btc,
-        ethWallet: eth,
-        usdtWallet: usdt,
-        updatedAt: new Date().toISOString(),
-      }
-
-      const updatedList = users.map((u) =>
-        u.id === currentUser.id ? updatedUser : u
-      )
-
-      storage.saveUsers(updatedList)
-      storage.setCurrentUser(updatedUser)
-
-      storage.addAuditLog({
-        actorId: currentUser.id,
-        actorUsername: currentUser.username,
-        action: "PROFILE_UPDATED",
-        entity: "User",
-        entityId: currentUser.id,
-        newState: {
-          btcWallet: btc,
-          ethWallet: eth,
-          usdtWallet: usdt,
-        },
-        notes: "User updated receiving cryptocurrency wallet addresses",
-      })
-
-      success(
-        "Wallets Updated",
-        "Your receiving crypto addresses have been securely stored."
-      )
-
+    try {
+      const result = await updateUserProfile({ btcWallet: btc, ethWallet: eth, usdtWallet: usdt })
+      if (!result.success || !result.user) throw new Error(result.message || "Unable to update profile.")
+      const updatedUser = { ...currentUser, ...result.user, id: String(result.user._id || result.user.id) } as User
+      success("Wallets Updated", "Your receiving crypto addresses have been securely stored.")
       onUpdateUser(updatedUser)
-    }, 450)
+    } catch (error) {
+      setPasswordError(error instanceof Error ? error.message : "Unable to update profile.")
+    } finally {
+      setIsSavingWallets(false)
+    }
   }
 
   /* ------------------------------------------------------------------------ */
   /* Change Password                                                          */
   /* ------------------------------------------------------------------------ */
 
-  const handleChangePassword = (e: React.FormEvent) => {
+  const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault()
 
     setPasswordError("")
-
-    if (
-      currentPassword !== currentUser.passwordHash &&
-      currentPassword !== "investor123" &&
-      currentPassword !== "admin123"
-    ) {
-      setPasswordError("Current password is incorrect.")
-      return
-    }
 
     if (newPassword.length < 6) {
       setPasswordError("New password must be at least 6 characters.")
@@ -205,42 +165,18 @@ export const AccountView: React.FC<AccountViewProps> = ({
     }
 
     setIsChangingPassword(true)
-
-    setTimeout(() => {
-      setIsChangingPassword(false)
-
-      const users = storage.getUsers()
-
-      const updatedUser: User = {
-        ...currentUser,
-        passwordHash: newPassword,
-        updatedAt: new Date().toISOString(),
-      }
-
-      const updatedList = users.map((u) =>
-        u.id === currentUser.id ? updatedUser : u
-      )
-
-      storage.saveUsers(updatedList)
-      storage.setCurrentUser(updatedUser)
-
-      storage.addAuditLog({
-        actorId: currentUser.id,
-        actorUsername: currentUser.username,
-        action: "PASSWORD_CHANGED",
-        entity: "User",
-        entityId: currentUser.id,
-        notes: "User updated authentication password",
-      })
-
+    try {
+      const result = await changeUserPassword({ currentPassword, newPassword })
+      if (!result.success) throw new Error(result.message || "Unable to update password.")
       setCurrentPassword("")
       setNewPassword("")
       setConfirmPassword("")
-
       success("Password Changed", "Your account credentials have been updated.")
-
-      onUpdateUser(updatedUser)
-    }, 500)
+    } catch (error) {
+      setPasswordError(error instanceof Error ? error.message : "Unable to update password.")
+    } finally {
+      setIsChangingPassword(false)
+    }
   }
 
   /* ------------------------------------------------------------------------ */

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, { useMemo, useState } from "react"
 import {
   ArrowDownToLine,
   Check,
@@ -19,17 +19,21 @@ import {
   YAxis,
 } from "recharts"
 
-import { Investment, Transaction, User } from "../../types"
-import { authApi } from "../../lib/api"
-import { Button } from "../ui/Button"
-import { useToast } from "../ui/Toast"
+// import { Button } from "../ui/Button"
+// import { useToast } from "../ui/Toast"
 import { DashboardTab } from "./DashboardLayout"
 import Image from "next/image"
-import { settleInvestmentAction } from "../../app/actions"
+import { User, Investment, Transaction, Withdrawal } from "@/types"
+import { settleUserInvestment } from "@/controller/userMutations.actions"
+import { useToast } from "@/components/ui/Toast"
+import { Button } from "@/components/ui/Button"
 
 interface DashboardOverviewProps {
   currentUser: User
   onNavigateTab: (tab: DashboardTab) => void
+  initialInvestments: Investment[]
+  initialTransactions: Transaction[]
+  initialWithdrawals: Withdrawal[]
 }
 
 type ChartTimeframe = "7D" | "30D" | "3M" | "1Y"
@@ -101,21 +105,27 @@ const isDebitTransaction = (type: unknown): boolean => {
 export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   currentUser,
   onNavigateTab,
+  initialInvestments,
+  initialTransactions,
+  initialWithdrawals,
 }) => {
   const [copiedRef, setCopiedRef] = useState(false)
   const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>("30D")
 
-  const [investments, setInvestments] = useState<Investment[]>([])
-  const [transactions, setTransactions] = useState<Transaction[]>([])
-  const [pendingWithdrawals, setPendingWithdrawals] = useState(0)
-  const [cryptoPrices, setCryptoPrices] = useState({
+  const [investments, setInvestments] = useState<Investment[]>(initialInvestments)
+  const transactions = initialTransactions.slice(0, 5)
+  const pendingWithdrawals =
+    initialWithdrawals
+      .filter((withdrawal) => withdrawal.status === "PENDING")
+      .reduce((sum, withdrawal) => sum + Number(withdrawal.amount || 0), 0)
+  const cryptoPrices = {
     BTC: 64000,
     ETH: 3400,
     USDT: 1,
-  })
+  }
   const [currentTime] = useState(() => Date.now())
 
-  const [isLoading, setIsLoading] = useState(true)
+  const isLoading = false
   const [settlingInvestmentId, setSettlingInvestmentId] = useState<
     string | null
   >(null)
@@ -127,58 +137,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
    * Dashboard data
    * ---------------------------------------------------------
    */
-
-  const loadDashboardData = useCallback(async () => {
-    try {
-      setIsLoading(true)
-
-      const [loadedInvestments, loadedTransactions, loadedWithdrawals] =
-        await Promise.all([
-          authApi.investments(),
-          authApi.transactions(),
-          authApi.withdrawals(),
-        ])
-
-      setInvestments(Array.isArray(loadedInvestments) ? loadedInvestments : [])
-
-      setTransactions(
-        Array.isArray(loadedTransactions) ? loadedTransactions.slice(0, 5) : []
-      )
-
-      const withdrawals = Array.isArray(loadedWithdrawals)
-        ? loadedWithdrawals
-        : []
-
-      const pendingAmount = withdrawals
-        .filter(
-          (withdrawal) =>
-            String(withdrawal?.status ?? "").toUpperCase() === "PENDING"
-        )
-        .reduce((sum, withdrawal) => sum + Number(withdrawal?.amount ?? 0), 0)
-
-      setPendingWithdrawals(Number.isFinite(pendingAmount) ? pendingAmount : 0)
-
-      void authApi
-        .prices()
-        .then(setCryptoPrices)
-        .catch(() => undefined)
-    } catch {
-      /*
-       * Do not break the dashboard if one API request fails.
-       * The existing state remains usable.
-       */
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    const loadTask = window.setTimeout(() => {
-      void loadDashboardData()
-    }, 0)
-
-    return () => window.clearTimeout(loadTask)
-  }, [loadDashboardData])
 
   /*
    * ---------------------------------------------------------
@@ -429,32 +387,22 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     try {
       setSettlingInvestmentId(investmentId)
 
-      const actionResult = await settleInvestmentAction(investmentId)
+      const settledInvestment = investments.find((item) => item.id === investmentId)
+      if (!settledInvestment) return
 
-      if (!actionResult.success) {
-        throw new Error(actionResult.error)
-      }
-
-      const settledInvestment = actionResult.data.investment
-
+      const result = await settleUserInvestment(investmentId)
+      if (!result.success || !result.investment) throw new Error(result.message || "Unable to settle investment.")
+      const updatedInvestment = {
+        ...result.investment,
+        id: String(result.investment._id || result.investment.id),
+      } as Investment
       setInvestments((current) =>
-        current.map((item) =>
-          String(item.id) === investmentId ? settledInvestment : item
-        )
+        current.map((item) => (item.id === investmentId ? updatedInvestment : item))
       )
-
       success(
         "Investment Settled",
-        `Principal and ${formatCurrency(
-          settledInvestment.expectedProfit
-        )} profit have been credited according to the settlement result.`
+        `Principal and ${formatCurrency(updatedInvestment.expectedProfit)} profit have been credited.`
       )
-
-      /*
-       * Refresh balances and transaction history because
-       * settlement changes more than the investment record.
-       */
-      await loadDashboardData()
     } catch (error) {
       info(
         "Settlement Failed",
