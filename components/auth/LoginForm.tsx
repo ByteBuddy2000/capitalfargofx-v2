@@ -80,7 +80,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         .trim()
         .toLowerCase()
 
-      console.log("LOGIN ROLE:", role)
 
       if (role !== "user" && role !== "admin" && role !== "super admin") {
         const message =

@@ -122,7 +122,7 @@ export async function POST(request: Request) {
       uplineId: upline?._id || null,
       uplineUsername: upline?.username || null,
       role: data.role,
-      status: "ACTIVE",
+      status: "INACTIVE",
     })
 
     const verifyURL = `${BASE_URL}/api/verify?token=${token}`;

@@ -76,7 +76,7 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name as string
         session.user.email = token.email as string
         session.user.fullName = token.fullname as string
-        session.user.status = token.status as "ACTIVE" | "SUSPENDED" | "BANNED"
+        session.user.status = token.status as "ACTIVE" | "INACTIVE" | "SUSPENDED" | "BANNED"
       }
       return session
     },

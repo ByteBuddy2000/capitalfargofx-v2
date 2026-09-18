@@ -12,7 +12,7 @@ declare module "next-auth" {
       role: "user" | "admin" | "super admin"
       username?: string
       fullName?: string
-      status?: "ACTIVE" | "SUSPENDED" | "BANNED"
+      status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "BANNED"
       btcWallet?: string
       ethWallet?: string
       usdtWallet?: string
@@ -27,7 +27,7 @@ declare module "next-auth" {
     role: "user" | "admin" | "super admin"
     username?: string
     fullName?: string
-    status?: "ACTIVE" | "SUSPENDED" | "BANNED"
+    status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "BANNED"
     btcWallet?: string
     ethWallet?: string
     usdtWallet?: string
@@ -42,6 +42,6 @@ declare module "next-auth/jwt" {
     name?: string | null
     role?: "user" | "admin" | "super admin"
     username?: string
-    status?: "ACTIVE" | "SUSPENDED" | "BANNED"
+    status?: "ACTIVE" | "INACTIVE" | "SUSPENDED" | "BANNED"
   }
 }
