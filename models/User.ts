@@ -2,7 +2,7 @@
 import mongoose, { type Model, type Schema, type Types } from "mongoose"
 
 export type UserRole = "user" | "admin" | "super admin"
-export type UserStatus = "ACTIVE" | "SUSPENDED" | "BANNED"
+export type UserStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED" | "BANNED"
 export type KycStatus = "VERIFIED" | "PENDING" | "UNVERIFIED"
 
 export interface IUser extends mongoose.Document {
@@ -56,8 +56,8 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["ACTIVE", "SUSPENDED", "BANNED"],
-      default: "ACTIVE",
+      enum: ["ACTIVE", "INACTIVE", "SUSPENDED", "BANNED"],
+      default: "INACTIVE",
     },
     btcWallet: { type: String, default: "" },
     ethWallet: { type: String, default: "" },

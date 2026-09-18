@@ -127,9 +127,9 @@ export const AdminPlans: React.FC<AdminPlansProps> = ({
 
       {/* Plans Grid */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {plans.map((plan) => (
+        {plans.map((plan, idx) => (
           <div
-            key={plan.id}
+            key={idx}
             className="flex flex-col justify-between rounded-3xl border border-slate-800 bg-slate-900 p-6 shadow-sm"
           >
             <div>

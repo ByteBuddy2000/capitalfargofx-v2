@@ -1,8 +1,9 @@
 // app/api/verify/route.ts
 
+import { connectToDB } from '@/lib/connectToDB';
+import { User } from '@/models/User';
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/connectDB';
-import User from '@/models/User';
+
 
 export async function GET(req: NextRequest) {
     const token = req.nextUrl.searchParams.get('token');
@@ -11,7 +12,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.redirect('/error');
     }
 
-    await connectDB();
+    await connectToDB();
 
     const user = await User.findOne({
         emailVerificationToken: token,
@@ -22,7 +23,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.redirect('/verify?error=invalid');
     }
 
-    user.status = 'active';
+    user.status = 'ACTIVE';
     user.emailVerificationToken = undefined;
     user.emailVerificationExpires = undefined;
 
