@@ -7,6 +7,11 @@ import { connectToDB } from "@/lib/connectToDB"
 import { ASSET_SYMBOLS, Asset } from "@/models/Asset"
 import { Referral } from "@/models/Referral"
 import { User } from "@/models/User"
+import { generateVerificationToken } from '@/lib/token';
+import { transporter } from '@/lib/mail';
+
+const BASE_URL = process.env.NEXTAUTH_URL;
+
 
 const BTC_ADDRESS_REGEX =
   /^(?:[13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1q[a-z0-9]{38,59}|bc1p[a-z0-9]{58})$/
@@ -104,6 +109,8 @@ export async function POST(request: Request) {
 
     const passwordHash = await bcrypt.hash(data.password, 12)
 
+    const token = generateVerificationToken();
+
     const createdUser = await User.create({
       fullName: data.fullName,
       username: normalizedUsername,
@@ -117,6 +124,19 @@ export async function POST(request: Request) {
       role: data.role,
       status: "ACTIVE",
     })
+
+    const verifyURL = `${BASE_URL}/api/verify?token=${token}`;
+
+    await transporter.sendMail({
+      from: `"CapitalsFargoFX" <${process.env.SMTP_EMAIL}>`,
+      to: normalizedEmail,
+      subject: 'Verify your email',
+      html: `
+        <h2>Verify your account</h2>
+        <p>Click the link below:</p>
+        <a href="${verifyURL}">${verifyURL}</a>
+      `,
+    });
 
     try {
       await Asset.insertMany(

@@ -24,6 +24,8 @@ export interface IUser extends mongoose.Document {
   totalWithdrawals: number
   referralEarnings: number
   kycStatus: KycStatus
+  emailVerificationToken?: string
+  emailVerificationExpires?: Date
   createdAt: Date
   updatedAt: Date
 }
@@ -76,6 +78,8 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
       enum: ["VERIFIED", "PENDING", "UNVERIFIED"],
       default: "PENDING",
     },
+    emailVerificationToken: { type: String },
+    emailVerificationExpires: { type: Date }
   },
   { timestamps: true }
 )
