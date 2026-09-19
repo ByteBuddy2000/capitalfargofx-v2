@@ -26,17 +26,17 @@ const VerifyEmail = () => {
         </div>
 
         <div>
-          <div className='space-y-4'>
-            <Button className='w-full' >
+          <div className='flex justify-center space-y-4'>
+            {/* <Button className='w-full' >
               <Link href='/login'>Sign In</Link>
-            </Button>
+            </Button> */}
 
-            <p className='text-muted-foreground text-center'>
-              Didn&apos;t get the mail?{' '}
-              <Link href='#' className='invisible text-card-foreground hover:underline'>
+            <Button className='w-fit mx-auto text-gray-500 text-center'>
+              Didn&apos;t get the mail ? {' '}
+              <Link href='#' className='text-card-foreground hover:underline'>
                 Resend
               </Link>
-            </p>
+            </Button>
           </div>
         </div>
       </div>
