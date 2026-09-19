@@ -23,9 +23,16 @@ export async function GET(req: NextRequest) {
         return NextResponse.redirect(new URL('/verify?error=invalid', baseUrl));
     }
 
-    user.status = 'ACTIVE';
-    user.emailVerificationToken = undefined;
-    user.emailVerificationExpires = undefined;
+    await User.updateOne(
+        { _id: user._id },
+        {
+            $set: { status: "ACTIVE" },
+            $unset: {
+                emailVerificationToken: 1,
+                emailVerificationExpires: 1,
+            },
+        }
+    )
 
     await user.save();
 
