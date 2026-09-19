@@ -14,6 +14,16 @@ export async function GET(req: NextRequest) {
 
     await connectToDB();
 
+    const existing = await User.findOne({
+        emailVerificationToken: token,
+    })
+
+    if (existing?.status === "ACTIVE") {
+        return NextResponse.redirect(
+            new URL('/login?verified=true', baseUrl)
+        )
+    }
+
     const user = await User.findOne({
         emailVerificationToken: token,
         emailVerificationExpires: { $gt: new Date() },

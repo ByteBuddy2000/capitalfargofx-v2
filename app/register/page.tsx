@@ -7,6 +7,7 @@ import { RegisterForm } from "@/components/auth/RegisterForm"
 import { LegalModal, type LegalDocType } from "@/components/legal/LegalModal"
 import { ToastProvider } from "@/components/ui/Toast"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
 export default function RegisterPage() {
   const [legalModalOpen, setLegalModalOpen] = useState(false)
@@ -17,9 +18,13 @@ export default function RegisterPage() {
     setLegalModalOpen(true)
   }
 
-  const handleSuccess = (user: { email: string }) => {
-    window.location.assign(`/verify?email=${encodeURIComponent(user.email)}`)
-  }
+const router = useRouter()
+
+const handleSuccess = (user: { email: string }) => {
+  router.push(
+    `/verify?email=${encodeURIComponent(user.email)}`
+  )
+}
 
   return (
     <ToastProvider>
