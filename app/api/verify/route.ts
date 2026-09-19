@@ -36,7 +36,9 @@ export async function GET(req: NextRequest) {
     await User.updateOne(
         { _id: user._id },
         {
-            $set: { status: "ACTIVE" },
+            $set: {
+                status: "ACTIVE",
+            },
             $unset: {
                 emailVerificationToken: 1,
                 emailVerificationExpires: 1,
