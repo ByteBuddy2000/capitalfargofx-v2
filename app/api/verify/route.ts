@@ -4,8 +4,7 @@ import { connectToDB } from '@/lib/connectToDB';
 import { User } from '@/models/User';
 import { NextRequest, NextResponse } from 'next/server';
 
-const BASE_URL = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-
+const BASE_URL = process.env.NEXTAUTH_URL ;
 export async function GET(req: NextRequest) {
     const token = req.nextUrl.searchParams.get('token');
 

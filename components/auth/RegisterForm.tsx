@@ -132,15 +132,15 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       )
       onSuccess(result.user)
     } catch (requestError) {
-      setError(
+      const message =
         requestError instanceof Error
           ? requestError.message
           : "Unable to create your account."
+
+      setError(
+        message
       )
-      toastError(
-        "Registration Failed",
-        "Please review your details and try again."
-      )
+      toastError("Registration Failed", message)
     } finally {
       setIsLoading(false)
     }
