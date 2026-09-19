@@ -1,3 +1,4 @@
+// app/register/page.tsx
 "use client"
 
 import { useState } from "react"
@@ -16,8 +17,8 @@ export default function RegisterPage() {
     setLegalModalOpen(true)
   }
 
-  const handleSuccess = () => {
-    window.location.assign("/login?registered=true")
+  const handleSuccess = (user: { email: string }) => {
+    window.location.assign(`/verify?email=${encodeURIComponent(user.email)}`)
   }
 
   return (

@@ -1,3 +1,4 @@
+// app/verify/page.tsx
 import VerifyEmail from "./VerifyForm"
 
 const page = () => {

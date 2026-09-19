@@ -1,4 +1,4 @@
-// app/verify/page.tsx
+// app/verify/VerifyForm.tsx
 'use client'
 import Logo from '@/components/Logo/Logo'
 import { Button } from '@/components/ui/Button'
@@ -9,6 +9,7 @@ const VerifyEmail = () => {
 
   const params = useSearchParams();
   const email = params.get('email');
+  const error = params.get("error")
 
   return (
     <div className='relative flex h-auto min-h-screen items-center justify-center overflow-x-hidden px-4 py-10 sm:px-6 lg:px-8'>
@@ -17,7 +18,13 @@ const VerifyEmail = () => {
           <Logo />
 
           <div>
+
             <h1 className='mb-1.5 text-2xl font-bold'>Verify your email</h1>
+            {error === "invalid" && (
+              <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                This verification link is invalid or has expired.
+              </div>
+            )}
             <p className='text-base text-slate-600'>
               An activation link has been sent to your email address: <b>{email}</b>. Please check your inbox/spam and
               click on the link to complete the registration process.

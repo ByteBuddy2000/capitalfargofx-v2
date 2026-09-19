@@ -4,12 +4,12 @@ import { connectToDB } from '@/lib/connectToDB';
 import { User } from '@/models/User';
 import { NextRequest, NextResponse } from 'next/server';
 
-const BASE_URL = process.env.NEXTAUTH_URL ;
 export async function GET(req: NextRequest) {
     const token = req.nextUrl.searchParams.get('token');
+    const baseUrl = process.env.NEXTAUTH_URL || req.nextUrl.origin;
 
     if (!token) {
-        return NextResponse.redirect(new URL('/error', BASE_URL));
+        return NextResponse.redirect(new URL('/error', baseUrl));
     }
 
     await connectToDB();
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     });
 
     if (!user) {
-        return NextResponse.redirect(new URL('/verify?error=invalid', BASE_URL));
+        return NextResponse.redirect(new URL('/verify?error=invalid', baseUrl));
     }
 
     user.status = 'ACTIVE';
@@ -29,5 +29,5 @@ export async function GET(req: NextRequest) {
 
     await user.save();
 
-    return NextResponse.redirect(new URL('/login?verified=true', BASE_URL));
+    return NextResponse.redirect(new URL('/login?verified=true', baseUrl));
 }

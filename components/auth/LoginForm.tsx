@@ -15,6 +15,8 @@ import { Input } from "../ui/Input"
 import { Button } from "../ui/Button"
 import { useToast } from "../ui/Toast"
 import { useRouter } from "next/navigation"
+import { useSearchParams } from "next/navigation"
+import { useEffect } from "react"
 
 interface LoginFormProps {
   onSwitchToRegister: () => void
@@ -25,13 +27,25 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   onSwitchToRegister,
   onForgotPassword,
 }) => {
-  const router = useRouter()
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [identifier, setIdentifier] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const { success, error: toastError } = useToast()
+
+  useEffect(() => {
+  const verified = searchParams.get("verified")
+
+  if (verified === "true") {
+    success(
+      "Email Verified",
+      "Your account has been activated. You can now sign in."
+    )
+  }
+}, [searchParams, success])
 
   const getFriendlyLoginError = (rawError?: string | null) => {
     if (!rawError) return "Unable to sign you in. Please try again."

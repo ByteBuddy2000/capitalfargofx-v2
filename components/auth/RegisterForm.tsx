@@ -1,3 +1,4 @@
+// RegisterForm.tsx
 "use client"
 
 import React, { useState } from "react"
@@ -16,6 +17,9 @@ import { User } from "@/types"
 import { Input } from "../ui/Input"
 import { Button } from "../ui/Button"
 import { useToast } from "../ui/Toast"
+import { useRouter } from "next/navigation"
+
+
 
 interface RegisterFormProps {
   initialReferralCode?: string
@@ -58,6 +62,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   )
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
+
+  const router = useRouter()
 
   const { success, error: toastError } = useToast()
 
@@ -131,6 +137,11 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         "Check your email to verify your account before signing in."
       )
       onSuccess(result.user)
+
+      router.push(
+        `/verify?email=${encodeURIComponent(result.user.email)}`
+      )
+
     } catch (requestError) {
       const message =
         requestError instanceof Error
@@ -159,7 +170,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 
       {/* Upline Card */}
       <div className="hidden items-center justify-between rounded-xl border border-slate-200/80 bg-slate-50 p-3">
-      {/* <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-slate-50 p-3"> */}
+        {/* <div className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-slate-50 p-3"> */}
         <div className="flex items-center gap-2">
           <Users className="h-4 w-4 text-blue-600" />
           <span className="text-xs font-semibold text-slate-700">
