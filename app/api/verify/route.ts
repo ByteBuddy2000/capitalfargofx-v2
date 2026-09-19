@@ -29,5 +29,5 @@ export async function GET(req: NextRequest) {
 
     await user.save();
 
-    return NextResponse.redirect('/signin?verified=true');
+    return NextResponse.redirect('/login?verified=true');
 }
