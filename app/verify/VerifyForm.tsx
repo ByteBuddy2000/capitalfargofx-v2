@@ -19,8 +19,8 @@ const VerifyEmail = () => {
           <div>
             <h1 className='mb-1.5 text-2xl font-bold'>Verify your email</h1>
             <p className='text-base text-slate-600'>
-              An activation link has been sent to your email address: <b>{email}</b>. Please check your inbox and
-              click on the link to complete the activation process.
+              An activation link has been sent to your email address: <b>{email}</b>. Please check your inbox/spam and
+              click on the link to complete the registration process.
             </p>
           </div>
         </div>
