@@ -17,7 +17,7 @@ export default function RegisterPage() {
   }
 
   const handleSuccess = () => {
-    window.location.assign("/dashboard")
+    window.location.assign("/login?registered=true")
   }
 
   return (

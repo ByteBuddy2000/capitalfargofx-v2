@@ -14,15 +14,8 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl
 
-  const role = String(token?.role ?? "")
-    .trim()
-    .toLowerCase()
-  const destination =
-    role === "admin" || role === "super admin"
-      ? "/admin"
-      : role === "user"
-        ? "/dashboard"
-        : "/login"
+  const role = String(token?.role ?? "").trim() .toLowerCase()
+  const destination =  role === "admin" || role === "super admin"  ? "/admin"  : role === "user"   ? "/dashboard"   : "/login"
 
   // 1. Redirect logged-in users away from the login page.
   if (token && pathname === "/login") {

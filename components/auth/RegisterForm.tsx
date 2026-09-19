@@ -9,8 +9,9 @@ import {
   Wallet,
   Users,
   CheckCircle2,
+  Eye,
+  EyeOff,
 } from "lucide-react"
-import { signIn } from "next-auth/react"
 import { User } from "@/types"
 import { Input } from "../ui/Input"
 import { Button } from "../ui/Button"
@@ -44,6 +45,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   const [confirmEmail, setConfirmEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const [btcWallet, setBtcWallet] = useState("")
   const [ethWallet, setEthWallet] = useState("")
@@ -123,20 +126,9 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         throw new Error(result.message || "Unable to create your account.")
       }
 
-      const signInResult = await signIn("credentials", {
-        email: email.trim().toLowerCase(),
-        password,
-        redirect: false,
-      })
-      if (!signInResult || signInResult.error) {
-        throw new Error(
-          "Account created, but automatic sign-in failed. Please sign in manually."
-        )
-      }
-
       success(
         "Account Created Successfully",
-        `Welcome to CapitalFargoFX, ${result.user.fullName}!`
+        "Check your email to verify your account before signing in."
       )
       onSuccess(result.user)
     } catch (requestError) {
@@ -232,21 +224,57 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
         <Input
           label="Password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="At least 6 characters"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           leftIcon={<Lock className="h-4 w-4" />}
+          rightIcon={
+            <button
+              type="button"
+              onClick={() => setShowPassword((visible) => !visible)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-pressed={showPassword}
+              className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none"
+            >
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          }
+          autoComplete="new-password"
           required
         />
 
         <Input
           label="Confirm Password"
-          type="password"
+          type={showConfirmPassword ? "text" : "password"}
           placeholder="Repeat password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           leftIcon={<Lock className="h-4 w-4" />}
+          rightIcon={
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((visible) => !visible)}
+              aria-label={
+                showConfirmPassword
+                  ? "Hide confirmed password"
+                  : "Show confirmed password"
+              }
+              aria-pressed={showConfirmPassword}
+              className="cursor-pointer rounded-md p-1 text-slate-400 transition-colors hover:text-slate-700 focus:ring-2 focus:ring-blue-500/30 focus:outline-none"
+            >
+              {showConfirmPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          }
+          autoComplete="new-password"
           required
         />
       </div>

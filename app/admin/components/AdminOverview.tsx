@@ -17,6 +17,28 @@ import {
 } from "../controllers/deposit.actions"
 import { updateAdminWithdrawal } from "../controllers/withdrawal.action"
 
+const getUserDisplayValue = (value: unknown, fallback = "Unknown user") => {
+  if (typeof value === "string") return value
+  if (!value || typeof value !== "object") return fallback
+
+  const user = value as {
+    fullName?: unknown
+    username?: unknown
+    _id?: unknown
+  }
+
+  if (typeof user.fullName === "string" && user.fullName) {
+    return user.fullName
+  }
+
+  if (typeof user.username === "string" && user.username) {
+    return user.username
+  }
+
+  if (user._id != null) return String(user._id)
+  return fallback
+}
+
 interface AdminOverviewProps {
   currentUser: User
   onNavigateTab: (tab: AdminTab) => void
@@ -232,18 +254,18 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({
             </p>
           ) : (
             <div className="space-y-3">
-              {pendingDeposits.slice(0, 3).map((dep) => (
+              {pendingDeposits.slice(0, 3).map((dep, idx) => (
                 <div
-                  key={dep.id}
+                  key={idx}
                   className="space-y-3 rounded-2xl border border-slate-800 bg-slate-950 p-4 text-xs"
                 >
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-sm font-bold text-white">
-                        {dep.userFullName}
+                        {getUserDisplayValue(dep.userFullName)}
                       </span>
                       <span className="block font-mono text-[11px] text-slate-400">
-                        @{dep.userId}
+                        @{getUserDisplayValue(dep.userId)}
                       </span>
                     </div>
                     <div className="text-right">
@@ -307,7 +329,7 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-sm font-bold text-white">
-                        {w.userFullName}
+                        {getUserDisplayValue(w.userFullName)}
                       </span>
                       <span className="block font-mono text-[11px] text-slate-400">
                         To: {w.destinationAddress.substring(0, 14)}...

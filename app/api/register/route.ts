@@ -68,6 +68,7 @@ export async function POST(request: Request) {
         { status: 400 }
       )
     }
+    
 
     if (normalizedWallets.ETH && !validateEthAddress(normalizedWallets.ETH)) {
       return NextResponse.json(
