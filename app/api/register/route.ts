@@ -10,7 +10,7 @@ import { User } from "@/models/User"
 import { generateVerificationToken } from '@/lib/token';
 import { transporter } from '@/lib/mail';
 
-const BASE_URL = process.env.NEXTAUTH_URL;
+const BASE_URL = process.env.NEXTAUTH_URL || "http://localhost:3000"
 
 
 const BTC_ADDRESS_REGEX =
@@ -133,16 +133,25 @@ export async function POST(request: Request) {
 
     const verifyURL = `${BASE_URL}/api/verify?token=${token}`;
 
-    await transporter.sendMail({
-      from: `"CapitalsFargoFX" <${process.env.SMTP_EMAIL}>`,
-      to: normalizedEmail,
-      subject: 'Verify your email',
-      html: `
-        <h2>Verify your account</h2>
-        <p>Click the link below:</p>
-        <a href="${verifyURL}">${verifyURL}</a>
-      `,
-    });
+    try {
+      await transporter.sendMail({
+        from: `"CapitalsFargoFX" <${process.env.GMAIL_USER}>`,
+        to: normalizedEmail,
+        subject: "Verify your email",
+        html: `
+          <h2>Verify your account</h2>
+          <p>Click the link below:</p>
+          <a href="${verifyURL}">${verifyURL}</a>
+        `,
+      })
+    } catch (mailError) {
+      await User.deleteOne({ _id: createdUser._id })
+      console.error("Registration verification email failed:", mailError)
+      return NextResponse.json(
+        { message: "Unable to send the verification email. Please try again later." },
+        { status: 503 }
+      )
+    }
 
     try {
       await Asset.insertMany(
@@ -198,7 +207,7 @@ export async function POST(request: Request) {
     const message =
       error instanceof Error ? error.message : "Unknown registration error."
 
-    console.error("Registration API error:", message)
+    console.error("Registration API error:", error)
     return NextResponse.json(
       {
         message:
