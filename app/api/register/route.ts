@@ -68,7 +68,7 @@ export async function POST(request: Request) {
         { status: 400 }
       )
     }
-    
+
 
     if (normalizedWallets.ETH && !validateEthAddress(normalizedWallets.ETH)) {
       return NextResponse.json(
@@ -131,39 +131,20 @@ export async function POST(request: Request) {
       emailVerificationExpires,
     })
 
-    const verifyURL = `${BASE_URL}/api/verify?token=${token}`;
-
-    try {
-      await transporter.sendMail({
-        from: `"CapitalsFargoFX" <${process.env.GMAIL_USER}>`,
-        to: normalizedEmail,
-        subject: "Verify your email",
-        html: `
-          <h2>Verify your account</h2>
-          <p>Click the link below:</p>
-          <a href="${verifyURL}">${verifyURL}</a>
-        `,
-      })
-    } catch (mailError) {
-      await User.deleteOne({ _id: createdUser._id })
-      console.error("Registration verification email failed:", mailError)
-      return NextResponse.json(
-        { message: "Unable to send the verification email. Please try again later." },
-        { status: 503 }
-      )
-    }
-
     try {
       await Asset.insertMany(
         ASSET_SYMBOLS.map((symbol) => ({
           userId: createdUser._id,
           symbol,
-          walletAddress: normalizedWallets[symbol],
+          walletAddress:
+            normalizedWallets[symbol as keyof typeof normalizedWallets] || "",
         }))
       )
     } catch (assetError) {
       console.error("Asset creation failed for new user:", assetError)
+
       await User.deleteOne({ _id: createdUser._id })
+
       return NextResponse.json(
         { message: "Unable to create your account." },
         { status: 400 }
@@ -171,10 +152,86 @@ export async function POST(request: Request) {
     }
 
     if (upline) {
-      await Referral.create({
-        referrerId: upline._id,
-        referredUserId: createdUser._id,
+      try {
+        await Referral.create({
+          referrerId: upline._id,
+          referredUserId: createdUser._id,
+        })
+      } catch (referralError) {
+        console.error("Referral creation failed:", referralError)
+      }
+    }
+
+    const verifyURL = `${BASE_URL}/api/verify?token=${token}`
+
+    try {
+      await transporter.sendMail({
+        from: `"CapitalsFargoFX" <${process.env.GMAIL_USER}>`,
+        to: normalizedEmail,
+        subject: "Verify Your CapitalsFargoFX Account",
+        html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto;">
+        <h2>Welcome to CapitalsFargoFX</h2>
+
+        <p>Hello ${createdUser.fullName},</p>
+
+        <p>
+          Thank you for registering. Please verify your email address by clicking
+          the button below:
+        </p>
+
+        <p style="margin: 30px 0;">
+          <a
+            href="${verifyURL}"
+            style="
+              background:#2563eb;
+              color:#ffffff;
+              padding:12px 24px;
+              text-decoration:none;
+              border-radius:6px;
+              display:inline-block;
+            "
+          >
+            Verify Email Address
+          </a>
+        </p>
+
+        <p>
+          If the button does not work, copy and paste the following link into
+          your browser:
+        </p>
+
+        <p>
+          <a href="${verifyURL}">
+            ${verifyURL}
+          </a>
+        </p>
+
+        <p>
+          This verification link will expire in 24 hours.
+        </p>
+
+        <p>
+          Regards,<br />
+          CapitalsFargoFX Support Team
+        </p>
+      </div>
+    `,
       })
+    } catch (mailError) {
+      console.error("Registration verification email failed:", mailError)
+
+      await Asset.deleteMany({ userId: createdUser._id })
+      await Referral.deleteMany({ referredUserId: createdUser._id })
+      await User.deleteOne({ _id: createdUser._id })
+
+      return NextResponse.json(
+        {
+          message:
+            "Unable to send the verification email. Please try again later.",
+        },
+        { status: 503 }
+      )
     }
 
     return NextResponse.json(
