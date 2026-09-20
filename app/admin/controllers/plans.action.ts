@@ -68,13 +68,15 @@ export async function getAdminPlans(): Promise<AdminPlansResponse> {
 
     await connectToDB()
 
-    const plans = await Plan.find({}).sort({ minimumAmount: 1 }).lean()
+    const plans = await Plan.find({})
+      .sort({ minimumAmount: 1 })
+      .lean()
 
     return {
       success: true,
       plans: JSON.parse(JSON.stringify(plans)),
     }
-  } catch (error: unknown) {
+  } catch (error) {
     console.error("Failed to load admin plans:", error)
 
     return {
@@ -106,12 +108,17 @@ export async function saveAdminPlan(
       .trim()
       .toLowerCase()
 
-    // Auto-generate slug from plan name if not provided
+    /**
+     * Auto-generate slug from plan name
+     * Examples:
+     * Level 1 Plan -> level-1
+     * Level 6 Plan -> level-6
+     * Diamond VIP Tier -> diamond-vip-tier
+     */
     if (!slug && name) {
       const match = name.match(/level\s*(\d+)/i)
 
       if (match) {
-        // Level 1 Plan -> level-1
         slug = `level-${match[1]}`
       } else {
         slug = name
@@ -119,7 +126,7 @@ export async function saveAdminPlan(
           .replace(/[^a-z0-9\s-]/g, "")
           .replace(/\s+/g, "-")
           .replace(/-+/g, "-")
-          .trim()
+          .replace(/^-|-$/g, "")
       }
     }
 
@@ -131,13 +138,16 @@ export async function saveAdminPlan(
     const maximumAmount = Number(body.maximumAmount || 0)
 
     const referralPercentage = Number(
-      body.referralPercentage ?? body.referralCommissionRate ?? 0
+      body.referralPercentage ??
+      body.referralCommissionRate ??
+      0
     )
 
     const principalReturn = Boolean(body.principalReturn)
 
     const status =
-      body.isActive === false || body.status === "INACTIVE"
+      body.isActive === false ||
+      body.status === "INACTIVE"
         ? "INACTIVE"
         : "ACTIVE"
 
@@ -158,7 +168,10 @@ export async function saveAdminPlan(
 
     await connectToDB()
 
-    // Only check if another plan already uses this slug
+    /**
+     * Prevent duplicate slugs.
+     * Ignore the current plan when editing.
+     */
     const existingPlan = await Plan.findOne({
       slug,
       ...(id && mongoose.isValidObjectId(id)
@@ -187,25 +200,20 @@ export async function saveAdminPlan(
       featured,
     }
 
-    const duplicate = await Plan.findOne({
-      slug,
-      ...(id && mongoose.isValidObjectId(id) ? { _id: { $ne: id } } : {}),
-    }).lean()
+    let plan
 
-    if (duplicate) {
-      return {
-        success: false,
-        message: "A plan with this name already exists.",
-      }
-    }
-
-    const plan =
-      id && mongoose.isValidObjectId(id)
-        ? await Plan.findByIdAndUpdate(id, values, {
+    if (id && mongoose.isValidObjectId(id)) {
+      plan = await Plan.findByIdAndUpdate(
+        id,
+        values,
+        {
           new: true,
           runValidators: true,
-        }).lean()
-        : await Plan.create(values)
+        }
+      ).lean()
+    } else {
+      plan = await Plan.create(values)
+    }
 
     if (!plan) {
       return {
@@ -219,12 +227,15 @@ export async function saveAdminPlan(
       plan: JSON.parse(JSON.stringify(plan)),
       adminId: admin.id,
     }
-  } catch (error: unknown) {
+  } catch (error) {
     console.error("Failed to save admin plan:", error)
 
     return {
       success: false,
-      message: "Unable to save plan.",
+      message:
+        error instanceof Error
+          ? error.message
+          : "Unable to save plan.",
     }
   }
 }
@@ -264,7 +275,7 @@ export async function deleteAdminPlan(
       success: true,
       message: "Plan deleted successfully.",
     }
-  } catch (error: unknown) {
+  } catch (error) {
     console.error("Failed to delete admin plan:", error)
 
     return {
