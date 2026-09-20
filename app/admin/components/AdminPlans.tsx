@@ -1,3 +1,4 @@
+// AdminPlans.tsx
 "use client"
 import React, { useState } from "react"
 import { Layers, Plus, Edit2, Trash2 } from "lucide-react"

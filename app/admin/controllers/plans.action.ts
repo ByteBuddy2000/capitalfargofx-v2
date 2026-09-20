@@ -102,10 +102,26 @@ export async function saveAdminPlan(
 
     const name = String(body.name || "").trim()
 
-    const slug = String(body.slug || body.name || "")
+    let slug = String(body.slug || "")
       .trim()
       .toLowerCase()
-      .replace(/\s+/g, "-")
+
+    // Auto-generate slug from plan name if not provided
+    if (!slug && name) {
+      const match = name.match(/level\s*(\d+)/i)
+
+      if (match) {
+        // Level 1 Plan -> level-1
+        slug = `level-${match[1]}`
+      } else {
+        slug = name
+          .toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, "")
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-")
+          .trim()
+      }
+    }
 
     const description = String(body.description || "")
 
@@ -142,6 +158,21 @@ export async function saveAdminPlan(
 
     await connectToDB()
 
+    // Only check if another plan already uses this slug
+    const existingPlan = await Plan.findOne({
+      slug,
+      ...(id && mongoose.isValidObjectId(id)
+        ? { _id: { $ne: id } }
+        : {}),
+    }).lean()
+
+    if (existingPlan) {
+      return {
+        success: false,
+        message: `A plan with slug "${slug}" already exists.`,
+      }
+    }
+
     const values = {
       name,
       slug,
@@ -171,9 +202,9 @@ export async function saveAdminPlan(
     const plan =
       id && mongoose.isValidObjectId(id)
         ? await Plan.findByIdAndUpdate(id, values, {
-            new: true,
-            runValidators: true,
-          }).lean()
+          new: true,
+          runValidators: true,
+        }).lean()
         : await Plan.create(values)
 
     if (!plan) {
