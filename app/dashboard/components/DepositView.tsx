@@ -15,9 +15,10 @@ import { createUserDeposit } from "@/controller/userMutations.actions"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Badge } from "@/components/ui/Badge"
-import { CryptoQRCode } from "@/components/ui/CryptoQRCode"
 import { useToast } from "@/components/ui/Toast"
 import Image from "next/image"
+import QRCode from 'react-qr-code';
+
 
 interface DepositViewProps {
   currentUser: User
@@ -92,6 +93,14 @@ export const DepositView: React.FC<DepositViewProps> = ({
     return `${amount} USD`
   }
 
+  const depositAddress = activeWalletConfig?.address || ""
+
+  const qrValue =
+    selectedCrypto === "BTC"
+      ? `bitcoin:${depositAddress}`
+      : selectedCrypto === "ETH"
+        ? `ethereum:${depositAddress}`
+        : depositAddress
   const handleProceedToPayment = (e: React.FormEvent) => {
     e.preventDefault()
     setErrorMsg("")
@@ -226,19 +235,19 @@ export const DepositView: React.FC<DepositViewProps> = ({
           <span
             className={`rounded-full px-3 py-1 ${step === "CONFIGURE" ? "bg-blue-600 text-white" : "bg-slate-200 text-slate-700"}`}
           >
-            1. Configure
+            1. <small className="hidden lg:block">Configure</small>
           </span>
           <span className="text-slate-300">→</span>
           <span
             className={`rounded-full px-3 py-1 ${step === "PAYMENT" ? "bg-blue-600 text-white" : "bg-slate-200 text-slate-700"}`}
           >
-            2. Payment
+            2. <small className="hidden lg:block">Payment</small>
           </span>
           <span className="text-slate-300">→</span>
           <span
             className={`rounded-full px-3 py-1 ${step === "SUCCESS" ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-700"}`}
           >
-            3. Confirmation
+            3. <small className="hidden lg:block">Confirmation</small>
           </span>
         </div>
       </div>
@@ -270,11 +279,10 @@ export const DepositView: React.FC<DepositViewProps> = ({
                         setAmount(p.minimumAmount)
                       }
                     }}
-                    className={`flex cursor-pointer flex-col justify-between rounded-2xl border-2 p-5 transition-all ${
-                      isSelected
-                        ? "border-blue-600 bg-blue-50/40 shadow-md ring-1 ring-blue-600"
-                        : "border-slate-200 bg-white hover:border-slate-300"
-                    }`}
+                    className={`flex cursor-pointer flex-col justify-between rounded-2xl border-2 p-5 transition-all ${isSelected
+                      ? "border-blue-600 bg-blue-50/40 shadow-md ring-1 ring-blue-600"
+                      : "border-slate-200 bg-white hover:border-slate-300"
+                      }`}
                   >
                     <div>
                       <div className="mb-2 flex items-center justify-between">
@@ -386,11 +394,10 @@ export const DepositView: React.FC<DepositViewProps> = ({
                     key={c.symbol}
                     type="button"
                     onClick={() => setSelectedCrypto(c.symbol)}
-                    className={`cursor-pointer rounded-2xl border-2 p-3 text-center transition-all ${
-                      selectedCrypto === c.symbol
-                        ? `${c.color} font-black shadow-xs ring-1`
-                        : "border-slate-200 bg-slate-50 font-semibold text-slate-700 hover:bg-white"
-                    }`}
+                    className={`cursor-pointer rounded-2xl border-2 p-3 text-center transition-all ${selectedCrypto === c.symbol
+                      ? `${c.color} font-black shadow-xs ring-1`
+                      : "border-slate-200 bg-slate-50 font-semibold text-slate-700 hover:bg-white"
+                      }`}
                   >
                     <div className="flex items-center justify-center">
                       <Image
@@ -519,12 +526,18 @@ export const DepositView: React.FC<DepositViewProps> = ({
             <div className="grid grid-cols-1 items-center gap-8 rounded-3xl border border-slate-200 bg-slate-50 p-6 sm:p-8 md:grid-cols-12">
               {/* QR Code */}
               <div className="flex flex-col items-center justify-center md:col-span-4">
-                <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
-                  <CryptoQRCode
-                    address={activeWalletConfig?.address || ""}
-                    asset={selectedCrypto as "BTC" | "ETH" | "USDT"}
+                <div className="w-full max-w-[220px] rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+                  <QRCode
+                    value={qrValue}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                    }}
+                    viewBox="0 0 256 256"
                   />
                 </div>
+
+
                 <span className="mt-2 text-[11px] font-semibold text-slate-500">
                   Scan to Pay in Wallet App
                 </span>

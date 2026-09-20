@@ -1,3 +1,4 @@
+// models/Transaction.ts
 import mongoose, { type Model, type Schema, type Types } from "mongoose"
 
 export type TransactionType =
@@ -5,6 +6,7 @@ export type TransactionType =
   | "WITHDRAWAL"
   | "INVESTMENT"
   | "PROFIT"
+  | "PRINCIPAL_RETURN"
   | "REFERRAL_COMMISSION"
   | "REFUND"
   | "ADJUSTMENT"
@@ -40,6 +42,7 @@ const transactionSchema: Schema<ITransaction> = new mongoose.Schema(
         "WITHDRAWAL",
         "INVESTMENT",
         "PROFIT",
+        "PRINCIPAL_RETURN",
         "REFERRAL_COMMISSION",
         "REFUND",
         "ADJUSTMENT",

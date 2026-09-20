@@ -50,9 +50,37 @@ export async function getAdminDeposits(): Promise<AdminDepositsResponse> {
       .sort({ createdAt: -1 })
       .lean()
 
+    const serializedDeposits = deposits.map((deposit) => {
+      const user =
+        deposit.userId && typeof deposit.userId === "object"
+          ? (deposit.userId as unknown as Record<string, unknown>)
+          : null
+      const plan =
+        deposit.planId && typeof deposit.planId === "object"
+          ? (deposit.planId as unknown as Record<string, unknown>)
+          : null
+
+      return {
+        ...deposit,
+        id: String(deposit._id),
+        userId: String(user?._id || deposit.userId),
+        userUsername: String(user?.username || ""),
+        userFullName: String(user?.fullName || "Unknown user"),
+        userEmail: String(user?.email || ""),
+        planId: String(plan?._id || deposit.planId),
+        planName: String(plan?.name || "Unknown plan"),
+        asset: deposit.asset,
+        txHash: deposit.txHash,
+        createdAt: deposit.createdAt,
+        approvedAt: deposit.approvedAt,
+        rejectedAt: deposit.rejectedAt,
+        adminNotes: deposit.adminNotes,
+      }
+    })
+
     return {
       success: true,
-      deposits: JSON.parse(JSON.stringify(deposits)),
+      deposits: JSON.parse(JSON.stringify(serializedDeposits)),
     }
   } catch (error: unknown) {
     console.error("Failed to load admin deposits:", error)

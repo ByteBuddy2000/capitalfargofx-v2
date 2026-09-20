@@ -25,6 +25,7 @@
     "postcss": "^8.5.26",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-qr-code": "^2.2.0",
     "recharts": "^3.10.1",
     "tailwindcss": "^4.3.3",
     "zod": "^3.25.76"

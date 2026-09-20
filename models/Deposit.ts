@@ -1,3 +1,4 @@
+// models/Deposit.ts
 import mongoose, { type Model, type Schema, type Types } from "mongoose"
 
 export type DepositAsset = "BTC" | "ETH" | "USDT"

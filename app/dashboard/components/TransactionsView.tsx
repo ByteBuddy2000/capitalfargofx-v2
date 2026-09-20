@@ -1,3 +1,4 @@
+// TransactionsView.tsx
 import React, { useState } from "react"
 import {
   ReceiptText,
@@ -11,7 +12,6 @@ import {
 } from "lucide-react"
 import { User, Transaction, TransactionType } from "@/types"
 import { Badge } from "@/components/ui/Badge"
-// import { Badge } from "../ui/Badge"
 
 interface TransactionsViewProps {
   currentUser: User
@@ -32,13 +32,13 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
     // Type tab filter
     if (activeTypeTab === "DEPOSIT" && tx.type !== "DEPOSIT") return false
     if (activeTypeTab === "WITHDRAWAL" && tx.type !== "WITHDRAWAL") return false
-    if (activeTypeTab === "INVESTMENT" && tx.type !== "INVESTMENT_DEBIT")
+    if (activeTypeTab === "INVESTMENT" && tx.type !== "INVESTMENT")
       return false
-    if (
-      activeTypeTab === "PROFIT" &&
-      tx.type !== "PROFIT_PAYOUT" &&
-      tx.type !== "PRINCIPAL_RETURN"
-    )
+
+    if (activeTypeTab === "PROFIT" && tx.type !== "PROFIT")
+      return false
+
+    if (activeTypeTab === "REFERRAL" && tx.type !== "REFERRAL_COMMISSION")
       return false
     if (activeTypeTab === "REFERRAL" && tx.type !== "REFERRAL_COMMISSION")
       return false
@@ -73,22 +73,26 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
   }
 
   const getTypeIcon = (type: TransactionType) => {
-    switch (type) {
-      case "DEPOSIT":
-        return <ArrowDownToLine className="h-4 w-4 text-emerald-500" />
-      case "WITHDRAWAL":
-        return <ArrowUpFromLine className="h-4 w-4 text-amber-500" />
-      case "INVESTMENT_DEBIT":
-        return <Layers className="h-4 w-4 text-blue-500" />
-      case "PROFIT_PAYOUT":
-      case "PRINCIPAL_RETURN":
-        return <TrendingUp className="h-4 w-4 text-emerald-500" />
-      case "REFERRAL_COMMISSION":
-        return <Users className="h-4 w-4 text-purple-500" />
-      default:
-        return <ReceiptText className="h-4 w-4 text-slate-500" />
-    }
+  switch (type) {
+    case "DEPOSIT":
+      return <ArrowDownToLine className="h-4 w-4 text-emerald-500" />
+
+    case "WITHDRAWAL":
+      return <ArrowUpFromLine className="h-4 w-4 text-amber-500" />
+
+    case "INVESTMENT":
+      return <Layers className="h-4 w-4 text-blue-500" />
+
+    case "PROFIT":
+      return <TrendingUp className="h-4 w-4 text-emerald-500" />
+
+    case "REFERRAL_COMMISSION":
+      return <Users className="h-4 w-4 text-purple-500" />
+
+    default:
+      return <ReceiptText className="h-4 w-4 text-slate-500" />
   }
+}
 
   return (
     <div className="space-y-6">
@@ -121,11 +125,10 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
             <button
               key={tab.id}
               onClick={() => setActiveTypeTab(tab.id)}
-              className={`cursor-pointer rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${
-                activeTypeTab === tab.id
+              className={`cursor-pointer rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${activeTypeTab === tab.id
                   ? "bg-blue-600 text-white shadow-xs"
                   : "bg-slate-50 text-slate-600 hover:bg-slate-100"
-              }`}
+                }`}
             >
               {tab.label}
             </button>
@@ -178,7 +181,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
-                  <th className="py-3.5 pl-6">Type & Operation</th>
+                  <th className="hidden py-3.5 pl-6">Type & Operation</th>
                   <th className="py-3.5">Description</th>
                   <th className="py-3.5">Amount (USD)</th>
                   <th className="py-3.5">Asset</th>
@@ -189,13 +192,13 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
               <tbody className="divide-y divide-slate-100">
                 {filtered.map((tx) => {
                   const isDebit =
-                    tx.type === "WITHDRAWAL" || tx.type === "INVESTMENT_DEBIT"
+                    tx.type === "WITHDRAWAL" || tx.type === "INVESTMENT"
                   return (
                     <tr
                       key={tx.id}
                       className="transition-colors hover:bg-slate-50/70"
                     >
-                      <td className="py-4 pl-6">
+                      <td className="hidden py-4 pl-6">
                         <div className="flex items-center gap-2.5">
                           <div className="rounded-xl bg-slate-100 p-2">
                             {getTypeIcon(tx.type)}
@@ -210,7 +213,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
                           </div>
                         </div>
                       </td>
-                      <td className="py-4">
+                      <td className="py-4 pl-6">
                         <p className="font-medium text-slate-800">
                           {tx.description}
                         </p>
@@ -234,7 +237,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
                         </span>
                       </td>
                       <td className="py-4 font-mono font-bold text-slate-600">
-                        {tx.cryptoCurrency || "USD"}
+                        {tx.asset || "USD"}
                       </td>
                       <td className="py-4">{getStatusBadge(tx.status)}</td>
                       <td className="py-4 pr-6 text-right font-mono text-[11px] text-slate-500">

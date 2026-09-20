@@ -2,7 +2,7 @@
 "use server"
 
 import { getServerSession } from "next-auth"
-
+import mongoose from "mongoose"
 import { authOptions } from "@/auth"
 import { connectToDB } from "@/lib/connectToDB"
 import { Transaction } from "@/models/Transaction"
@@ -27,8 +27,11 @@ export async function getUserTransactions(): Promise<MeTransactionsResponse> {
 
   try {
     await connectToDB()
+console.log("Session User ID:", userId)
 
-    const transactions = await Transaction.find({ userId })
+    const transactions = await Transaction.find({
+      userId: new mongoose.Types.ObjectId(userId),
+    })
       .sort({ createdAt: -1 })
       .lean()
 

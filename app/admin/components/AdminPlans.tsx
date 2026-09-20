@@ -68,14 +68,13 @@ export const AdminPlans: React.FC<AdminPlansProps> = ({
   const handleOpenCreate = () => {
     const newPlan: InvestmentPlan = {
       id: "",
-      name: "Diamond VIP Tier",
-      slug: "diamond-tier",
-      description:
-        "Exclusive institutional high-frequency liquidity cycle for VIP portfolios.",
-      returnPercentage: 75,
-      durationHours: 48,
-      minimumAmount: 25000,
-      maximumAmount: 100000,
+      name: "",
+      slug: "",
+      description: "",
+      returnPercentage: 0,
+      durationHours: 0,
+      minimumAmount: 0,
+      maximumAmount: 0,
       referralCommissionRate: 5,
       principalReturn: true,
       isActive: true,
