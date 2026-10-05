@@ -70,7 +70,6 @@ export const DepositView: React.FC<DepositViewProps> = ({
   const [transactionHash, setTransactionHash] = useState<string>("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submittedDeposit, setSubmittedDeposit] = useState<Deposit | null>(null)
-
   const [copiedWallet, setCopiedWallet] = useState(false)
   const [errorMsg, setErrorMsg] = useState("")
 
