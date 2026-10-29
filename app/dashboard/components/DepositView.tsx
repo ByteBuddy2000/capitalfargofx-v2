@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/Badge"
 import { useToast } from "@/components/ui/Toast"
 import Image from "next/image"
 import QRCode from "react-qr-code"
+import {useRouter} from "next/navigation"
 
 interface DepositViewProps {
   currentUser: User
@@ -213,6 +214,8 @@ export const DepositView: React.FC<DepositViewProps> = ({
       setIsSubmitting(false)
     }
   }
+
+  const router = useRouter()
 
   return (
     <div className="space-y-6">
@@ -639,7 +642,7 @@ export const DepositView: React.FC<DepositViewProps> = ({
 
           <div>
             <span className="text-xs font-bold tracking-wider text-emerald-600 uppercase">
-              Deposit Successfully Registered
+              Deposit Successfully
             </span>
             <h3 className="mt-1 text-2xl font-black tracking-tight text-slate-900">
               Deposit Order #{submittedDeposit?.id?.substring(0, 10) || ""}
@@ -680,10 +683,13 @@ export const DepositView: React.FC<DepositViewProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <Button variant="primary" onClick={onNavigateTransactions}>
+            {/* <Button variant="primary" onClick={onNavigateTransactions}>
               View in Transaction Ledger
+            </Button> */}
+            <Button variant="primary" onClick={router.back}>
+              Continue
             </Button>
-            <Button
+            {/* <Button
               variant="outline"
               onClick={() => {
                 setStep("CONFIGURE")
@@ -692,7 +698,7 @@ export const DepositView: React.FC<DepositViewProps> = ({
               }}
             >
               Create Another Deposit
-            </Button>
+            </Button> */}
           </div>
         </div>
       )}

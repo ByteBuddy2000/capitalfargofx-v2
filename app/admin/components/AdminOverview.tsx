@@ -262,36 +262,27 @@ export const AdminOverview: React.FC<AdminOverviewProps> = ({
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="text-sm font-bold text-white">
-                        {getUserDisplayValue(dep.userFullName)}
+                        {dep.userFullName || getUserDisplayValue(dep.userId)}
                       </span>
-                      <span className="block font-mono text-[11px] text-slate-400">
+                      {/* <span className="block font-mono text-[11px] text-slate-400">
                         @{getUserDisplayValue(dep.userId)}
-                      </span>
+                      </span> */}
                     </div>
                     <div className="text-right">
                       <span className="font-mono text-base font-black text-emerald-400">
                         ${(dep?.amount || 0).toLocaleString()}
                       </span>
                       <span className="block font-mono text-[10px] text-slate-400">
-                        {dep.cryptoCurrency} ({dep.planName})
+                        {`${dep.cryptoCurrency || dep.asset || "Crypto"} (${dep.planName || "Unknown plan"})`}
                       </span>
                     </div>
                   </div>
 
                   <div className="truncate rounded-xl bg-slate-900 p-2 font-mono text-[10px] text-slate-400">
-                    TXID: {dep.transactionHash}
+                    txHash: {dep.transactionHash || dep.txHash || "—"}
                   </div>
 
-                  <div className="flex items-center justify-end gap-2 pt-1">
-                    <Button
-                      size="sm"
-                      variant="primary"
-                      onClick={() => handleQuickApproveDeposit(dep)}
-                      className="bg-emerald-600 text-xs font-bold hover:bg-emerald-700"
-                    >
-                      Approve & Credit Plan
-                    </Button>
-                  </div>
+
                 </div>
               ))}
             </div>

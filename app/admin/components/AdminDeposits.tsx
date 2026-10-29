@@ -1,7 +1,7 @@
 // app/admin/components/AdminDeposits.tsx
 "use client"
 import React, { useState } from "react"
-import { ArrowDownToLine, Search } from "lucide-react"
+import { ArrowDownToLine, Copy, Search } from "lucide-react"
 import { User, Deposit } from "@/types"
 import { useToast } from "@/components/ui/Toast"
 import { Button } from "@/components/ui/Button"
@@ -32,6 +32,20 @@ export const AdminDeposits: React.FC<AdminDepositsProps> = ({
   const [allDeposits, setAllDeposits] = useState<Deposit[]>(initialDeposits)
 
   const { success, error: toastError } = useToast()
+
+  const handleCopyTxHash = async (txHash: string) => {
+    try {
+      await navigator.clipboard.writeText(txHash)
+      success("Copied", "Transaction hash copied to clipboard.")
+    } catch (error) {
+      toastError(
+        "Copy Error",
+        error instanceof Error
+          ? error.message
+          : "Unable to copy transaction hash."
+      )
+    }
+  }
 
   const filtered = allDeposits.filter((d) => {
     if (filter !== "ALL" && d.status !== filter) return false
@@ -211,11 +225,33 @@ export const AdminDeposits: React.FC<AdminDepositsProps> = ({
                       </span>
                     </td>
                     <td className="py-4">
-                      <span className="block max-w-xs font-mono text-[11px] break-all text-amber-300 select-all">
-                        {d.txHash}
-                      </span>
+                      {d.txHash ? (
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="font-mono text-[11px] text-amber-300"
+                            title={d.txHash}
+                          >
+                            {d.txHash.length > 9
+                              ? `${d.txHash.slice(0, 5)}...${d.txHash.slice(-4)}`
+                              : d.txHash}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (d.txHash) void handleCopyTxHash(d.txHash)
+                            }}
+                            className="rounded p-1 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white"
+                            aria-label="Copy transaction hash"
+                            title="Copy transaction hash"
+                          >
+                            <Copy className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      ) : (
+                        <span className="text-slate-500">—</span>
+                      )}
                     </td>
-                    <td className="py-4">
+                    <td className="py-4 text-[8px] font-bold tracking-wider text-slate-400 uppercase">
                       <Badge
                         variant={
                           d.status === "APPROVED"
@@ -242,15 +278,15 @@ export const AdminDeposits: React.FC<AdminDepositsProps> = ({
                             size="sm"
                             variant="primary"
                             onClick={() => handleApprove(d)}
-                            className="bg-emerald-600 text-xs font-bold hover:bg-emerald-700"
+                            className="bg-emerald-600 text-xs lg:text-xs font-bold hover:bg-emerald-700"
                           >
                             Approve
                           </Button>
                           <Button
                             size="sm"
-                            variant="outline"
+                            variant="danger"
                             onClick={() => handleOpenReject(d)}
-                            className="border-rose-800 bg-rose-950/40 text-xs text-rose-300 hover:bg-rose-900"
+                            className="bg-rose-700 text-xs lg:text-xs text-rose-100"
                           >
                             Reject
                           </Button>

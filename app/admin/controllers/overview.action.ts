@@ -63,10 +63,33 @@ export async function getAdminOverview(): Promise<AdminOverviewResponse> {
         .lean(),
     ])
 
+    const serializedDeposits = deposits.map((deposit) => {
+      const user =
+        deposit.userId && typeof deposit.userId === "object"
+          ? (deposit.userId as unknown as Record<string, unknown>)
+          : null
+      const plan =
+        deposit.planId && typeof deposit.planId === "object"
+          ? (deposit.planId as unknown as Record<string, unknown>)
+          : null
+
+      return {
+        ...deposit,
+        id: String(deposit._id),
+        userId: String(user?._id || deposit.userId),
+        userFullName: String(user?.fullName || "Unknown user"),
+        userEmail: String(user?.email || ""),
+        planId: String(plan?._id || deposit.planId),
+        planName: String(plan?.name || "Unknown plan"),
+        cryptoCurrency: deposit.asset,
+        transactionHash: deposit.txHash,
+      }
+    })
+
     return {
       success: true,
       users: JSON.parse(JSON.stringify(users)),
-      deposits: JSON.parse(JSON.stringify(deposits)),
+      deposits: JSON.parse(JSON.stringify(serializedDeposits)),
       withdrawals: JSON.parse(JSON.stringify(withdrawals)),
       investments: JSON.parse(JSON.stringify(investments)),
     }
