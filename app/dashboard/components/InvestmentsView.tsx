@@ -218,8 +218,8 @@ export const InvestmentsView: React.FC<InvestmentsViewProps> = ({
                       <h3 className="text-lg font-black text-slate-900">
                         {inv.planName} Plan
                       </h3>
-                      <p className="font-mono text-[11px] text-slate-400">
-                        Ref #{inv.id.substring(0, 14)}
+                      <p className="hidden font-mono text-[11px] text-slate-400">
+                        Ref #{inv.id.substring(0, 13)}
                       </p>
                     </div>
                     <Badge
@@ -229,29 +229,20 @@ export const InvestmentsView: React.FC<InvestmentsViewProps> = ({
                     </Badge>
                   </div>
 
-                  <div className="mb-4 grid grid-cols-3 gap-3 rounded-2xl bg-slate-50 p-3.5 text-xs">
+                  <div className="mb-4 grid grid-cols-2 gap-3 rounded-2xl bg-slate-50 p-3.5 text-xs">
                     <div>
                       <span className="block text-[10px] text-slate-500">
                         Invested Principal
                       </span>
-                      <span className="font-mono font-bold text-slate-900">
+                      <span className="text-lg font-mono font-bold text-slate-900">
                         ${(inv?.amount || 0).toLocaleString()}
                       </span>
                     </div>
-                    <div>
-                      <span className="block text-[10px] text-slate-500">
-                        Yield Profit
-                      </span>
-                      <span className="font-mono font-bold text-emerald-600">
-                        +{inv?.returnPercentage || 0}% ($
-                        {(inv?.expectedProfit || 0).toLocaleString()})
-                      </span>
-                    </div>
-                    <div>
+                    <div className="">
                       <span className="block text-[10px] text-slate-500">
                         Total Maturity
                       </span>
-                      <span className="font-mono font-bold text-slate-900">
+                      <span className="text-lg font-mono font-bold text-slate-900">
                         ${(inv?.totalReturn || 0).toLocaleString()}
                       </span>
                     </div>
@@ -299,6 +290,13 @@ export const InvestmentsView: React.FC<InvestmentsViewProps> = ({
                       </span>
                     </div>
                     <div className="flex justify-between">
+                      <span>Yield Profit:</span>
+                      <span className="font-mono font-bold text-emerald-600">
+                        +{inv?.returnPercentage || 0}% ($
+                        {(inv?.expectedProfit || 0).toLocaleString()})
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
                       <span>Duration:</span>
                       <span className="font-bold text-slate-800">
                         {inv.durationHours} Hours Cycle
@@ -322,7 +320,7 @@ export const InvestmentsView: React.FC<InvestmentsViewProps> = ({
                       title="Simulate contract maturity for testing"
                     >
                       <Play className="h-3.5 w-3.5" />
-                      Simulate Settlement
+                      Payoff
                     </button>
                   )}
                 </div>

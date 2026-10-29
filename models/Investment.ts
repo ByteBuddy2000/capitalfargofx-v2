@@ -6,6 +6,7 @@ export interface IInvestment extends mongoose.Document {
   _id: Types.ObjectId
   userId: Types.ObjectId
   planId: Types.ObjectId
+  planName?: string
   depositId: Types.ObjectId
   amount: number
   returnPercentage: number
@@ -34,6 +35,7 @@ const investmentSchema: Schema<IInvestment> = new mongoose.Schema(
       ref: "Plan",
       required: true,
     },
+    planName: { type: String, trim: true },
     depositId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Deposit",

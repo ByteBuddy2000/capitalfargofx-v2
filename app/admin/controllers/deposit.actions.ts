@@ -177,6 +177,7 @@ export async function approveAdminDeposit(
     const investment = await Investment.create({
       userId: deposit.userId,
       planId: plan._id ?? plan.id,
+      planName: plan.name,
       depositId: deposit._id,
       amount: deposit.amount,
       returnPercentage: plan.returnPercentage,

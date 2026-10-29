@@ -902,7 +902,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 return (
                   <div
                     key={investmentId}
-                    className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-4 transition-all hover:border-[#2563EB]/40"
+                    className="rounded-xl border border-[#E2E8F0] p-4 transition-all hover:border-[#2563EB]/40"
                   >
                     <div className="mb-2.5 flex items-center justify-between gap-3">
                       <div className="min-w-0">

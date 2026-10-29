@@ -218,8 +218,8 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
                           {tx.description}
                         </p>
                         {tx.txHash && (
-                          <p className="mt-0.5 max-w-xs truncate font-mono text-[10px] text-slate-400">
-                            TXID: {tx.txHash}
+                          <p className=" mt-0.5 max-w-xs truncate font-mono text-[10px] text-slate-400">
+                            TXHASH: {tx.txHash}
                           </p>
                         )}
                       </td>

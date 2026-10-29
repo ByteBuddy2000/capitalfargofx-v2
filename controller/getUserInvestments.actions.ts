@@ -29,13 +29,29 @@ export async function getUserInvestments(): Promise<MeInvestmentsResponse> {
     await connectToDB()
 
     const investments = await Investment.find({ userId })
-      .populate("planId")
+      .populate("planId", "name")
       .sort({ createdAt: -1 })
       .lean()
 
+    const serializedInvestments = investments.map((investment) => {
+      const plan =
+        investment.planId &&
+        typeof investment.planId === "object" &&
+        "name" in investment.planId
+          ? (investment.planId as { _id?: unknown; name?: string })
+          : undefined
+
+      return {
+        ...investment,
+        id: String(investment._id),
+        planId: String(plan?._id ?? investment.planId),
+        planName: investment.planName || plan?.name || "",
+      }
+    })
+
     return {
       success: true,
-      investments: JSON.parse(JSON.stringify(investments)),
+      investments: JSON.parse(JSON.stringify(serializedInvestments)),
     }
   } catch (error: unknown) {
     console.error("Failed to load user investments:", error)
