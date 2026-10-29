@@ -1126,7 +1126,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
                 <th className="px-5 py-3">Amount</th>
 
-                <th className="px-5 py-3">Asset</th>
+                <th className="hidden px-5 py-3">Asset</th>
 
                 <th className="px-5 py-3">Status</th>
 
@@ -1193,8 +1193,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                         </span>
                       </td>
 
-                      <td className="px-5 py-3.5 font-semibold text-[#64748B]">
-                        {transaction.cryptoCurrency || "USD"}
+                      <td className="hidden px-5 py-3.5 font-semibold text-[#64748B]">
+                        {transaction.asset || "USD"}
                       </td>
 
                       <td className="px-5 py-3.5">
