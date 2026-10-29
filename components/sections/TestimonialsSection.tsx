@@ -1,14 +1,14 @@
 // components/sections/TestimonialsSection.tsx
-"use client";
+"use client"
 
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { motion } from "framer-motion";
-import { TESTIMONIALS } from "../../lib/data";
-import { Quote, MessageSquare } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react"
+import Image from "next/image"
+import { motion } from "framer-motion"
+import { TESTIMONIALS } from "../../lib/data"
+import { Quote, MessageSquare } from "lucide-react"
 
-const CARD_GAP = 24;
-const SCROLL_SPEED = 35; // Pixels per second
+const CARD_GAP = 24
+const SCROLL_SPEED = 35 // Pixels per second
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 35 },
@@ -17,7 +17,7 @@ const fadeInUp = {
     y: 0,
     transition: { duration: 0.65, ease: "easeOut" as const },
   },
-};
+}
 
 const fadeInLeft = {
   hidden: { opacity: 0, x: -45 },
@@ -26,7 +26,7 @@ const fadeInLeft = {
     x: 0,
     transition: { duration: 0.7, ease: "easeOut" as const },
   },
-};
+}
 
 const staggerContainer = {
   hidden: {},
@@ -35,92 +35,92 @@ const staggerContainer = {
       staggerChildren: 0.12,
     },
   },
-};
+}
 
 export const TestimonialsSection: React.FC = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | null>(null);
-  const previousTimeRef = useRef<number | null>(null);
-  const halfWidthRef = useRef(0);
-  const isPausedRef = useRef(false);
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const animationRef = useRef<number | null>(null)
+  const previousTimeRef = useRef<number | null>(null)
+  const halfWidthRef = useRef(0)
+  const isPausedRef = useRef(false)
 
-  const [isPaused, setIsPaused] = useState(false);
+  const [isPaused, setIsPaused] = useState(false)
 
   // Duplicate the cards to create a seamless, continuous marquee.
-  const testimonials = [...TESTIMONIALS, ...TESTIMONIALS];
+  const testimonials = [...TESTIMONIALS, ...TESTIMONIALS]
 
   useEffect(() => {
-    const container = scrollRef.current;
-    const track = trackRef.current;
+    const container = scrollRef.current
+    const track = trackRef.current
 
-    if (!container || !track || TESTIMONIALS.length === 0) return;
+    if (!container || !track || TESTIMONIALS.length === 0) return
 
-    let resizeObserver: ResizeObserver | undefined;
+    let resizeObserver: ResizeObserver | undefined
 
     const measureTrack = () => {
       // Each duplicated set occupies half of the complete track.
-      halfWidthRef.current = track.scrollWidth / 2;
+      halfWidthRef.current = track.scrollWidth / 2
 
       if (halfWidthRef.current > 0) {
-        container.scrollLeft %= halfWidthRef.current;
+        container.scrollLeft %= halfWidthRef.current
       }
-    };
+    }
 
-    measureTrack();
+    measureTrack()
 
     if (typeof ResizeObserver !== "undefined") {
-      resizeObserver = new ResizeObserver(measureTrack);
-      resizeObserver.observe(track);
+      resizeObserver = new ResizeObserver(measureTrack)
+      resizeObserver.observe(track)
     }
 
     const animate = (time: number) => {
       if (previousTimeRef.current === null) {
-        previousTimeRef.current = time;
+        previousTimeRef.current = time
       }
 
-      const deltaTime = Math.min(time - previousTimeRef.current, 50);
-      previousTimeRef.current = time;
+      const deltaTime = Math.min(time - previousTimeRef.current, 50)
+      previousTimeRef.current = time
 
-      const halfwayPoint = halfWidthRef.current;
+      const halfwayPoint = halfWidthRef.current
 
       if (
         !isPausedRef.current &&
         halfwayPoint > 0 &&
         container.scrollWidth > container.clientWidth
       ) {
-        container.scrollLeft += (SCROLL_SPEED * deltaTime) / 1000;
+        container.scrollLeft += (SCROLL_SPEED * deltaTime) / 1000
 
         // Wrap seamlessly to the beginning of the duplicated sequence.
         if (container.scrollLeft >= halfwayPoint) {
-          container.scrollLeft %= halfwayPoint;
+          container.scrollLeft %= halfwayPoint
         }
       }
 
-      animationRef.current = requestAnimationFrame(animate);
-    };
+      animationRef.current = requestAnimationFrame(animate)
+    }
 
-    animationRef.current = requestAnimationFrame(animate);
+    animationRef.current = requestAnimationFrame(animate)
 
     return () => {
       if (animationRef.current !== null) {
-        cancelAnimationFrame(animationRef.current);
+        cancelAnimationFrame(animationRef.current)
       }
 
-      resizeObserver?.disconnect();
-      previousTimeRef.current = null;
-    };
-  }, []);
+      resizeObserver?.disconnect()
+      previousTimeRef.current = null
+    }
+  }, [])
 
   const pauseScrolling = () => {
-    isPausedRef.current = true;
-    setIsPaused(true);
-  };
+    isPausedRef.current = true
+    setIsPaused(true)
+  }
 
   const resumeScrolling = () => {
-    isPausedRef.current = false;
-    setIsPaused(false);
-  };
+    isPausedRef.current = false
+    setIsPaused(false)
+  }
 
   return (
     <section
@@ -136,7 +136,7 @@ export const TestimonialsSection: React.FC = () => {
           viewport={{ once: true, amount: 0.2 }}
           className="mx-auto mb-14 max-w-3xl space-y-4 text-center"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-blue-300 sm:text-xs">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 text-[10px] font-bold tracking-wider text-blue-300 uppercase sm:text-xs">
             <MessageSquare className="h-3.5 w-3.5 text-blue-400" />
             <span>Investor Perspectives</span>
           </div>
@@ -171,9 +171,11 @@ export const TestimonialsSection: React.FC = () => {
             onFocusCapture={pauseScrolling}
             onBlurCapture={(event) => {
               if (
-                !event.currentTarget.contains(event.relatedTarget as Node | null)
+                !event.currentTarget.contains(
+                  event.relatedTarget as Node | null
+                )
               ) {
-                resumeScrolling();
+                resumeScrolling()
               }
             }}
             onTouchStart={pauseScrolling}
@@ -196,7 +198,7 @@ export const TestimonialsSection: React.FC = () => {
               style={{ paddingRight: CARD_GAP }}
             >
               {testimonials.map((testimonial, idx) => {
-                const isDuplicate = idx >= TESTIMONIALS.length;
+                const isDuplicate = idx >= TESTIMONIALS.length
 
                 return (
                   <motion.article
@@ -212,7 +214,7 @@ export const TestimonialsSection: React.FC = () => {
                       </div>
 
                       {/* Testimonial */}
-                      <p className="mb-8 text-sm italic leading-relaxed text-slate-300 sm:text-base">
+                      <p className="mb-8 text-sm leading-relaxed text-slate-300 italic sm:text-base">
                         &ldquo;{testimonial.quote}&rdquo;
                       </p>
                     </div>
@@ -231,7 +233,7 @@ export const TestimonialsSection: React.FC = () => {
                             fill
                             sizes="48px"
                             draggable={false}
-                            className="pointer-events-none select-none object-cover"
+                            className="pointer-events-none object-cover select-none"
                           />
                         ) : (
                           <div
@@ -258,7 +260,7 @@ export const TestimonialsSection: React.FC = () => {
                       </div>
                     </div>
                   </motion.article>
-                );
+                )
               })}
             </motion.div>
           </div>
@@ -286,14 +288,14 @@ export const TestimonialsSection: React.FC = () => {
         </motion.div>
 
         {/* Disclaimer */}
-        <p className="hidden mt-5 text-center text-xs leading-relaxed text-slate-500">
-          *Supplied testimonials reflect individual investor experiences.
-          Verify testimonial authenticity and any stated investment outcomes
-          before publication.
+        <p className="mt-5 hidden text-center text-xs leading-relaxed text-slate-500">
+          *Supplied testimonials reflect individual investor experiences. Verify
+          testimonial authenticity and any stated investment outcomes before
+          publication.
         </p>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default TestimonialsSection;
+export default TestimonialsSection

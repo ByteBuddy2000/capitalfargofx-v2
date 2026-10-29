@@ -231,7 +231,8 @@ export async function deleteUser(userId: string): Promise<DeleteUserResponse> {
     if (!mongoose.isValidObjectId(userId) || userId === admin.id) {
       return {
         success: false,
-        message: "A valid user other than the current administrator is required.",
+        message:
+          "A valid user other than the current administrator is required.",
       }
     }
 
@@ -267,7 +268,8 @@ export async function deleteUser(userId: string): Promise<DeleteUserResponse> {
 
     return {
       success: false,
-      message: error instanceof Error ? error.message : "Unable to delete user.",
+      message:
+        error instanceof Error ? error.message : "Unable to delete user.",
     }
   }
 }

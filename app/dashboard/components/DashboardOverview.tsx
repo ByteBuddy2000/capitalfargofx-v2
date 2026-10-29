@@ -188,7 +188,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     cryptoBalance > 0
       ? cryptoBalance + (Number.isFinite(earningBalance) ? earningBalance : 0)
       : (Number.isFinite(availableBalance) ? availableBalance : 0) +
-      (Number.isFinite(earningBalance) ? earningBalance : 0)
+        (Number.isFinite(earningBalance) ? earningBalance : 0)
 
   /*
    * ---------------------------------------------------------
@@ -450,7 +450,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
 
           <div className="mt-2 flex items-center justify-between border-t border-[#E2E8F0] pt-2">
-            <span className="rounded-sm p-1 flex items-center gap-0.5 text-[10px] font-semibold bg-(--landing-cyan)">
+            <span className="flex items-center gap-0.5 rounded-sm bg-(--landing-cyan) p-1 text-[10px] font-semibold">
               <TrendingUp className="h-3 w-3" />
               +14.8% this cycle
             </span>
@@ -514,7 +514,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
 
           <div className="mt-2 flex items-center justify-between border-t border-[#E2E8F0] pt-2">
-            <span className="rounded-sm p-1 text-[10px] font-semibold bg-(--landing-cyan)">
+            <span className="rounded-sm bg-(--landing-cyan) p-1 text-[10px] font-semibold">
               Yield & Referral
             </span>
 
@@ -582,10 +582,11 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   key={timeframe}
                   type="button"
                   onClick={() => setChartTimeframe(timeframe)}
-                  className={`cursor-pointer rounded-lg px-3 py-1 text-xs font-bold transition-all ${chartTimeframe === timeframe
+                  className={`cursor-pointer rounded-lg px-3 py-1 text-xs font-bold transition-all ${
+                    chartTimeframe === timeframe
                       ? "bg-[#2563EB] text-white shadow-xs"
                       : "text-[#64748B] hover:text-[#0F172A]"
-                    }`}
+                  }`}
                 >
                   {timeframe}
                 </button>
@@ -697,7 +698,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               />
             </div>
 
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-1 gap-3 md:grid-col-3 lg:grid-cols-1 xl:grid-cols-1">
+            <div className="md:grid-col-3 mt-4 grid grid-cols-1 gap-3 sm:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1">
               {/* Bitcoin */}
               <div className="flex items-center justify-between rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-3">
                 <div className="flex items-center gap-3">
@@ -775,7 +776,9 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                     <p className="text-xs font-bold text-gray-600">
                       Tether USDT
                     </p>
-                    <p className="text-[10px] text-gray-400">                       TRC-20 / ERC-20
+                    <p className="text-[10px] text-gray-400">
+                      {" "}
+                      TRC-20 / ERC-20
                     </p>
                   </div>
                 </div>
@@ -888,7 +891,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   progress = Math.round(
                     ((now - startTimestamp) /
                       (maturityTimestamp - startTimestamp)) *
-                    100
+                      100
                   )
                 }
 
@@ -1129,7 +1132,6 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                 <th className="hidden px-5 py-3">Asset</th>
 
                 <th className="px-5 py-3">Status</th>
-
               </tr>
             </thead>
 
@@ -1168,8 +1170,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                       key={transactionId || `${type}-${transaction.createdAt}`}
                       className="transition-colors hover:bg-[#F8FAFC]/80"
                     >
-
-                       <td className="px-5 py-3.5 font-mono text-[11px] text-[#64748B]">
+                      <td className="px-5 py-3.5 font-mono text-[11px] text-[#64748B]">
                         {formatDate(transaction.createdAt)}
                       </td>
                       <td className="hidden px-5 py-3.5">
@@ -1199,20 +1200,19 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
                       <td className="px-5 py-3.5">
                         <span
-                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${status === "COMPLETED"
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                            status === "COMPLETED"
                               ? "bg-[#059669]/10 text-[#059669]"
                               : status === "PENDING"
                                 ? "bg-amber-500/10 text-amber-600"
                                 : status === "FAILED" || status === "REJECTED"
                                   ? "bg-rose-500/10 text-rose-600"
                                   : "bg-slate-500/10 text-slate-600"
-                            }`}
+                          }`}
                         >
                           {status}
                         </span>
                       </td>
-
-                     
                     </tr>
                   )
                 })

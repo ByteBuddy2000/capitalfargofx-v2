@@ -7,8 +7,8 @@ import CoinPriceMarquee from "@/components/CoinPriceMarquee/CoinPriceMarquee"
 const page = () => {
   return (
     <div>
-            <CoinPriceMarquee />
-      
+      <CoinPriceMarquee />
+
       <Navbar />
 
       <AssetsPage />

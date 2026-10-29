@@ -87,7 +87,7 @@ export const AboutPreview: React.FC = () => {
           viewport={{ once: true, amount: 0.2 }}
           className="mb-12 max-w-3xl space-y-4 text-left"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3 py-1 text-[8px] lg:text-xs font-bold tracking-wider text-blue-300 uppercase">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3 py-1 text-[8px] font-bold tracking-wider text-blue-300 uppercase lg:text-xs">
             <Sparkles className="h-3.5 w-3.5 text-blue-400" />
             About CapitalsFargoFX
           </div>

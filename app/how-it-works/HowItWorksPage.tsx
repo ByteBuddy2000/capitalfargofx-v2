@@ -76,9 +76,7 @@ export const HowItWorksPage: React.FC = () => {
     if (planSlug) params.set("plan", planSlug)
     if (amount !== undefined) params.set("amount", String(amount))
 
-    router.push(
-      `/investment-plans${params.toString() ? `?${params}` : ""}`,
-    )
+    router.push(`/investment-plans${params.toString() ? `?${params}` : ""}`)
   }
 
   const steps = [
@@ -157,10 +155,7 @@ export const HowItWorksPage: React.FC = () => {
       {/* Hero Header */}
       <section className="relative overflow-hidden border-b border-slate-800 bg-slate-950 py-12 md:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <motion.div
-            {...reveal(fadeUpVariants)}
-            className="space-y-6"
-          >
+          <motion.div {...reveal(fadeUpVariants)} className="space-y-6">
             <Breadcrumbs currentPageTitle="How It Works" />
 
             <div className="max-w-3xl space-y-6 text-left">
@@ -201,9 +196,7 @@ export const HowItWorksPage: React.FC = () => {
                 whileInView={shouldReduceMotion ? undefined : "visible"}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ delay: idx * 0.15 }}
-                whileHover={
-                  shouldReduceMotion ? undefined : { y: -6 }
-                }
+                whileHover={shouldReduceMotion ? undefined : { y: -6 }}
                 className="group relative flex flex-col justify-between rounded-3xl border border-slate-800 bg-slate-900/80 p-8 shadow-sm transition-[border-color,box-shadow] duration-300 hover:border-blue-500/40 hover:shadow-xl"
               >
                 <div>
@@ -278,18 +271,14 @@ export const HowItWorksPage: React.FC = () => {
                 initial={shouldReduceMotion ? false : "hidden"}
                 whileInView={shouldReduceMotion ? undefined : "visible"}
                 viewport={{ once: true, amount: 0.2 }}
-                whileHover={
-                  shouldReduceMotion ? undefined : { y: -5 }
-                }
+                whileHover={shouldReduceMotion ? undefined : { y: -5 }}
                 className="space-y-3 rounded-2xl border border-slate-800 bg-slate-900/80 p-6 transition-colors duration-300 hover:border-blue-500/40"
               >
                 <div className={`font-mono text-xs font-bold ${phase.color}`}>
                   {phase.phase}
                 </div>
 
-                <h4 className="text-lg font-bold text-white">
-                  {phase.title}
-                </h4>
+                <h4 className="text-lg font-bold text-white">{phase.title}</h4>
 
                 <p className="text-xs leading-relaxed text-slate-300">
                   {phase.description}
@@ -301,9 +290,7 @@ export const HowItWorksPage: React.FC = () => {
       </section>
 
       {/* Embedded Yield Simulator */}
-      <motion.div
-        {...reveal(fadeUpVariants)}
-      >
+      <motion.div {...reveal(fadeUpVariants)}>
         <YieldSimulator onOpenInvest={onOpenInvestModal} />
       </motion.div>
 

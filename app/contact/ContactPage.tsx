@@ -18,10 +18,8 @@ import {
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 import Link from "next/link"
 
-
 const CONTACT_ADDRESS = "Add your official business address"
 const CONTACT_PHONE = "+234 XXX XXX XXXX"
-
 
 export const ContactPage: React.FC = () => {
   const [fullName, setFullName] = useState("")
@@ -55,7 +53,7 @@ export const ContactPage: React.FC = () => {
           <Breadcrumbs currentPageTitle="Investor Support Desk" />
 
           <div className="max-w-3xl space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 text-[8px] lg:text-xs font-bold tracking-wider text-blue-300 uppercase">
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 text-[8px] font-bold tracking-wider text-blue-300 uppercase lg:text-xs">
               <Headphones className="h-3.5 w-3.5 text-blue-400" />
               <span>Continuous Operational Inquiries</span>
             </div>
@@ -99,11 +97,9 @@ export const ContactPage: React.FC = () => {
                       <div className="font-mono text-sm font-bold text-white transition-colors group-hover:text-blue-400">
                         support@CapitalsFargofx.com
                       </div>
-                      
                     </div>
                   </Link>
 
-                  
                   {/* Phone Contact */}
                   <Link
                     href={`tel:${CONTACT_PHONE.replace(/[^+\\d]/g, "")}`}
@@ -116,7 +112,7 @@ export const ContactPage: React.FC = () => {
                       <div className="font-mono text-xs font-bold tracking-wider text-slate-400 uppercase">
                         Phone Support
                       </div>
-                      <div className="break-words font-mono text-sm font-bold text-white transition-colors group-hover:text-emerald-400">
+                      <div className="font-mono text-sm font-bold break-words text-white transition-colors group-hover:text-emerald-400">
                         {CONTACT_PHONE}
                       </div>
                       <p className="mt-1 text-xs leading-relaxed text-slate-500">
@@ -125,9 +121,9 @@ export const ContactPage: React.FC = () => {
                     </div>
                   </Link>
 
-                   {/* Business Address */}
+                  {/* Business Address */}
                   <div className="hidden items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4">
-                  {/* <div className="flex items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4"> */}
+                    {/* <div className="flex items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4"> */}
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-950/60 text-violet-400">
                       <MapPin className="h-5 w-5" />
                     </div>
@@ -135,7 +131,7 @@ export const ContactPage: React.FC = () => {
                       <div className="font-mono text-xs font-bold tracking-wider text-slate-400 uppercase">
                         Business Address
                       </div>
-                      <address className="mt-1 not-italic text-sm leading-relaxed text-white">
+                      <address className="mt-1 text-sm leading-relaxed text-white not-italic">
                         {CONTACT_ADDRESS}
                       </address>
                     </div>
@@ -158,13 +154,12 @@ export const ContactPage: React.FC = () => {
                       <div className="font-mono text-sm font-bold text-white transition-colors group-hover:text-cyan-400">
                         @CapitalsFargofx_official
                       </div>
-                     
                     </div>
                   </Link>
                 </div>
 
                 {/* Service Level Agreement Metrics */}
-                <div className="hidden xl:block space-y-3 rounded-2xl border border-blue-800/60 bg-blue-950/50 p-4 font-mono text-xs">
+                <div className="hidden space-y-3 rounded-2xl border border-blue-800/60 bg-blue-950/50 p-4 font-mono text-xs xl:block">
                   <div className="flex items-center justify-between text-blue-200">
                     <span className="flex items-center gap-1.5 font-semibold">
                       <Clock className="h-3.5 w-3.5 text-blue-400" />
@@ -189,7 +184,7 @@ export const ContactPage: React.FC = () => {
 
               {/* Safety notice */}
               <div className="hidden items-start gap-2.5 rounded-2xl border border-slate-800 bg-slate-900 p-4 text-xs text-slate-400">
-              {/* <div className="flex items-start gap-2.5 rounded-2xl border border-slate-800 bg-slate-900 p-4 text-xs text-slate-400"> */}
+                {/* <div className="flex items-start gap-2.5 rounded-2xl border border-slate-800 bg-slate-900 p-4 text-xs text-slate-400"> */}
                 <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-400" />
                 <p>
                   Security Reminder: CapitalsFargoFX will never contact you

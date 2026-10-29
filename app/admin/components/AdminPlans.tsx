@@ -8,10 +8,7 @@ import { Badge } from "@/components/ui/Badge"
 import { Modal } from "@/components/ui/Modal"
 import { InvestmentPlan, User } from "@/types"
 import { useToast } from "@/components/ui/Toast"
-import {
-  deleteAdminPlan,
-  saveAdminPlan,
-} from "../controllers/plans.action"
+import { deleteAdminPlan, saveAdminPlan } from "../controllers/plans.action"
 
 interface AdminPlansProps {
   currentUser: User
@@ -123,7 +120,10 @@ export const AdminPlans: React.FC<AdminPlansProps> = ({
     try {
       const result = await deleteAdminPlan(plan.id)
       if (!result.success) {
-        toastError("Plan Delete Failed", result.message || "Unable to delete plan.")
+        toastError(
+          "Plan Delete Failed",
+          result.message || "Unable to delete plan."
+        )
         return
       }
 

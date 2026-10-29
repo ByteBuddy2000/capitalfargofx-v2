@@ -19,6 +19,7 @@ import Image from "next/image"
 import type { User } from "@/types"
 import { markNotificationAsRead as markNotificationRead } from "@/controller/getUserNotifications.action"
 import { Button } from "@/components/ui/Button"
+import Link from "next/link"
 
 export type DashboardTab =
   | "overview"
@@ -204,17 +205,34 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       <aside className="sticky top-0 z-20 hidden h-screen w-64 shrink-0 flex-col border-r border-white/10 bg-[#0b0f19]/80 backdrop-blur-xl lg:flex">
         {/* Brand Logo Header */}
         <div className="flex items-center justify-between border-b border-white/10 p-6">
-          <button
-            onClick={onNavigateLanding}
-            className="group flex cursor-pointer items-center gap-3 text-left focus:outline-none"
-          >
-            {/* <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-purple-600 shadow-lg shadow-purple-500/20 transition-transform group-hover:scale-105">
-              <div className="h-4 w-4 rotate-45 transform rounded-xs border-2 border-white" />
-            </div> */}
-            <span className="text-xl font-bold tracking-tight text-white">
-              CapitalFargo<span className="text-[#2563EB]">FX</span>
-            </span>
-          </button>
+          <div>
+            {/* Brand Logo */}
+            <Link
+              href="#"
+              className="group flex cursor-pointer items-center gap-2.5 text-left focus:outline-none"
+            >
+              <div className="">
+                <Image
+                  src="/capitalsfargofx-logo.png"
+                  width={1055}
+                  height={1055}
+                  alt="CapitalsFargoFX Logo"
+                  className="h-10 w-10"
+                  priority
+                />
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-lg font-extrabold tracking-tight text-gray-200">
+                    CapitalsFargo<span className="text-blue-400">FX</span>
+                  </span>
+                </div>
+                <p className="-mt-0.5 text-[8px] font-medium tracking-wider text-slate-400 uppercase">
+                  Digital Asset Management
+                </p>
+              </div>
+            </Link>
+          </div>
         </div>
 
         {/* Navigation Items */}
@@ -225,11 +243,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               <button
                 key={item.id}
                 onClick={() => onTabChange(item.id)}
-                className={`flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left text-sm font-medium transition-colors ${
-                  isActive
-                    ? "rounded-r-md border-l-4 border-[#2563EB] bg-[#2563EB]/10 text-white"
-                    : "rounded-md text-[#64748B] hover:bg-white/3 hover:text-white"
-                }`}
+                className={`flex w-full cursor-pointer items-center gap-3 px-4 py-3 text-left text-sm font-medium transition-colors ${isActive
+                  ? "rounded-r-md border-l-4 border-[#2563EB] bg-[#2563EB]/10 text-white"
+                  : "rounded-md text-[#64748B] hover:bg-white/3 hover:text-white"
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <span
@@ -362,11 +379,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                         <div
                           key={notif.id}
                           onClick={() => markNotificationAsRead(notif.id)}
-                          className={`cursor-pointer rounded-xl border p-2.5 text-xs transition-colors ${
-                            notif.read
-                              ? "border-[#E2E8F0] text-[#64748B]"
-                              : "border-blue-200 bg-blue-50/60 font-medium text-[#0F172A]"
-                          }`}
+                          className={`cursor-pointer rounded-xl border p-2.5 text-xs transition-colors ${notif.read
+                            ? "border-[#E2E8F0] text-[#64748B]"
+                            : "border-blue-200 bg-blue-50/60 font-medium text-[#0F172A]"
+                            }`}
                         >
                           <div className="mb-1 flex items-center justify-between">
                             <span className="font-bold text-white">
@@ -393,16 +409,16 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             {/* Admin Switcher */}
             {(currentUser.role === "admin" ||
               currentUser.role === "super admin") && (
-              <Button
-                size="sm"
-                variant="dark"
-                leftIcon={<Lock className="h-3.5 w-3.5 text-amber-400" />}
-                onClick={onNavigateAdmin}
-                className="hidden rounded-xl border border-amber-500/30 bg-amber-500/10 text-xs text-amber-300 hover:bg-amber-500/20 sm:inline-flex"
-              >
-                Admin Suite
-              </Button>
-            )}
+                <Button
+                  size="sm"
+                  variant="dark"
+                  leftIcon={<Lock className="h-3.5 w-3.5 text-amber-400" />}
+                  onClick={onNavigateAdmin}
+                  className="hidden rounded-xl border border-amber-500/30 bg-amber-500/10 text-xs text-amber-300 hover:bg-amber-500/20 sm:inline-flex"
+                >
+                  Admin Suite
+                </Button>
+              )}
 
             {/* User Profile Avatar Dropdown */}
             <div className="relative">
@@ -448,17 +464,17 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
                   {(currentUser.role === "admin" ||
                     currentUser.role === "super admin") && (
-                    <button
-                      onClick={() => {
-                        setUserDropdownOpen(false)
-                        onNavigateAdmin()
-                      }}
-                      className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-medium text-amber-400 transition-colors hover:bg-amber-500/10"
-                    >
-                      <Lock className="h-4 w-4 text-amber-400" />
-                      Admin Suite
-                    </button>
-                  )}
+                      <button
+                        onClick={() => {
+                          setUserDropdownOpen(false)
+                          onNavigateAdmin()
+                        }}
+                        className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2 text-left text-xs font-medium text-amber-400 transition-colors hover:bg-amber-500/10"
+                      >
+                        <Lock className="h-4 w-4 text-amber-400" />
+                        Admin Suite
+                      </button>
+                    )}
 
                   <div className="mt-1 border-t border-white/10 pt-1">
                     <button
@@ -495,12 +511,32 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             <div>
               <div className="mb-6 flex items-center justify-between border-b border-white/10 pb-4">
                 <div className="flex items-center gap-2.5">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-tr from-blue-600 to-purple-600">
-                    <div className="h-3.5 w-3.5 rotate-45 transform rounded-xs border-2 border-white" />
-                  </div>
-                  <span className="text-lg font-bold text-white">
-                    CapitalsFargoFX
-                  </span>
+                  {/* Brand Logo */}
+                  <Link
+                    href="#"
+                    className="group flex cursor-pointer items-center gap-2.5 text-left focus:outline-none"
+                  >
+                    <div className="">
+                      <Image
+                        src="/capitalsfargofx-logo.png"
+                        width={1055}
+                        height={1055}
+                        alt="CapitalsFargoFX Logo"
+                        className="h-10 w-10"
+                        priority
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-lg font-extrabold tracking-tight text-gray-200">
+                          CapitalsFargo<span className="text-blue-400">FX</span>
+                        </span>
+                      </div>
+                      <p className="-mt-0.5 text-[8px] font-medium tracking-wider text-slate-400 uppercase">
+                        Digital Asset Management
+                      </p>
+                    </div>
+                  </Link>
                 </div>
                 <button
                   onClick={() => setMobileDrawerOpen(false)}
@@ -518,11 +554,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                       onTabChange(item.id)
                       setMobileDrawerOpen(false)
                     }}
-                    className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-xs font-medium transition-colors ${
-                      activeTab === item.id
-                        ? "border-l-4 border-[#2563EB] bg-[#2563EB]/10 text-white"
-                        : "text-[#64748B] hover:bg-white/5 hover:text-white"
-                    }`}
+                    className={`flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-xs font-medium transition-colors ${activeTab === item.id
+                      ? "border-l-4 border-[#2563EB] bg-[#2563EB]/10 text-white"
+                      : "text-[#64748B] hover:bg-white/5 hover:text-white"
+                      }`}
                   >
                     {item.icon}
                     <span>{item.label}</span>
@@ -549,11 +584,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         {/* <div className="hidden fixed right-0 bottom-0 left-0 z-30 flex items-center justify-around border-t border-[#E2E8F0] bg-white px-3 py-2 shadow-lg lg:hidden"> */}
         <button
           onClick={() => onTabChange("overview")}
-          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${
-            activeTab === "overview"
-              ? "font-bold text-[#2563EB]"
-              : "text-[#64748B]"
-          }`}
+          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${activeTab === "overview"
+            ? "font-bold text-[#2563EB]"
+            : "text-[#64748B]"
+            }`}
         >
           <LayoutDashboard className="h-5 w-5" />
           <span>Dashboard</span>
@@ -561,11 +595,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
         <button
           onClick={() => onTabChange("deposit")}
-          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${
-            activeTab === "deposit"
-              ? "font-bold text-[#2563EB]"
-              : "text-[#64748B]"
-          }`}
+          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${activeTab === "deposit"
+            ? "font-bold text-[#2563EB]"
+            : "text-[#64748B]"
+            }`}
         >
           <ArrowDownToLine className="h-5 w-5 text-emerald-400" />
           <span>Deposit</span>
@@ -573,11 +606,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
         <button
           onClick={() => onTabChange("withdraw")}
-          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${
-            activeTab === "withdraw"
-              ? "font-bold text-[#2563EB]"
-              : "text-[#64748B]"
-          }`}
+          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${activeTab === "withdraw"
+            ? "font-bold text-[#2563EB]"
+            : "text-[#64748B]"
+            }`}
         >
           <ArrowUpFromLine className="h-5 w-5" />
           <span>Withdraw</span>
@@ -585,11 +617,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
         <button
           onClick={() => onTabChange("investments")}
-          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${
-            activeTab === "investments"
-              ? "font-bold text-[#2563EB]"
-              : "text-[#64748B]"
-          }`}
+          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${activeTab === "investments"
+            ? "font-bold text-[#2563EB]"
+            : "text-[#64748B]"
+            }`}
         >
           <Layers className="h-5 w-5" />
           <span>Invest</span>
@@ -597,11 +628,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 
         <button
           onClick={() => onTabChange("account")}
-          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${
-            activeTab === "account"
-              ? "font-bold text-[#2563EB]"
-              : "text-[#64748B]"
-          }`}
+          className={`flex cursor-pointer flex-col items-center gap-1 p-1 text-[10px] font-medium ${activeTab === "account"
+            ? "font-bold text-[#2563EB]"
+            : "text-[#64748B]"
+            }`}
         >
           <UserIcon className="h-5 w-5" />
           <span>Account</span>

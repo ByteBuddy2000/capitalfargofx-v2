@@ -79,7 +79,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
       default: "PENDING",
     },
     emailVerificationToken: { type: String },
-    emailVerificationExpires: { type: Date }
+    emailVerificationExpires: { type: Date },
   },
   { timestamps: true }
 )

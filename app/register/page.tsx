@@ -18,13 +18,11 @@ export default function RegisterPage() {
     setLegalModalOpen(true)
   }
 
-const router = useRouter()
+  const router = useRouter()
 
-const handleSuccess = (user: { email: string }) => {
-  router.push(
-    `/verify?email=${encodeURIComponent(user.email)}`
-  )
-}
+  const handleSuccess = (user: { email: string }) => {
+    router.push(`/verify?email=${encodeURIComponent(user.email)}`)
+  }
 
   return (
     <ToastProvider>

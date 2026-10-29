@@ -27,8 +27,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   onSwitchToRegister,
   onForgotPassword,
 }) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [identifier, setIdentifier] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -37,15 +37,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   const { success, error: toastError } = useToast()
 
   useEffect(() => {
-  const verified = searchParams.get("verified")
+    const verified = searchParams.get("verified")
 
-  if (verified === "true") {
-    success(
-      "Email Verified",
-      "Your account has been activated. You can now sign in."
-    )
-  }
-}, [searchParams, success])
+    if (verified === "true") {
+      success(
+        "Email Verified",
+        "Your account has been activated. You can now sign in."
+      )
+    }
+  }, [searchParams, success])
 
   const getFriendlyLoginError = (rawError?: string | null) => {
     if (!rawError) return "Unable to sign you in. Please try again."
@@ -100,7 +100,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       const role = String(session?.user?.role || "")
         .trim()
         .toLowerCase()
-
 
       if (role !== "user" && role !== "admin" && role !== "super admin") {
         const message =

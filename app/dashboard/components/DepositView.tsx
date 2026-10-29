@@ -18,8 +18,7 @@ import { Input } from "@/components/ui/Input"
 import { Badge } from "@/components/ui/Badge"
 import { useToast } from "@/components/ui/Toast"
 import Image from "next/image"
-import QRCode from 'react-qr-code';
-
+import QRCode from "react-qr-code"
 
 interface DepositViewProps {
   currentUser: User
@@ -279,10 +278,11 @@ export const DepositView: React.FC<DepositViewProps> = ({
                         setAmount(p.minimumAmount)
                       }
                     }}
-                    className={`flex cursor-pointer flex-col justify-between rounded-2xl border-2 p-5 transition-all ${isSelected
-                      ? "border-blue-600 bg-blue-50/40 shadow-md ring-1 ring-blue-600"
-                      : "border-slate-200 bg-white hover:border-slate-300"
-                      }`}
+                    className={`flex cursor-pointer flex-col justify-between rounded-2xl border-2 p-5 transition-all ${
+                      isSelected
+                        ? "border-blue-600 bg-blue-50/40 shadow-md ring-1 ring-blue-600"
+                        : "border-slate-200 bg-white hover:border-slate-300"
+                    }`}
                   >
                     <div>
                       <div className="mb-2 flex items-center justify-between">
@@ -394,10 +394,11 @@ export const DepositView: React.FC<DepositViewProps> = ({
                     key={c.symbol}
                     type="button"
                     onClick={() => setSelectedCrypto(c.symbol)}
-                    className={`cursor-pointer rounded-2xl border-2 p-3 text-center transition-all ${selectedCrypto === c.symbol
-                      ? `${c.color} font-black shadow-xs ring-1`
-                      : "border-slate-200 bg-slate-50 font-semibold text-slate-700 hover:bg-white"
-                      }`}
+                    className={`cursor-pointer rounded-2xl border-2 p-3 text-center transition-all ${
+                      selectedCrypto === c.symbol
+                        ? `${c.color} font-black shadow-xs ring-1`
+                        : "border-slate-200 bg-slate-50 font-semibold text-slate-700 hover:bg-white"
+                    }`}
                   >
                     <div className="flex items-center justify-center">
                       <Image
@@ -536,7 +537,6 @@ export const DepositView: React.FC<DepositViewProps> = ({
                     viewBox="0 0 256 256"
                   />
                 </div>
-
 
                 <span className="mt-2 text-[11px] font-semibold text-slate-500">
                   Scan to Pay in Wallet App

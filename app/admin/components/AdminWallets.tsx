@@ -182,7 +182,7 @@ export const AdminWallets: React.FC<AdminWalletsProps> = ({
       </div>
 
       {/* Wallets Grid */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-col-3">
+      <div className="xl:grid-col-3 grid grid-cols-1 gap-6 md:grid-cols-2">
         {wallets.map((w, idx) => (
           <div
             key={idx}

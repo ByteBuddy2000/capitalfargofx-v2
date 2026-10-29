@@ -6,7 +6,7 @@ export default function Loading() {
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-4">
       <div className="hidden max-w-sm text-center">
-      {/* <div className="w-full max-w-sm text-center"> */}
+        {/* <div className="w-full max-w-sm text-center"> */}
         <div className="mb-6">
           <h1 className="animate-pulse text-2xl font-bold text-blue-600">
             CapitalsFargoFX

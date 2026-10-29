@@ -40,7 +40,7 @@ const MetricCounter: React.FC<MetricCounterProps> = ({
         latest.toLocaleString("en-US", {
           minimumFractionDigits: decimals,
           maximumFractionDigits: decimals,
-        }),
+        })
       )
     })
 
@@ -190,9 +190,7 @@ export const MetricsSection: React.FC = () => {
                   {metric.label}
                 </div>
 
-                <div className="text-xs text-slate-400">
-                  {metric.detail}
-                </div>
+                <div className="text-xs text-slate-400">{metric.detail}</div>
               </div>
             </motion.div>
           ))}

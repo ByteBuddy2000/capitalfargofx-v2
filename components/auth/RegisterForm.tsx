@@ -19,8 +19,6 @@ import { Button } from "../ui/Button"
 import { useToast } from "../ui/Toast"
 import { useRouter } from "next/navigation"
 
-
-
 interface RegisterFormProps {
   initialReferralCode?: string
   onSuccess: (user: User) => void
@@ -138,19 +136,14 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       )
       onSuccess(result.user)
 
-      router.push(
-        `/verify?email=${encodeURIComponent(result.user.email)}`
-      )
-
+      router.push(`/verify?email=${encodeURIComponent(result.user.email)}`)
     } catch (requestError) {
       const message =
         requestError instanceof Error
           ? requestError.message
           : "Unable to create your account."
 
-      setError(
-        message
-      )
+      setError(message)
       toastError("Registration Failed", message)
     } finally {
       setIsLoading(false)

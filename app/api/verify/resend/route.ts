@@ -6,7 +6,7 @@ import { User } from "@/models/User"
 import { generateVerificationToken } from "@/lib/token"
 import { transporter } from "@/lib/mail"
 
-const BASE_URL =  process.env.NEXTAUTH_URL || "http://localhost:3000"
+const BASE_URL = process.env.NEXTAUTH_URL || "http://localhost:3000"
 
 export async function POST(req: NextRequest) {
   try {
@@ -26,10 +26,7 @@ export async function POST(req: NextRequest) {
     })
 
     if (!user) {
-      return NextResponse.json(
-        { message: "User not found." },
-        { status: 404 }
-      )
+      return NextResponse.json({ message: "User not found." }, { status: 404 })
     }
 
     if (user.status === "ACTIVE") {
@@ -42,9 +39,7 @@ export async function POST(req: NextRequest) {
     const token = generateVerificationToken()
 
     user.emailVerificationToken = token
-    user.emailVerificationExpires = new Date(
-      Date.now() + 24 * 60 * 60 * 1000
-    )
+    user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000)
 
     await user.save()
 
@@ -84,8 +79,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        message:
-          "Unable to resend verification email. Please try again later.",
+        message: "Unable to resend verification email. Please try again later.",
       },
       { status: 500 }
     )

@@ -68,9 +68,7 @@ export async function getAdminPlans(): Promise<AdminPlansResponse> {
 
     await connectToDB()
 
-    const plans = await Plan.find({})
-      .sort({ minimumAmount: 1 })
-      .lean()
+    const plans = await Plan.find({}).sort({ minimumAmount: 1 }).lean()
 
     return {
       success: true,
@@ -138,16 +136,13 @@ export async function saveAdminPlan(
     const maximumAmount = Number(body.maximumAmount || 0)
 
     const referralPercentage = Number(
-      body.referralPercentage ??
-      body.referralCommissionRate ??
-      0
+      body.referralPercentage ?? body.referralCommissionRate ?? 0
     )
 
     const principalReturn = Boolean(body.principalReturn)
 
     const status =
-      body.isActive === false ||
-      body.status === "INACTIVE"
+      body.isActive === false || body.status === "INACTIVE"
         ? "INACTIVE"
         : "ACTIVE"
 
@@ -174,9 +169,7 @@ export async function saveAdminPlan(
      */
     const existingPlan = await Plan.findOne({
       slug,
-      ...(id && mongoose.isValidObjectId(id)
-        ? { _id: { $ne: id } }
-        : {}),
+      ...(id && mongoose.isValidObjectId(id) ? { _id: { $ne: id } } : {}),
     }).lean()
 
     if (existingPlan) {
@@ -203,14 +196,10 @@ export async function saveAdminPlan(
     let plan
 
     if (id && mongoose.isValidObjectId(id)) {
-      plan = await Plan.findByIdAndUpdate(
-        id,
-        values,
-        {
-          new: true,
-          runValidators: true,
-        }
-      ).lean()
+      plan = await Plan.findByIdAndUpdate(id, values, {
+        new: true,
+        runValidators: true,
+      }).lean()
     } else {
       plan = await Plan.create(values)
     }
@@ -232,10 +221,7 @@ export async function saveAdminPlan(
 
     return {
       success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "Unable to save plan.",
+      message: error instanceof Error ? error.message : "Unable to save plan.",
     }
   }
 }

@@ -5,13 +5,7 @@ import React from "react"
 import { motion, useReducedMotion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { ALTERNATIVE_ASSETS } from "../../lib/data"
-import {
-  Building,
-  Cpu,
-  Sparkles,
-  CheckCircle2,
-  ArrowRight,
-} from "lucide-react"
+import { Building, Cpu, Sparkles, CheckCircle2, ArrowRight } from "lucide-react"
 import Image from "next/image"
 
 const easing = [0.22, 1, 0.36, 1] as const
@@ -31,10 +25,10 @@ const sectionVariants = {
 const cardVariants = {
   hidden: (index: number) => {
     const directions = [
-      { x: -70, y: 0 },  // Left to center
-      { x: 70, y: 0 },   // Right to center
-      { x: 0, y: 60 },   // Bottom to center
-      { x: 0, y: -60 },  // Top to center
+      { x: -70, y: 0 }, // Left to center
+      { x: 70, y: 0 }, // Right to center
+      { x: 0, y: 60 }, // Bottom to center
+      { x: 0, y: -60 }, // Top to center
     ]
 
     return {
@@ -75,14 +69,12 @@ export const AlternativeAssetsSection: React.FC = () => {
             {/* Animated Badge */}
             <motion.div
               initial={
-                shouldReduceMotion
-                  ? false
-                  : { opacity: 0, scale: 0.85, y: 15 }
+                shouldReduceMotion ? false : { opacity: 0, scale: 0.85, y: 15 }
               }
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, ease: easing }}
-              className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-950/80 px-3 py-1 text-[8px] lg:text-xs font-bold tracking-wider text-indigo-300 uppercase"
+              className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-950/80 px-3 py-1 text-[8px] font-bold tracking-wider text-indigo-300 uppercase lg:text-xs"
             >
               <Sparkles className="h-3.5 w-3.5 text-indigo-400" />
               <span>Alternative Asset Classes</span>
@@ -101,11 +93,7 @@ export const AlternativeAssetsSection: React.FC = () => {
           {/* Animated Explore Button */}
           <motion.button
             type="button"
-            initial={
-              shouldReduceMotion
-                ? false
-                : { opacity: 0, x: 40 }
-            }
+            initial={shouldReduceMotion ? false : { opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{

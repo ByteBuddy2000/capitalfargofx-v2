@@ -51,7 +51,8 @@ export const ReferralsView: React.FC<ReferralsViewProps> = ({
     }
   })
 
-  const referralLink =   typeof window !== "undefined"
+  const referralLink =
+    typeof window !== "undefined"
       ? `${window.location.origin}/register/?ref=${currentUser?.username || ""}`
       : `/register/?ref=${currentUser?.username || ""}`
 

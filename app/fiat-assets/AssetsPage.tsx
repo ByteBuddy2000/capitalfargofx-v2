@@ -8,13 +8,7 @@ import { SupportedCryptoSection } from "@/components/sections/SupportedCryptoSec
 import { DiversifiedCategoriesSection } from "@/components/sections/DiversifiedCategoriesSection"
 import { AlternativeAssetsSection } from "@/components/sections/AlternativeAssetsSection"
 import { FinalCtaSection } from "@/components/sections/FinalCtaSection"
-import {
-  ShieldCheck,
-  Lock,
-  Layers,
-  Database,
-  Key,
-} from "lucide-react"
+import { ShieldCheck, Lock, Layers, Database, Key } from "lucide-react"
 import { motion } from "framer-motion"
 
 export const AssetsPage: React.FC = () => {
@@ -30,7 +24,7 @@ export const AssetsPage: React.FC = () => {
           <Breadcrumbs currentPageTitle="Supported & Alternative Assets" />
 
           <div className="max-w-3xl space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 text-[8px] lg:text-xs font-bold tracking-wider text-blue-300 uppercase">
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 text-[8px] font-bold tracking-wider text-blue-300 uppercase lg:text-xs">
               <Layers className="h-3.5 w-3.5 text-blue-400" />
               <span>Multi-Chain & Physical Assets</span>
             </div>

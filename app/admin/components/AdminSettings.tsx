@@ -16,9 +16,7 @@ import { User, PlatformSettings } from "@/types"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { useToast } from "@/components/ui/Toast"
-import {
-  updateAdminSettings
-} from "../controllers/settings.action"
+import { updateAdminSettings } from "../controllers/settings.action"
 import { changeAdminPassword } from "../controllers/security.action"
 
 interface AdminSettingsProps {
@@ -59,7 +57,8 @@ const normalizeSettings = (
   statsTotalDeposited: value?.statsTotalDeposited ?? "",
   statsTotalWithdrawn: value?.statsTotalWithdrawn ?? "",
   statsCountriesSupported: value?.statsCountriesSupported ?? "",
-  isMaintenanceMode: value?.isMaintenanceMode ?? value?.maintenanceMode ?? false,
+  isMaintenanceMode:
+    value?.isMaintenanceMode ?? value?.maintenanceMode ?? false,
   updatedAt: value?.updatedAt ?? "",
 })
 
@@ -93,7 +92,10 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
       !settings.statsTotalWithdrawn?.trim() ||
       !settings.statsCountriesSupported?.trim()
     ) {
-      info("Validation Error", "Complete all platform settings fields before saving.")
+      info(
+        "Validation Error",
+        "Complete all platform settings fields before saving."
+      )
       return
     }
 
@@ -296,8 +298,8 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
         <div className="rounded-2xl border border-amber-900/40 bg-amber-950/20 p-4">
           <p className="text-xs text-amber-300">
             For security reasons, administrator password changes require your
-            current password. After updating, you may be asked to sign in
-            again on other active sessions.
+            current password. After updating, you may be asked to sign in again
+            on other active sessions.
           </p>
         </div>
       </div>
@@ -352,8 +354,6 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
             />
           </div>
         </div>
-
-
 
         {/* Public Landing Metrics Customizer */}
         <div className="space-y-6 rounded-3xl border border-slate-800 bg-slate-900 p-6 sm:p-8">

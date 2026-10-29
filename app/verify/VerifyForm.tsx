@@ -83,33 +83,33 @@ const VerifyEmail = () => {
       <div className="z-1 w-full rounded-xl bg-gradient-to-br from-blue-100 to-indigo-100 p-6 shadow-md sm:max-w-md">
         <div className="mb-6">
           <div>
-      {/* Brand Logo */}
-      <Link
-        href="/"
-        className="group flex cursor-pointer items-center gap-2.5 text-left focus:outline-none"
-      >
-        <div className="">
-          <Image
-            src="/capitalsfargofx-logo.png"
-            width={1055}
-            height={1055}
-            alt="CapitalsFargoFX Logo"
-            className="h-20 w-20"
-            priority
-          />
-        </div>
-        <div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-xl font-extrabold tracking-tight text-gray-600">
-              CapitalsFargo<span className="text-blue-400">FX</span>
-            </span>
+            {/* Brand Logo */}
+            <Link
+              href="/"
+              className="group flex cursor-pointer items-center gap-2.5 text-left focus:outline-none"
+            >
+              <div className="">
+                <Image
+                  src="/capitalsfargofx-logo.png"
+                  width={1055}
+                  height={1055}
+                  alt="CapitalsFargoFX Logo"
+                  className="h-20 w-20"
+                  priority
+                />
+              </div>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xl font-extrabold tracking-tight text-gray-600">
+                    CapitalsFargo<span className="text-blue-400">FX</span>
+                  </span>
+                </div>
+                <p className="-mt-0.5 text-[10px] font-medium tracking-wider text-slate-400 uppercase">
+                  Digital Asset Management
+                </p>
+              </div>
+            </Link>
           </div>
-          <p className="-mt-0.5 text-[10px] font-medium tracking-wider text-slate-400 uppercase">
-            Digital Asset Management
-          </p>
-        </div>
-      </Link>
-    </div>
 
           <div>
             <h1 className="mb-1.5 text-2xl font-bold text-slate-900">
@@ -166,9 +166,7 @@ const VerifyEmail = () => {
                 disabled={isResending}
                 className="font-medium text-blue-600 hover:underline disabled:opacity-50"
               >
-                {isResending
-                  ? "Sending..."
-                  : "Didn't get the email? Resend"}
+                {isResending ? "Sending..." : "Didn't get the email? Resend"}
               </button>
             )}
           </div>

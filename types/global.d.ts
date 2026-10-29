@@ -1,4 +1,4 @@
-import type { DetailedHTMLProps, HTMLAttributes } from "react";
+import type { DetailedHTMLProps, HTMLAttributes } from "react"
 
 declare module "react" {
   namespace JSX {
@@ -7,22 +7,22 @@ declare module "react" {
         HTMLAttributes<HTMLElement>,
         HTMLElement
       > & {
-        locale?: string;
-        "coin-ids"?: string;
-        "initial-currency"?: string;
-        "dark-mode"?: string;
-        "transparent-background"?: string;
-        outlined?: string;
-      };
+        locale?: string
+        "coin-ids"?: string
+        "initial-currency"?: string
+        "dark-mode"?: string
+        "transparent-background"?: string
+        outlined?: string
+      }
       "gecko-coin-price-static-headline-widget": DetailedHTMLProps<
         HTMLAttributes<HTMLElement>,
         HTMLElement
       > & {
-        locale?: string;
-        outlined?: string;
-        "coin-ids"?: string;
-        "initial-currency"?: string;
-      };
+        locale?: string
+        outlined?: string
+        "coin-ids"?: string
+        "initial-currency"?: string
+      }
     }
   }
 }

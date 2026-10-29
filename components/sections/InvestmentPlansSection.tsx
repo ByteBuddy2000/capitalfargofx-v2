@@ -53,11 +53,11 @@ export const InvestmentPlansSection: React.FC<InvestmentPlansSectionProps> = ({
               viewport={{ once: true, amount: 0.2 }}
               className="max-w-2xl space-y-3 text-left"
             >
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3 py-1  text-[8px] font-bold tracking-wider text-blue-300 uppercase">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3 py-1 text-[8px] font-bold tracking-wider text-blue-300 uppercase">
                 <Layers className="h-3.5 w-3.5 text-blue-400" />
                 <span>Structured Yield Architecture</span>
               </div>
-              <h2 className="px-2 lg:px-0 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+              <h2 className="px-2 text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:px-0">
                 Institutional Investment Plans
               </h2>
               <p className="text-base text-slate-300">
@@ -123,123 +123,123 @@ export const InvestmentPlansSection: React.FC<InvestmentPlansSectionProps> = ({
                     </div>
                   )}
 
-                <div>
-                  {/* Top Meta Bar */}
-                  <div className="mb-4 flex items-center justify-between">
-                    <span
-                      className={`rounded-lg px-2.5 py-1 font-mono text-xs font-bold tracking-wider uppercase ${
-                        isFeatured
-                          ? "border border-blue-700/50 bg-blue-900/60 text-cyan-300"
-                          : "border border-slate-700 bg-slate-800 text-slate-300"
-                      }`}
-                    >
-                      {plan.name.toUpperCase()}
-                    </span>
-
-                    <span
-                      className={`flex items-center gap-1 font-mono text-xs font-semibold ${
-                        isFeatured ? "text-slate-300" : "text-slate-400"
-                      }`}
-                    >
-                      <Clock className="h-3.5 w-3.5 text-blue-400" />
-                      <span>{plan.durationHours} Hour Cycle</span>
-                    </span>
-                  </div>
-
-                  {/* Return Percentage Display */}
-                  <div className="my-4">
-                    <div className="flex items-baseline gap-1">
+                  <div>
+                    {/* Top Meta Bar */}
+                    <div className="mb-4 flex items-center justify-between">
                       <span
-                        className={`font-mono text-4xl font-extrabold tracking-tight sm:text-5xl ${
-                          isFeatured ? "text-cyan-300" : "text-blue-400"
+                        className={`rounded-lg px-2.5 py-1 font-mono text-xs font-bold tracking-wider uppercase ${
+                          isFeatured
+                            ? "border border-blue-700/50 bg-blue-900/60 text-cyan-300"
+                            : "border border-slate-700 bg-slate-800 text-slate-300"
                         }`}
                       >
-                        {plan.returnPercentage}%
+                        {plan.name.toUpperCase()}
+                      </span>
+
+                      <span
+                        className={`flex items-center gap-1 font-mono text-xs font-semibold ${
+                          isFeatured ? "text-slate-300" : "text-slate-400"
+                        }`}
+                      >
+                        <Clock className="h-3.5 w-3.5 text-blue-400" />
+                        <span>{plan.durationHours} Hour Cycle</span>
                       </span>
                     </div>
+
+                    {/* Return Percentage Display */}
+                    <div className="my-4">
+                      <div className="flex items-baseline gap-1">
+                        <span
+                          className={`font-mono text-4xl font-extrabold tracking-tight sm:text-5xl ${
+                            isFeatured ? "text-cyan-300" : "text-blue-400"
+                          }`}
+                        >
+                          {plan.returnPercentage}%
+                        </span>
+                      </div>
+                      <div
+                        className={`text-xs font-semibold tracking-wider uppercase ${
+                          isFeatured ? "text-slate-300" : "text-slate-400"
+                        }`}
+                      >
+                        Projected Contract Yield
+                      </div>
+                    </div>
+
+                    {/* Capital Range & Core Metrics Grid */}
                     <div
-                      className={`text-xs font-semibold tracking-wider uppercase ${
+                      className={`my-4 space-y-2.5 rounded-2xl p-4 ${
+                        isFeatured
+                          ? "border border-slate-700 bg-slate-800/80"
+                          : "border border-slate-800 bg-slate-950/80"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between text-xs">
+                        <span
+                          className={
+                            isFeatured ? "text-slate-400" : "text-slate-400"
+                          }
+                        >
+                          Capital Range
+                        </span>
+                        <span className="font-mono font-bold text-white">
+                          {formatCurrency(plan.minimumAmount)} – {maxLabel}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between text-xs">
+                        <span
+                          className={
+                            isFeatured ? "text-slate-400" : "text-slate-400"
+                          }
+                        >
+                          Principal Return
+                        </span>
+                        <span className="flex items-center gap-1 font-mono font-bold text-emerald-400">
+                          <Check className="h-3.5 w-3.5" />
+                          <span>100% Return</span>
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between text-xs">
+                        <span
+                          className={
+                            isFeatured ? "text-slate-400" : "text-slate-400"
+                          }
+                        >
+                          Affiliate Downline
+                        </span>
+                        <span className="font-mono font-bold text-blue-400">
+                          {plan.referralPercentage}% Commission
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p
+                      className={`my-4 text-xs leading-relaxed ${
                         isFeatured ? "text-slate-300" : "text-slate-400"
                       }`}
                     >
-                      Projected Contract Yield
-                    </div>
+                      {plan.description}
+                    </p>
                   </div>
 
-                  {/* Capital Range & Core Metrics Grid */}
-                  <div
-                    className={`my-4 space-y-2.5 rounded-2xl p-4 ${
-                      isFeatured
-                        ? "border border-slate-700 bg-slate-800/80"
-                        : "border border-slate-800 bg-slate-950/80"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between text-xs">
-                      <span
-                        className={
-                          isFeatured ? "text-slate-400" : "text-slate-400"
-                        }
-                      >
-                        Capital Range
-                      </span>
-                      <span className="font-mono font-bold text-white">
-                        {formatCurrency(plan.minimumAmount)} – {maxLabel}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between text-xs">
-                      <span
-                        className={
-                          isFeatured ? "text-slate-400" : "text-slate-400"
-                        }
-                      >
-                        Principal Return
-                      </span>
-                      <span className="flex items-center gap-1 font-mono font-bold text-emerald-400">
-                        <Check className="h-3.5 w-3.5" />
-                        <span>100% Return</span>
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between text-xs">
-                      <span
-                        className={
-                          isFeatured ? "text-slate-400" : "text-slate-400"
-                        }
-                      >
-                        Affiliate Downline
-                      </span>
-                      <span className="font-mono font-bold text-blue-400">
-                        {plan.referralPercentage}% Commission
-                      </span>
-                    </div>
+                  {/* Card CTA */}
+                  <div className="border-t border-slate-800 pt-4">
+                    <button
+                      id={`btn-invest-${plan.slug}`}
+                      onClick={() => onOpenInvestModal(plan.slug)}
+                      className={`group flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${
+                        isFeatured
+                          ? "bg-linear-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 hover:from-cyan-400 hover:to-indigo-500"
+                          : "bg-blue-600 text-white shadow-sm hover:bg-blue-500"
+                      }`}
+                    >
+                      <span>Invest in {plan.name.replace(" Plan", "")}</span>
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </button>
                   </div>
-
-                  {/* Description */}
-                  <p
-                    className={`my-4 text-xs leading-relaxed ${
-                      isFeatured ? "text-slate-300" : "text-slate-400"
-                    }`}
-                  >
-                    {plan.description}
-                  </p>
-                </div>
-
-                {/* Card CTA */}
-                <div className="border-t border-slate-800 pt-4">
-                  <button
-                    id={`btn-invest-${plan.slug}`}
-                    onClick={() => onOpenInvestModal(plan.slug)}
-                    className={`group flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-bold transition-all ${
-                      isFeatured
-                        ? "bg-linear-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/30 hover:from-cyan-400 hover:to-indigo-500"
-                        : "bg-blue-600 text-white shadow-sm hover:bg-blue-500"
-                    }`}
-                  >
-                    <span>Invest in {plan.name.replace(" Plan", "")}</span>
-                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </button>
-                </div>
                 </div>
               </motion.div>
             )

@@ -1,12 +1,12 @@
-"use client";
+"use client"
 
-import Script from "next/script";
+import Script from "next/script"
 
 interface CoinPriceHeadlineProps {
-  coinIds?: string;
-  currency?: string;
-  outlined?: boolean;
-  className?: string;
+  coinIds?: string
+  currency?: string
+  outlined?: boolean
+  className?: string
 }
 
 export default function CoinPriceHeadline({
@@ -29,5 +29,5 @@ export default function CoinPriceHeadline({
         initial-currency={currency}
       />
     </div>
-  );
+  )
 }

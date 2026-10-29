@@ -66,11 +66,7 @@ export const DiversifiedCategoriesSection: React.FC = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section heading animation */}
         <motion.div
-          initial={
-            shouldReduceMotion
-              ? false
-              : { opacity: 0, y: 30 }
-          }
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{
@@ -95,8 +91,8 @@ export const DiversifiedCategoriesSection: React.FC = () => {
           </h2>
 
           <p className="text-base text-slate-300">
-            Systematic exposure across high-liquidity digital assets,
-            tokenized instruments, and macroeconomic capital markets.
+            Systematic exposure across high-liquidity digital assets, tokenized
+            instruments, and macroeconomic capital markets.
           </p>
         </motion.div>
 
@@ -110,17 +106,9 @@ export const DiversifiedCategoriesSection: React.FC = () => {
               <motion.div
                 key={category.title}
                 custom={idx}
-                variants={
-                  shouldReduceMotion
-                    ? undefined
-                    : cardVariants
-                }
+                variants={shouldReduceMotion ? undefined : cardVariants}
                 initial={shouldReduceMotion ? false : "hidden"}
-                whileInView={
-                  shouldReduceMotion
-                    ? undefined
-                    : "visible"
-                }
+                whileInView={shouldReduceMotion ? undefined : "visible"}
                 viewport={{
                   once: true,
                   amount: 0.15,
@@ -151,10 +139,8 @@ export const DiversifiedCategoriesSection: React.FC = () => {
                 </div>
 
                 <div className="hidden items-center justify-between border-t border-slate-800 pt-4 font-mono text-xs">
-                {/* <div className="flex items-center justify-between border-t border-slate-800 pt-4 font-mono text-xs"> */}
-                  <span className="text-slate-400">
-                    Allocation Target:
-                  </span>
+                  {/* <div className="flex items-center justify-between border-t border-slate-800 pt-4 font-mono text-xs"> */}
+                  <span className="text-slate-400">Allocation Target:</span>
 
                   <span className="text-[9px] font-semibold text-slate-200 lg:text-sm">
                     {category.metric}

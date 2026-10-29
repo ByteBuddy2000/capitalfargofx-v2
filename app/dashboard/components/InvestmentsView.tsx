@@ -234,7 +234,7 @@ export const InvestmentsView: React.FC<InvestmentsViewProps> = ({
                       <span className="block text-[10px] text-slate-500">
                         Invested Principal
                       </span>
-                      <span className="text-lg font-mono font-bold text-slate-900">
+                      <span className="font-mono text-lg font-bold text-slate-900">
                         ${(inv?.amount || 0).toLocaleString()}
                       </span>
                     </div>
@@ -242,7 +242,7 @@ export const InvestmentsView: React.FC<InvestmentsViewProps> = ({
                       <span className="block text-[10px] text-slate-500">
                         Total Maturity
                       </span>
-                      <span className="text-lg font-mono font-bold text-slate-900">
+                      <span className="font-mono text-lg font-bold text-slate-900">
                         ${(inv?.totalReturn || 0).toLocaleString()}
                       </span>
                     </div>

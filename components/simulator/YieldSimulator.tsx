@@ -113,12 +113,12 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mx-auto mb-12 max-w-3xl space-y-3 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 text-[8px] lg:text-xs font-bold tracking-wider text-blue-300 uppercase">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 text-[8px] font-bold tracking-wider text-blue-300 uppercase lg:text-xs">
             <Calculator className="h-3.5 w-3.5 text-blue-400" />
             <span>Live Yield Simulator</span>
           </div>
 
-          <h2 className="px-2 lg:px-0 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+          <h2 className="px-2 text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:px-0">
             Calculate Your Projected Return
           </h2>
 
@@ -160,10 +160,11 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
                         type="button"
                         id={`simulator-select-${plan.slug}`}
                         onClick={() => handlePlanChange(plan)}
-                        className={`relative rounded-xl border p-2.5 text-center transition-all ${isSelected
-                          ? "border-blue-500 bg-blue-600 font-bold text-white shadow-md shadow-blue-600/30"
-                          : "border-slate-800 bg-slate-950 font-medium text-slate-300 hover:border-slate-700 hover:bg-slate-800"
-                          }`}
+                        className={`relative rounded-xl border p-2.5 text-center transition-all ${
+                          isSelected
+                            ? "border-blue-500 bg-blue-600 font-bold text-white shadow-md shadow-blue-600/30"
+                            : "border-slate-800 bg-slate-950 font-medium text-slate-300 hover:border-slate-700 hover:bg-slate-800"
+                        }`}
                       >
                         {plan.featured && (
                           <span className="py-0.2 absolute -top-2 left-1/2 -translate-x-1/2 rounded-full bg-amber-400 px-1.5 text-[8px] font-black tracking-wider text-slate-900 uppercase shadow-xs">
@@ -253,7 +254,7 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
                 {/* Preset Chips */}
                 {presets.length > 0 && (
                   <div className="flex flex-wrap items-center gap-2 pt-2">
-                    <span className="hidden xl:block mr-1 font-mono text-[10px] font-bold text-slate-400 uppercase">
+                    <span className="mr-1 hidden font-mono text-[10px] font-bold text-slate-400 uppercase xl:block">
                       Presets:
                     </span>
                     {presets.slice(0, 5).map((amount) => (
@@ -261,10 +262,11 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
                         key={amount}
                         type="button"
                         onClick={() => setInvestmentAmount(amount)}
-                        className={`rounded-lg px-2.5 py-1 font-mono text-xs font-semibold transition-colors ${investmentAmount === amount
-                          ? "border border-blue-500/50 bg-blue-950 text-blue-300"
-                          : "border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700"
-                          }`}
+                        className={`rounded-lg px-2.5 py-1 font-mono text-xs font-semibold transition-colors ${
+                          investmentAmount === amount
+                            ? "border border-blue-500/50 bg-blue-950 text-blue-300"
+                            : "border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700"
+                        }`}
                       >
                         {formatCurrency(amount)}
                       </button>
@@ -414,7 +416,7 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
 
           {/* Mandatory Disclaimers Strip */}
           <div className="hidden space-y-1.5 border-t border-slate-800 bg-slate-950 p-4 text-xs text-slate-400 sm:p-5">
-          {/* <div className="space-y-1.5 border-t border-slate-800 bg-slate-950 p-4 text-xs text-slate-400 sm:p-5"> */}
+            {/* <div className="space-y-1.5 border-t border-slate-800 bg-slate-950 p-4 text-xs text-slate-400 sm:p-5"> */}
             <div className="flex items-start gap-2">
               <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-500" />
               <p className="leading-relaxed">

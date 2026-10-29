@@ -1,41 +1,41 @@
 // components/CoinPriceBlock.tsx
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { Bitcoin, Coins, RefreshCw } from "lucide-react";
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+import { Bitcoin, Coins, RefreshCw } from "lucide-react"
 
-const COINGECKO_API_URL = "https://api.coingecko.com/api/v3";
+const COINGECKO_API_URL = "https://api.coingecko.com/api/v3"
 
-type CryptoId = "bitcoin" | "ethereum" | "tether";
+type CryptoId = "bitcoin" | "ethereum" | "tether"
 
 interface CoinPriceResponse {
-  bitcoin?: { usd?: number };
-  ethereum?: { usd?: number };
-  tether?: { usd?: number };
+  bitcoin?: { usd?: number }
+  ethereum?: { usd?: number }
+  tether?: { usd?: number }
 }
 
 interface CryptoAsset {
-  id: CryptoId;
-  symbol: string;
-  name: string;
-  price: number | null;
+  id: CryptoId
+  symbol: string
+  name: string
+  price: number | null
 }
 
 interface CryptoCardProps {
-  name: string;
-  symbol: string;
-  price: number | null;
-  currency?: string;
-  loading?: boolean;
-  index: number;
+  name: string
+  symbol: string
+  price: number | null
+  currency?: string
+  loading?: boolean
+  index: number
 }
 
 const INITIAL_ASSETS: CryptoAsset[] = [
   { id: "bitcoin", symbol: "BTC", name: "Bitcoin", price: null },
   { id: "ethereum", symbol: "ETH", name: "Ethereum", price: null },
   { id: "tether", symbol: "USDT", name: "Tether", price: null },
-];
+]
 
 const fadeInLeft = {
   hidden: { opacity: 0, x: -60 },
@@ -44,7 +44,7 @@ const fadeInLeft = {
     x: 0,
     transition: { duration: 0.7, ease: "easeOut" as const },
   },
-};
+}
 
 const fadeInRight = {
   hidden: { opacity: 0, x: 60 },
@@ -53,7 +53,7 @@ const fadeInRight = {
     x: 0,
     transition: { duration: 0.7, ease: "easeOut" as const },
   },
-};
+}
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -62,7 +62,7 @@ const fadeInUp = {
     y: 0,
     transition: { duration: 0.6, ease: "easeOut" as const },
   },
-};
+}
 
 const staggerContainer = {
   hidden: {},
@@ -71,18 +71,18 @@ const staggerContainer = {
       staggerChildren: 0.15,
     },
   },
-};
+}
 
 function CryptoIcon({ symbol }: { symbol: string }) {
   if (symbol === "BTC") {
-    return <Bitcoin className="h-6 w-6 text-amber-400" />;
+    return <Bitcoin className="h-6 w-6 text-amber-400" />
   }
 
   if (symbol === "ETH") {
-    return <Coins className="h-6 w-6 text-blue-400" />;
+    return <Coins className="h-6 w-6 text-blue-400" />
   }
 
-  return <Coins className="h-6 w-6 text-emerald-400" />;
+  return <Coins className="h-6 w-6 text-emerald-400" />
 }
 
 function CryptoCard({
@@ -101,14 +101,14 @@ function CryptoCard({
           currency,
           minimumFractionDigits: 2,
           maximumFractionDigits: price < 1 ? 6 : 2,
-        }).format(price);
+        }).format(price)
 
   return (
     <motion.article
       variants={index % 2 === 0 ? fadeInLeft : fadeInRight}
       className="group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/80 p-6 shadow-sm transition-colors duration-300 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-lg hover:shadow-blue-950/20"
     >
-      <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-blue-500/5 blur-2xl transition-colors duration-300 group-hover:bg-blue-500/10" />
+      <div className="absolute -top-10 -right-10 h-28 w-28 rounded-full bg-blue-500/5 blur-2xl transition-colors duration-300 group-hover:bg-blue-500/10" />
 
       <div className="relative flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -128,7 +128,7 @@ function CryptoCard({
       </div>
 
       <div className="relative mt-7 border-t border-slate-800 pt-5">
-        <p className="text-xs font-medium uppercase tracking-wider text-slate-400">
+        <p className="text-xs font-medium tracking-wider text-slate-400 uppercase">
           Current price
         </p>
 
@@ -138,36 +138,34 @@ function CryptoCard({
             className="mt-3 h-8 w-36 animate-pulse rounded-md bg-slate-800"
           />
         ) : (
-          <p className="mt-2 break-words text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          <p className="mt-2 text-2xl font-bold tracking-tight break-words text-white sm:text-3xl">
             {formattedPrice}
           </p>
         )}
 
-        <p className="mt-2 text-xs text-slate-500">
-          Per 1 {symbol}
-        </p>
+        <p className="mt-2 text-xs text-slate-500">Per 1 {symbol}</p>
       </div>
     </motion.article>
-  );
+  )
 }
 
 export default function CoinPriceBlocks() {
-  const [assets, setAssets] = useState<CryptoAsset[]>(INITIAL_ASSETS);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [assets, setAssets] = useState<CryptoAsset[]>(INITIAL_ASSETS)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const controller = new AbortController();
+    const controller = new AbortController()
 
     async function fetchPrices() {
       try {
-        setLoading(true);
-        setError(null);
+        setLoading(true)
+        setError(null)
 
         const params = new URLSearchParams({
           ids: "bitcoin,ethereum,tether",
           vs_currencies: "usd",
-        });
+        })
 
         const response = await fetch(
           `${COINGECKO_API_URL}/simple/price?${params.toString()}`,
@@ -175,63 +173,60 @@ export default function CoinPriceBlocks() {
             headers: { Accept: "application/json" },
             cache: "no-store",
             signal: controller.signal,
-          },
-        );
+          }
+        )
 
         if (!response.ok) {
           throw new Error(
             response.status === 429
               ? "CoinGecko rate limit exceeded. Please try again later."
-              : `Unable to fetch cryptocurrency prices (${response.status}).`,
-          );
+              : `Unable to fetch cryptocurrency prices (${response.status}).`
+          )
         }
 
-        const data: CoinPriceResponse = await response.json();
+        const data: CoinPriceResponse = await response.json()
 
         const prices: Record<CryptoId, number | null> = {
           bitcoin: data.bitcoin?.usd ?? null,
           ethereum: data.ethereum?.usd ?? null,
           tether: data.tether?.usd ?? null,
-        };
+        }
 
         if (
           Object.values(prices).some(
-            (price) =>
-              price === null ||
-              !Number.isFinite(price) ||
-              price <= 0,
+            (price) => price === null || !Number.isFinite(price) || price <= 0
           )
         ) {
-          throw new Error("CoinGecko returned incomplete price data.");
+          throw new Error("CoinGecko returned incomplete price data.")
         }
 
         setAssets((current) =>
           current.map((asset) => ({
             ...asset,
             price: prices[asset.id],
-          })),
-        );
+          }))
+        )
       } catch (err) {
         if (err instanceof Error && err.name === "AbortError") {
-          return;
+          return
         }
 
         setError(
           err instanceof Error
             ? err.message
-            : "An unexpected error occurred while fetching prices.",
-        );
+            : "An unexpected error occurred while fetching prices."
+        )
       } finally {
         if (!controller.signal.aborted) {
-          setLoading(false);
+          setLoading(false)
         }
       }
     }
 
-    void fetchPrices();
+    void fetchPrices()
 
-    return () => controller.abort();
-  }, []);
+    return () => controller.abort()
+  }, [])
 
   return (
     <section
@@ -247,7 +242,7 @@ export default function CoinPriceBlocks() {
           viewport={{ once: true, amount: 0.2 }}
           className="mb-12 max-w-3xl space-y-4 text-left"
         >
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3 py-1 font-mono text-xs font-bold uppercase tracking-wider text-blue-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3 py-1 font-mono text-xs font-bold tracking-wider text-blue-300 uppercase">
             Digital Asset Market
           </div>
 
@@ -265,9 +260,9 @@ export default function CoinPriceBlocks() {
           </div>
 
           <p className="text-base leading-relaxed text-slate-300 sm:text-lg">
-            Monitor the latest available market prices for Bitcoin,
-            Ethereum, and Tether in USD. Prices are retrieved from
-            CoinGecko and may fluctuate with market conditions.
+            Monitor the latest available market prices for Bitcoin, Ethereum,
+            and Tether in USD. Prices are retrieved from CoinGecko and may
+            fluctuate with market conditions.
           </p>
         </motion.div>
 
@@ -327,5 +322,5 @@ export default function CoinPriceBlocks() {
         </motion.p>
       </div>
     </section>
-  );
+  )
 }

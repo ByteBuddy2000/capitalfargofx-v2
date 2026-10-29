@@ -268,10 +268,11 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({
                     <td className="px-4 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <span
-                          className={`rounded px-2 py-0.5 text-[10px] font-black uppercase ${u.role === "admin" || u.role === "super admin"
+                          className={`rounded px-2 py-0.5 text-[10px] font-black uppercase ${
+                            u.role === "admin" || u.role === "super admin"
                               ? "border border-amber-800 bg-amber-950 text-amber-300"
                               : "bg-slate-800 text-slate-300"
-                            }`}
+                          }`}
                         >
                           {u.role}
                         </span>

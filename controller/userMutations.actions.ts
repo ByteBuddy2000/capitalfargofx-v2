@@ -13,9 +13,7 @@ import { Withdrawal } from "@/models/Withdrawal"
 import { AuditLog } from "@/models/AuditLog"
 
 type UserAuditAction =
-  | "DEPOSIT_SUBMITTED"
-  | "WITHDRAWAL_REQUESTED"
-  | "INVESTMENT_SETTLED"
+  "DEPOSIT_SUBMITTED" | "WITHDRAWAL_REQUESTED" | "INVESTMENT_SETTLED"
 
 async function writeUserAudit({
   actorId,

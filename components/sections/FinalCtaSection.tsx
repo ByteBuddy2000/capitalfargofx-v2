@@ -54,7 +54,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({
           {benefits.map((benefit, idx) => (
             <div
               key={idx}
-              className="flex items-center gap-2 text-xs lg:text-sm font-medium text-slate-200"
+              className="flex items-center gap-2 text-xs font-medium text-slate-200 lg:text-sm"
             >
               <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
               <span>{benefit}</span>

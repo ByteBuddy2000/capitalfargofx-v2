@@ -41,7 +41,10 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
 
       await navigator.clipboard.writeText(txHash)
       setCopiedTxHash(txHash)
-      success("Transaction Hash Copied", "The full transaction hash was copied.")
+      success(
+        "Transaction Hash Copied",
+        "The full transaction hash was copied."
+      )
       window.setTimeout(() => setCopiedTxHash(""), 2000)
     } catch (copyError) {
       toastError(
@@ -58,11 +61,9 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
     // Type tab filter
     if (activeTypeTab === "DEPOSIT" && tx.type !== "DEPOSIT") return false
     if (activeTypeTab === "WITHDRAWAL" && tx.type !== "WITHDRAWAL") return false
-    if (activeTypeTab === "INVESTMENT" && tx.type !== "INVESTMENT")
-      return false
+    if (activeTypeTab === "INVESTMENT" && tx.type !== "INVESTMENT") return false
 
-    if (activeTypeTab === "PROFIT" && tx.type !== "PROFIT")
-      return false
+    if (activeTypeTab === "PROFIT" && tx.type !== "PROFIT") return false
 
     if (activeTypeTab === "REFERRAL" && tx.type !== "REFERRAL_COMMISSION")
       return false
@@ -99,26 +100,26 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
   }
 
   const getTypeIcon = (type: TransactionType) => {
-  switch (type) {
-    case "DEPOSIT":
-      return <ArrowDownToLine className="h-4 w-4 text-emerald-500" />
+    switch (type) {
+      case "DEPOSIT":
+        return <ArrowDownToLine className="h-4 w-4 text-emerald-500" />
 
-    case "WITHDRAWAL":
-      return <ArrowUpFromLine className="h-4 w-4 text-amber-500" />
+      case "WITHDRAWAL":
+        return <ArrowUpFromLine className="h-4 w-4 text-amber-500" />
 
-    case "INVESTMENT":
-      return <Layers className="h-4 w-4 text-blue-500" />
+      case "INVESTMENT":
+        return <Layers className="h-4 w-4 text-blue-500" />
 
-    case "PROFIT":
-      return <TrendingUp className="h-4 w-4 text-emerald-500" />
+      case "PROFIT":
+        return <TrendingUp className="h-4 w-4 text-emerald-500" />
 
-    case "REFERRAL_COMMISSION":
-      return <Users className="h-4 w-4 text-purple-500" />
+      case "REFERRAL_COMMISSION":
+        return <Users className="h-4 w-4 text-purple-500" />
 
-    default:
-      return <ReceiptText className="h-4 w-4 text-slate-500" />
+      default:
+        return <ReceiptText className="h-4 w-4 text-slate-500" />
+    }
   }
-}
 
   return (
     <div className="space-y-6">
@@ -151,10 +152,11 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
             <button
               key={tab.id}
               onClick={() => setActiveTypeTab(tab.id)}
-              className={`cursor-pointer rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${activeTypeTab === tab.id
+              className={`cursor-pointer rounded-xl px-3.5 py-1.5 text-xs font-bold transition-all ${
+                activeTypeTab === tab.id
                   ? "bg-blue-600 text-white shadow-xs"
                   : "bg-slate-50 text-slate-600 hover:bg-slate-100"
-                }`}
+              }`}
             >
               {tab.label}
             </button>
@@ -288,32 +290,32 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
                       </td>
                       <td className="hidden py-4 font-mono font-bold text-slate-600">
                         {tx.asset === "USDT" && (
-                          <Image 
+                          <Image
                             src="/usdt.png"
                             alt="USDT"
                             width={16}
                             height={16}
-                            className="inline-block mr-1.5 -mt-0.5 h-4 w-4 rounded-full"
-                          />  
-                        ) }
+                            className="-mt-0.5 mr-1.5 inline-block h-4 w-4 rounded-full"
+                          />
+                        )}
                         {tx.asset === "BTC" && (
-                          <Image 
+                          <Image
                             src="/bitcoin.png"
                             alt="BTC"
                             width={16}
                             height={16}
-                            className="inline-block mr-1.5 -mt-0.5 h-4 w-4 rounded-full"
-                          />  
-                        ) }
+                            className="-mt-0.5 mr-1.5 inline-block h-4 w-4 rounded-full"
+                          />
+                        )}
                         {tx.asset === "ETH" && (
-                          <Image 
+                          <Image
                             src="/ethereum.png"
                             alt="ETH"
                             width={16}
                             height={16}
-                            className="inline-block mr-1.5 -mt-0.5 h-4 w-4 rounded-full"
-                          />  
-                        ) }
+                            className="-mt-0.5 mr-1.5 inline-block h-4 w-4 rounded-full"
+                          />
+                        )}
                       </td>
                       <td className="py-4">{getStatusBadge(tx.status)}</td>
                       <td className="py-4 pr-6 text-right font-mono text-[11px] text-slate-500">

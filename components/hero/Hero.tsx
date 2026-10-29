@@ -3,7 +3,13 @@
 
 import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowRight, ChevronRight, CheckCircle, RocketIcon, PlayIcon } from "lucide-react"
+import {
+  ArrowRight,
+  ChevronRight,
+  CheckCircle,
+  RocketIcon,
+  PlayIcon,
+} from "lucide-react"
 import { TRUST_FEATURES } from "@/lib/data"
 import { AnimatePresence, motion } from "motion/react"
 
@@ -89,7 +95,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
   return (
     <section
       id="hero-section"
-      className="mt-14 relative overflow-hidden pt-32 pb-14 md:pt-40 md:pb-28"
+      className="relative mt-14 overflow-hidden pt-32 pb-14 md:pt-40 md:pb-28"
     >
       {/* Dynamic Background linears */}
       <div className="pointer-events-none absolute top-0 left-1/2 -z-10 h-150 w-full max-w-7xl -translate-x-1/2">
@@ -102,9 +108,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
         <div className="grid grid-cols-1 items-center">
           {/* <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8"> */}
           {/* Left Column: Editorial Copy */}
-          <div className="space-y-8 lg:space-y-6 flex items-center flex-col text-center justify-center">
-
-            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/60 px-3.5 py-1.5 text-[8px] lg:text-xs shadow-xs">
+          <div className="flex flex-col items-center justify-center space-y-8 text-center lg:space-y-6">
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/60 px-3.5 py-1.5 text-[8px] shadow-xs lg:text-xs">
               <span className="h-2 w-2 animate-pulse rounded-full bg-blue-400"></span>
               <span className="font-bold tracking-wider text-blue-300 uppercase">
                 Your Financial Goals
@@ -113,9 +118,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
               </span>
             </div>
 
-
             {/* Main Headline */}
-            <div className="px-2 mx-auto max-w-5xl">
+            <div className="mx-auto max-w-5xl px-2">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={headlineIndex}
@@ -125,9 +129,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
                   transition={{ duration: 0.5, ease: "easeInOut" }}
                 >
                   {headlineIndex === 0 ? (
-                    <AnimatedHeadline
-                      className="text-3xl lg:text-4xl leading-[1.12] font-extrabold tracking-tight text-white sm:text-5xl xl:text-6xl"
-                    >
+                    <AnimatedHeadline className="text-3xl leading-[1.12] font-extrabold tracking-tight text-white sm:text-5xl lg:text-4xl xl:text-6xl">
                       <AnimatedWord>Build</AnimatedWord>{" "}
                       <AnimatedWord>Your</AnimatedWord>{" "}
                       {/* <AnimatedWord>Financial</AnimatedWord>{" "} */}
@@ -138,9 +140,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
                       </AnimatedWord>
                     </AnimatedHeadline>
                   ) : (
-                    <AnimatedHeadline
-                      className="text-3xl lg:text-4xl leading-[1.12] font-extrabold tracking-tight text-white sm:text-5xl xl:text-6xl"
-                    >
+                    <AnimatedHeadline className="text-3xl leading-[1.12] font-extrabold tracking-tight text-white sm:text-5xl lg:text-4xl xl:text-6xl">
                       <AnimatedWord>Invest</AnimatedWord>{" "}
                       <AnimatedWord>With</AnimatedWord>{" "}
                       <AnimatedWord className="bg-linear-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
@@ -156,20 +156,26 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
             </div>
 
             {/* Supporting copy */}
-            <p className="max-w-2xl text-sm lg:text-lg leading-relaxed font-normal text-slate-300 sm:text-xl">
-              Explore structured digital investment opportunities through a secure platform designed to help you manage your portfolio, monitor performance, and access cryptocurrency transactions with confidence.
+            <p className="max-w-2xl text-sm leading-relaxed font-normal text-slate-300 sm:text-xl lg:text-lg">
+              Explore structured digital investment opportunities through a
+              secure platform designed to help you manage your portfolio,
+              monitor performance, and access cryptocurrency transactions with
+              confidence.
             </p>
 
             {/* CTA Buttons */}
             {/* <div className="flex flex-col items-stretch gap-4 pt-2 sm:flex-row sm:items-center"> */}
-            <div className="flex  items-stretch gap-4 pt-2 sm:flex-row sm:items-center">
+            <div className="flex items-stretch gap-4 pt-2 sm:flex-row sm:items-center">
               <button
                 id="hero-primary-cta"
                 onClick={() => onOpenInvestModal()}
                 className="group flex items-center justify-center gap-2.5 rounded-xl bg-linear-to-r from-blue-600 via-blue-700 to-indigo-700 px-7 py-4 text-sm font-semibold text-white shadow-lg shadow-blue-900/40 transition-all hover:-translate-y-0.5 hover:from-blue-500 hover:to-indigo-600 hover:shadow-xl hover:shadow-blue-600/40"
               >
                 <span>Start Investing</span>
-                <RocketIcon size={32}  className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <RocketIcon
+                  size={32}
+                  className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                />
               </button>
 
               <button
@@ -181,7 +187,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
                 className="group flex items-center justify-center gap-2 rounded-xl border border-slate-700/80 bg-slate-900/80 px-7 py-4 text-sm font-semibold text-slate-200 shadow-sm transition-all hover:border-slate-600 hover:bg-slate-800 hover:shadow-md"
               >
                 <span>Learn More</span>
-                <PlayIcon size={32} className="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:text-slate-200" />
+                <PlayIcon
+                  size={32}
+                  className="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:text-slate-200"
+                />
               </button>
             </div>
 
