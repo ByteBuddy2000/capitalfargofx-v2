@@ -200,10 +200,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     const username = encodeURIComponent(String(currentUser?.username ?? ""))
 
     if (typeof window !== "undefined" && window.location?.origin) {
-      return `${window.location.origin}/?ref=${username}`
+      return `${window.location.origin}/register/?ref=${username}`
     }
 
-    return `/?ref=${username}`
+    return `/register/?ref=${username}`
   }, [currentUser?.username])
 
   const copyReferralLink = async () => {

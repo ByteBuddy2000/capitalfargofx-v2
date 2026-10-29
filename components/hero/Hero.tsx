@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowRight, ChevronRight, CheckCircle } from "lucide-react"
+import { ArrowRight, ChevronRight, CheckCircle, RocketIcon, PlayIcon } from "lucide-react"
 import { TRUST_FEATURES } from "@/lib/data"
 import { AnimatePresence, motion } from "motion/react"
 
@@ -168,7 +168,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
                 className="group flex items-center justify-center gap-2.5 rounded-xl bg-linear-to-r from-blue-600 via-blue-700 to-indigo-700 px-7 py-4 text-base font-bold text-white shadow-lg shadow-blue-900/40 transition-all hover:-translate-y-0.5 hover:from-blue-500 hover:to-indigo-600 hover:shadow-xl hover:shadow-blue-600/40"
               >
                 <span>Start Investing</span>
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <RocketIcon size={32}  className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </button>
 
               <button
@@ -180,12 +180,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
                 className="group flex items-center justify-center gap-2 rounded-xl border border-slate-700/80 bg-slate-900/80 px-7 py-4 text-base font-bold text-slate-200 shadow-sm transition-all hover:border-slate-600 hover:bg-slate-800 hover:shadow-md"
               >
                 <span>Explore Investment Plans</span>
-                <ChevronRight className="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:text-slate-200" />
+                <PlayIcon size={32} className="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:text-slate-200" />
               </button>
             </div>
 
             {/* Trust Badges - 4 compact glass badges */}
-            <div className="border-t border-slate-800 pt-6">
+            <div className="hidden border-t border-slate-800 pt-6">
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {TRUST_FEATURES.map((item, idx) => (
                   <div

@@ -51,10 +51,9 @@ export const ReferralsView: React.FC<ReferralsViewProps> = ({
     }
   })
 
-  const referralLink =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/?ref=${currentUser?.username || ""}`
-      : `/?ref=${currentUser?.username || ""}`
+  const referralLink =   typeof window !== "undefined"
+      ? `${window.location.origin}/register/?ref=${currentUser?.username || ""}`
+      : `/register/?ref=${currentUser?.username || ""}`
 
   const copyLink = async () => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
