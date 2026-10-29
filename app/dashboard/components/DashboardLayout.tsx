@@ -364,7 +364,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                           onClick={() => markNotificationAsRead(notif.id)}
                           className={`cursor-pointer rounded-xl border p-2.5 text-xs transition-colors ${
                             notif.read
-                              ? "border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]"
+                              ? "border-[#E2E8F0] text-[#64748B]"
                               : "border-blue-200 bg-blue-50/60 font-medium text-[#0F172A]"
                           }`}
                         >

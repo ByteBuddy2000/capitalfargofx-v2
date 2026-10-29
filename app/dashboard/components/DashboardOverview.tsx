@@ -697,7 +697,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               />
             </div>
 
-            <div className="mt-4 grid grid-cols-1 gap-3 xl:grid-cols-3">
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-1 gap-3 md:grid-col-3 lg:grid-cols-1 xl:grid-cols-1">
               {/* Bitcoin */}
               <div className="flex items-center justify-between rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-3">
                 <div className="flex items-center gap-3">

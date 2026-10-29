@@ -9,9 +9,13 @@ import {
   Layers,
   TrendingUp,
   Users,
+  Copy,
+  Check,
 } from "lucide-react"
 import { User, Transaction, TransactionType } from "@/types"
 import { Badge } from "@/components/ui/Badge"
+import Image from "next/image"
+import { useToast } from "@/components/ui/Toast"
 
 interface TransactionsViewProps {
   currentUser: User
@@ -24,8 +28,30 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
   const [activeTypeTab, setActiveTypeTab] = useState<string>("ALL")
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("ALL")
+  const [copiedTxHash, setCopiedTxHash] = useState("")
+  const { success, error: toastError } = useToast()
 
   const allTransactions = initialTransactions
+
+  const handleCopyTxHash = async (txHash: string) => {
+    try {
+      if (!navigator.clipboard) {
+        throw new Error("Clipboard access is unavailable.")
+      }
+
+      await navigator.clipboard.writeText(txHash)
+      setCopiedTxHash(txHash)
+      success("Transaction Hash Copied", "The full transaction hash was copied.")
+      window.setTimeout(() => setCopiedTxHash(""), 2000)
+    } catch (copyError) {
+      toastError(
+        "Unable to Copy Transaction Hash",
+        copyError instanceof Error
+          ? copyError.message
+          : "Please copy the transaction hash manually."
+      )
+    }
+  }
 
   const filtered = allTransactions.filter((tx) => {
     if (!tx) return false
@@ -177,14 +203,19 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          <div
+            className="min-w-0 overflow-x-auto overscroll-x-contain"
+            role="region"
+            aria-label="Transactions table"
+            tabIndex={0}
+          >
+            <table className="w-full min-w-[760px] text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
                   <th className="hidden py-3.5 pl-6">Type & Operation</th>
                   <th className="py-3.5">Description</th>
                   <th className="py-3.5">Amount (USD)</th>
-                  <th className="py-3.5">Asset</th>
+                  <th className="hidden py-3.5">Asset</th>
                   <th className="py-3.5">Status</th>
                   <th className="py-3.5 pr-6 text-right">Timestamp</th>
                 </tr>
@@ -193,6 +224,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
                 {filtered.map((tx) => {
                   const isDebit =
                     tx.type === "WITHDRAWAL" || tx.type === "INVESTMENT"
+                  const txHash = tx.txHash
                   return (
                     <tr
                       key={tx.id}
@@ -217,10 +249,28 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
                         <p className="font-medium text-slate-800">
                           {tx.description}
                         </p>
-                        {tx.txHash && (
-                          <p className=" mt-0.5 max-w-xs truncate font-mono text-[10px] text-slate-400">
-                            TXHASH: {tx.txHash}
-                          </p>
+                        {txHash && (
+                          <div className="mt-0.5 flex max-w-xs items-center gap-1.5 font-mono text-[10px] text-slate-400">
+                            <span className="truncate" title={txHash}>
+                              TXHASH:{" "}
+                              {txHash.length > 9
+                                ? `${txHash.slice(0, 5)}…${txHash.slice(-4)}`
+                                : txHash}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => handleCopyTxHash(txHash)}
+                              aria-label={`Copy transaction hash ${txHash}`}
+                              title="Copy full transaction hash"
+                              className="shrink-0 rounded p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                            >
+                              {copiedTxHash === txHash ? (
+                                <Check className="h-3.5 w-3.5 text-emerald-600" />
+                              ) : (
+                                <Copy className="h-3.5 w-3.5" />
+                              )}
+                            </button>
+                          </div>
                         )}
                       </td>
                       <td className="py-4 font-mono font-bold">
@@ -236,8 +286,34 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
                           })}
                         </span>
                       </td>
-                      <td className="py-4 font-mono font-bold text-slate-600">
-                        {tx.asset || "USD"}
+                      <td className="hidden py-4 font-mono font-bold text-slate-600">
+                        {tx.asset === "USDT" && (
+                          <Image 
+                            src="/usdt.png"
+                            alt="USDT"
+                            width={16}
+                            height={16}
+                            className="inline-block mr-1.5 -mt-0.5 h-4 w-4 rounded-full"
+                          />  
+                        ) }
+                        {tx.asset === "BTC" && (
+                          <Image 
+                            src="/bitcoin.png"
+                            alt="BTC"
+                            width={16}
+                            height={16}
+                            className="inline-block mr-1.5 -mt-0.5 h-4 w-4 rounded-full"
+                          />  
+                        ) }
+                        {tx.asset === "ETH" && (
+                          <Image 
+                            src="/ethereum.png"
+                            alt="ETH"
+                            width={16}
+                            height={16}
+                            className="inline-block mr-1.5 -mt-0.5 h-4 w-4 rounded-full"
+                          />  
+                        ) }
                       </td>
                       <td className="py-4">{getStatusBadge(tx.status)}</td>
                       <td className="py-4 pr-6 text-right font-mono text-[11px] text-slate-500">
