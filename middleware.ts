@@ -22,6 +22,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(destination, request.url))
   }
 
+  if (token && pathname === "/register") {
+    return NextResponse.redirect(new URL("/dashboard", request.url))
+  }
+
   // 2. Protect defined dashboard routes
   const isProtectedRoute = AUTH_ROUTES.some((route) =>
     pathname.startsWith(route)

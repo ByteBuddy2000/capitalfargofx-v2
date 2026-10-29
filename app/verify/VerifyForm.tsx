@@ -1,5 +1,4 @@
 // app/verify/VerifyForm.tsx
-'use client'
 "use client"
 
 import { useEffect, useState } from "react"
@@ -7,6 +6,7 @@ import Logo from "@/components/Logo/Logo"
 import { Button } from "@/components/ui/Button"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
+import Image from "next/image"
 
 const RESEND_DELAY = 240 // 4 minutes
 
@@ -80,9 +80,36 @@ const VerifyEmail = () => {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-x-hidden px-4 py-10 sm:px-6 lg:px-8">
-      <div className="z-1 w-full rounded-xl bg-white p-6 shadow-md sm:max-w-md">
+      <div className="z-1 w-full rounded-xl bg-gradient-to-br from-blue-100 to-indigo-100 p-6 shadow-md sm:max-w-md">
         <div className="mb-6">
-          <Logo />
+          <div>
+      {/* Brand Logo */}
+      <Link
+        href="/"
+        className="group flex cursor-pointer items-center gap-2.5 text-left focus:outline-none"
+      >
+        <div className="">
+          <Image
+            src="/capitalsfargofx-logo.png"
+            width={1055}
+            height={1055}
+            alt="CapitalsFargoFX Logo"
+            className="h-20 w-20"
+            priority
+          />
+        </div>
+        <div>
+          <div className="flex items-center gap-1.5">
+            <span className="text-xl font-extrabold tracking-tight text-gray-600">
+              CapitalsFargo<span className="text-blue-400">FX</span>
+            </span>
+          </div>
+          <p className="-mt-0.5 text-[10px] font-medium tracking-wider text-slate-400 uppercase">
+            Digital Asset Management
+          </p>
+        </div>
+      </Link>
+    </div>
 
           <div>
             <h1 className="mb-1.5 text-2xl font-bold text-slate-900">
