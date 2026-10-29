@@ -67,6 +67,8 @@ export const HomePage: React.FC<HomePageProps> = ({ plans }) => {
       {/* 8. Video Showcase #2: Inside Digital Asset Markets (Distinct Layout) */}
       <VideoShowcaseSectionTwo />
 
+      {/* <CoinPriceBlocks /> */}
+
       {/* 9. Supported Digital Assets Settlement Rails */}
       <SupportedCryptoSection />
 

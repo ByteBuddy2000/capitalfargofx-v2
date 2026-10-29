@@ -413,7 +413,8 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
           </div>
 
           {/* Mandatory Disclaimers Strip */}
-          <div className="space-y-1.5 border-t border-slate-800 bg-slate-950 p-4 text-xs text-slate-400 sm:p-5">
+          <div className="hidden space-y-1.5 border-t border-slate-800 bg-slate-950 p-4 text-xs text-slate-400 sm:p-5">
+          {/* <div className="space-y-1.5 border-t border-slate-800 bg-slate-950 p-4 text-xs text-slate-400 sm:p-5"> */}
             <div className="flex items-start gap-2">
               <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-500" />
               <p className="leading-relaxed">

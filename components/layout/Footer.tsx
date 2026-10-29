@@ -246,13 +246,6 @@ export const Footer: React.FC<FooterProps> = ({
         {/* Bottom copyright */}
         <div className="mt-6 flex flex-col items-center justify-between gap-3 text-xs text-slate-500 sm:flex-row">
           <div>© 2026 CapitalsFargoFX. All rights reserved.</div>
-          <div className="flex items-center gap-4">
-            <span>Institutional Digital Finance</span>
-            <span>·</span>
-            <span>Zero Deposit Fees</span>
-            <span>·</span>
-            <span>Multi-Signature Custody</span>
-          </div>
         </div>
       </div>
     </footer>

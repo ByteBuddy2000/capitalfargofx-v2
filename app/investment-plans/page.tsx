@@ -11,7 +11,6 @@ const page = async () => {
   return (
     <div>
       <Navbar />
-
       <InvestmentPlansPage plans={plans} />
       <Footer />
     </div>
