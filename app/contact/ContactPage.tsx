@@ -126,8 +126,9 @@ export const ContactPage: React.FC = () => {
                   </Link>
 
                    {/* Business Address */}
-                  <div className="flex items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-violet-950/60 text-violet-400">
+                  <div className="hidden items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4">
+                  {/* <div className="flex items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4"> */}
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-950/60 text-violet-400">
                       <MapPin className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
@@ -141,13 +142,13 @@ export const ContactPage: React.FC = () => {
                   </div>
 
                   {/* Telegram Channel */}
-                  <a
+                  <Link
                     href="https://t.me/CapitalsFargofx_official"
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="group block flex items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4 transition-all hover:border-blue-500/50 hover:shadow-xs"
+                    className="group flex items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4 transition-all hover:border-blue-500/50 hover:shadow-xs"
                   >
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-cyan-950/60 text-cyan-400">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-cyan-950/60 text-cyan-400">
                       <Send className="h-5 w-5" />
                     </div>
                     <div>
@@ -159,7 +160,7 @@ export const ContactPage: React.FC = () => {
                       </div>
                      
                     </div>
-                  </a>
+                  </Link>
                 </div>
 
                 {/* Service Level Agreement Metrics */}

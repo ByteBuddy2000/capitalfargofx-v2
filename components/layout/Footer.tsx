@@ -137,7 +137,7 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button
-                  onClick={() => handleLink("/assets")}
+                  onClick={() => handleLink("/fiats-assets")}
                   className="group flex items-center gap-1 text-slate-400 transition-colors hover:text-white"
                 >
                   <span>Supported Crypto</span>
