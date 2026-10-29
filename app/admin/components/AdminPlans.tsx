@@ -226,7 +226,7 @@ export const AdminPlans: React.FC<AdminPlansProps> = ({
               <Button
                 onClick={() => handleDeletePlan(plan)}
                 aria-label={`Delete ${plan.name}`}
-                className="bg-red-600 px-3 text-white hover:bg-red-700"
+                className="hidden bg-red-600 px-3 text-white hover:bg-red-700"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>

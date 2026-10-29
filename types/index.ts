@@ -98,6 +98,7 @@ export interface Investment {
   userUsername?: string
   planId: string
   planName: string
+  assetName?: "BTC" | "ETH" | "USDT"
   depositId?: string
   principalAmount?: number
   amount: number

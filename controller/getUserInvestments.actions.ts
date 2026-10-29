@@ -30,6 +30,7 @@ export async function getUserInvestments(): Promise<MeInvestmentsResponse> {
 
     const investments = await Investment.find({ userId })
       .populate("planId", "name")
+      .populate("depositId", "asset")
       .sort({ createdAt: -1 })
       .lean()
 
@@ -40,12 +41,20 @@ export async function getUserInvestments(): Promise<MeInvestmentsResponse> {
         "name" in investment.planId
           ? (investment.planId as { _id?: unknown; name?: string })
           : undefined
+      const deposit =
+        investment.depositId &&
+        typeof investment.depositId === "object" &&
+        "asset" in investment.depositId
+          ? (investment.depositId as { _id?: unknown; asset?: string })
+          : undefined
 
       return {
         ...investment,
         id: String(investment._id),
         planId: String(plan?._id ?? investment.planId),
+        depositId: String(deposit?._id ?? investment.depositId),
         planName: investment.planName || plan?.name || "",
+        assetName: investment.assetName || deposit?.asset || "",
       }
     })
 

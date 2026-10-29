@@ -1,12 +1,14 @@
 import mongoose, { type Model, type Schema, type Types } from "mongoose"
 
 export type InvestmentStatus = "ACTIVE" | "MATURED" | "COMPLETED" | "CANCELLED"
+export type InvestmentAsset = "BTC" | "ETH" | "USDT"
 
 export interface IInvestment extends mongoose.Document {
   _id: Types.ObjectId
   userId: Types.ObjectId
   planId: Types.ObjectId
   planName?: string
+  assetName: InvestmentAsset
   depositId: Types.ObjectId
   amount: number
   returnPercentage: number
@@ -36,6 +38,11 @@ const investmentSchema: Schema<IInvestment> = new mongoose.Schema(
       required: true,
     },
     planName: { type: String, trim: true },
+    assetName: {
+      type: String,
+      enum: ["BTC", "ETH", "USDT"],
+      required: true,
+    },
     depositId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Deposit",

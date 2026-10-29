@@ -178,6 +178,7 @@ export async function approveAdminDeposit(
       userId: deposit.userId,
       planId: plan._id ?? plan.id,
       planName: plan.name,
+      assetName: deposit.asset,
       depositId: deposit._id,
       amount: deposit.amount,
       returnPercentage: plan.returnPercentage,
