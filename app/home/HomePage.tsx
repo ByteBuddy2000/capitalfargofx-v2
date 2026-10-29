@@ -46,6 +46,7 @@ export const HomePage: React.FC<HomePageProps> = ({ plans }) => {
       {/* 3. Video Showcase #1: Understand Digital Assets */}
       <VideoShowcaseSectionOne />
 
+      {/* <CoinPriceBlocks /> */}
       {/* 4. About Preview Section */}
       <AboutPreview />
 

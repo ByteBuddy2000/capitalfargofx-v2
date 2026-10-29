@@ -38,9 +38,9 @@ export const WhyUsSection: React.FC = () => {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto mb-14 max-w-3xl space-y-3 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 font-mono text-xs font-bold tracking-wider text-blue-300 uppercase">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 text-[9px] font-bold tracking-wider text-blue-300 uppercase">
             <Sparkles className="h-3.5 w-3.5 text-blue-400" />
-            <span>Institutional Advantage</span>
+            <span>Core Features</span>
           </div>
 
           <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">

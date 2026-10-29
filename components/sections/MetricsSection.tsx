@@ -1,3 +1,4 @@
+// MetricsSection.tsx
 import React, { useEffect, useState } from "react"
 import { PLATFORM_METRICS } from "../../lib/data"
 import { Users, Vault, ArrowDownRight, Layers, Info } from "lucide-react"

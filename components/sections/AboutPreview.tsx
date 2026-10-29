@@ -1,12 +1,57 @@
+// AboutPreview.tsx
 "use client"
 
 import React from "react"
 import { useRouter } from "next/navigation"
+import { motion, type Variants } from "framer-motion"
 import { ABOUT_FEATURES } from "../../lib/data"
-import { Layers, Activity, ShieldCheck, Users, ArrowRight } from "lucide-react"
+import {
+  Layers,
+  Activity,
+  ShieldCheck,
+  Users,
+  ArrowRight,
+} from "lucide-react"
+
+const fadeInLeft: Variants = {
+  hidden: { opacity: 0, x: -60 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.7, ease: "easeOut" },
+  },
+}
+
+const fadeInRight: Variants = {
+  hidden: { opacity: 0, x: 60 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.7, ease: "easeOut" },
+  },
+}
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 35 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+}
+
+const staggerContainer: Variants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+}
 
 export const AboutPreview: React.FC = () => {
   const router = useRouter()
+
   const getIcon = (iconName: string) => {
     switch (iconName) {
       case "Layers":
@@ -22,14 +67,26 @@ export const AboutPreview: React.FC = () => {
     }
   }
 
+  const handleLearnMore = () => {
+    router.push("/about")
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
   return (
     <section
       id="about-preview-section"
-      className="border-b border-slate-800 bg-slate-900/40 py-20"
+      className="overflow-hidden border-b border-slate-800 bg-slate-900/40 py-20"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 max-w-3xl space-y-4 text-left">
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3 py-1 font-mono text-xs font-bold tracking-wider text-blue-300 uppercase">
+        {/* About Introduction */}
+        <motion.div
+          variants={fadeInLeft}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          className="mb-12 max-w-3xl space-y-4 text-left"
+        >
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3 py-1 text-xs font-bold tracking-wider text-blue-300 uppercase">
             About CapitalsFargoFX
           </div>
 
@@ -44,42 +101,57 @@ export const AboutPreview: React.FC = () => {
             transparency, CapitalsFargoFX bridges traditional financial rigor
             and decentralized digital opportunity.
           </p>
-        </div>
+        </motion.div>
 
-        {/* 4 Feature Cards Grid */}
-        <div className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {/* Feature Cards — staggered left-to-right scroll animation */}
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
+        >
           {ABOUT_FEATURES.map((feature, idx) => (
-            <div
-              key={idx}
-              className="group rounded-2xl border border-slate-800 bg-slate-900/80 p-6 shadow-sm transition-all hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-md"
+            <motion.div
+              key={feature.title ?? idx}
+              variants={idx % 2 === 0 ? fadeInLeft : fadeInRight}
+              className="group rounded-2xl border border-slate-800 bg-slate-900/80 p-6 shadow-sm transition-colors duration-300 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-md"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-800 transition-colors group-hover:bg-blue-950/80">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-800 transition-colors duration-300 group-hover:bg-blue-950/80">
                 {getIcon(feature.icon)}
               </div>
+
               <h3 className="mb-2 text-base font-bold text-white">
                 {feature.title}
               </h3>
+
               <p className="text-xs leading-relaxed text-slate-400">
                 {feature.description}
               </p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Bottom CTA */}
-        <div className="flex justify-start">
+        <motion.div
+          variants={fadeInRight}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          className="flex justify-start"
+        >
           <button
-            onClick={() => {
-              router.push("/about")
-              window.scrollTo({ top: 0, behavior: "smooth" })
-            }}
-            className="group inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-950/50 transition-all hover:bg-blue-500"
+            type="button"
+            onClick={handleLearnMore}
+            className="group inline-flex items-center gap-2 rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-md shadow-blue-950/50 transition-colors duration-300 hover:bg-blue-500"
           >
             <span>Learn More About CapitalsFargoFX</span>
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
           </button>
-        </div>
+        </motion.div>
       </div>
     </section>
   )
 }
+
+export default AboutPreview

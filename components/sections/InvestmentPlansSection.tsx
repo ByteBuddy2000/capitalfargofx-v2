@@ -28,11 +28,11 @@ export const InvestmentPlansSection: React.FC<InvestmentPlansSectionProps> = ({
         {showAllHeading && (
           <div className="mb-12 flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div className="max-w-2xl space-y-3 text-left">
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3 py-1 font-mono text-xs font-bold tracking-wider text-blue-300 uppercase">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3 py-1  text-[8px] font-bold tracking-wider text-blue-300 uppercase">
                 <Layers className="h-3.5 w-3.5 text-blue-400" />
                 <span>Structured Yield Architecture</span>
               </div>
-              <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+              <h2 className="px-2 lg:px-0 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                 Institutional Investment Plans
               </h2>
               <p className="text-base text-slate-300">

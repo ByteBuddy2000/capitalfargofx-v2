@@ -91,12 +91,12 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mx-auto mb-12 max-w-3xl space-y-3 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 font-mono text-xs font-bold tracking-wider text-blue-300 uppercase">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 text-[8px] lg:text-xs font-bold tracking-wider text-blue-300 uppercase">
             <Calculator className="h-3.5 w-3.5 text-blue-400" />
             <span>Live Yield Simulator</span>
           </div>
 
-          <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+          <h2 className="px-2 lg:px-0 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
             Calculate Your Projected Return
           </h2>
 
