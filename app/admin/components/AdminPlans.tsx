@@ -382,7 +382,7 @@ export const AdminPlans: React.FC<AdminPlansProps> = ({
                 variant="primary"
                 className="bg-blue-600 font-bold hover:bg-blue-700"
               >
-                Update Plan
+                Save Plan
               </Button>
             </div>
           </form>

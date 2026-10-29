@@ -27,7 +27,6 @@ export async function getUserTransactions(): Promise<MeTransactionsResponse> {
 
   try {
     await connectToDB()
-console.log("Session User ID:", userId)
 
     const transactions = await Transaction.find({
       userId: new mongoose.Types.ObjectId(userId),

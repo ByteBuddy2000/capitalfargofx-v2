@@ -1,3 +1,4 @@
+// DepositView.tsx
 import React, { useState } from "react"
 import {
   ArrowDownToLine,
@@ -232,21 +233,21 @@ export const DepositView: React.FC<DepositViewProps> = ({
         {/* Stepper Pill */}
         <div className="flex items-center gap-2 text-xs font-semibold">
           <span
-            className={`rounded-full px-3 py-1 ${step === "CONFIGURE" ? "bg-blue-600 text-white" : "bg-slate-200 text-slate-700"}`}
+            className={`flex rounded-full px-3 py-1 ${step === "CONFIGURE" ? "bg-blue-600 text-white" : "bg-slate-200 text-slate-700"}`}
           >
-            1. <small className="hidden lg:block">Configure</small>
+            1. <small className="hidden xl:block">Configure</small>
           </span>
           <span className="text-slate-300">→</span>
           <span
             className={`rounded-full px-3 py-1 ${step === "PAYMENT" ? "bg-blue-600 text-white" : "bg-slate-200 text-slate-700"}`}
           >
-            2. <small className="hidden lg:block">Payment</small>
+            2. <small className="hidden xl:block">Payment</small>
           </span>
           <span className="text-slate-300">→</span>
           <span
             className={`rounded-full px-3 py-1 ${step === "SUCCESS" ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-700"}`}
           >
-            3. <small className="hidden lg:block">Confirmation</small>
+            3. <small className="hidden xl:block">Confirmation</small>
           </span>
         </div>
       </div>
@@ -618,6 +619,7 @@ export const DepositView: React.FC<DepositViewProps> = ({
                 variant="primary"
                 size="lg"
                 isLoading={isSubmitting}
+                disabled={!transactionHash.trim()}
                 rightIcon={<CheckCircle2 className="h-4 w-4" />}
                 className="w-full border-none bg-linear-to-r from-blue-600 to-emerald-600 font-bold hover:from-blue-700 hover:to-emerald-700 sm:w-auto"
               >
