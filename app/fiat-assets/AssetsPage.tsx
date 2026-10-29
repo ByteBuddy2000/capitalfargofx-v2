@@ -1,3 +1,4 @@
+// AssetsPage.tsx
 "use client"
 
 import React from "react"
@@ -11,10 +12,10 @@ import {
   ShieldCheck,
   Lock,
   Layers,
-  ArrowRight,
   Database,
   Key,
 } from "lucide-react"
+import { motion } from "framer-motion"
 
 export const AssetsPage: React.FC = () => {
   const router = useRouter()
@@ -29,7 +30,7 @@ export const AssetsPage: React.FC = () => {
           <Breadcrumbs currentPageTitle="Supported & Alternative Assets" />
 
           <div className="max-w-3xl space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 font-mono text-xs font-bold tracking-wider text-blue-300 uppercase">
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 text-[8px] lg:text-xs font-bold tracking-wider text-blue-300 uppercase">
               <Layers className="h-3.5 w-3.5 text-blue-400" />
               <span>Multi-Chain & Physical Assets</span>
             </div>
@@ -51,126 +52,144 @@ export const AssetsPage: React.FC = () => {
       <SupportedCryptoSection />
 
       {/* Custody Architecture Section */}
-      <section className="relative overflow-hidden border-y border-slate-800 bg-slate-950/90 py-16 text-white">
+      <section className="relative overflow-hidden border-y border-slate-800 bg-slate-950/90 py-16 text-white sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+          <div className="grid grid-cols-1 items-center gap-12">
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3 py-1 font-mono text-xs font-bold text-cyan-300">
-                <Lock className="h-3.5 w-3.5 text-cyan-400" />
-                <span>Cold-Storage Security Architecture</span>
-              </div>
+              {/* Section Introduction */}
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+                className="space-y-6"
+              >
+                <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3 py-1 font-mono text-xs font-bold text-cyan-300">
+                  <Lock className="h-3.5 w-3.5 text-cyan-400" />
+                  <span>Cold-Storage Security Architecture</span>
+                </div>
 
-              <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Offline Multi-Signature Cold Custody
-              </h2>
+                <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                  Offline Multi-Signature Cold Custody
+                </h2>
 
-              <p className="text-base leading-relaxed text-slate-300">
-                Client digital assets are never maintained in persistent hot
-                wallets. Every deposit is routed into segregated, air-gapped
-                cryptographic vaults protected by multi-party computation and
-                quorum approvals.
-              </p>
+                <p className="text-base leading-relaxed text-slate-300">
+                  Client digital assets are never maintained in persistent hot
+                  wallets. Every deposit is routed into segregated, air-gapped
+                  cryptographic vaults protected by multi-party computation and
+                  quorum approvals.
+                </p>
+              </motion.div>
 
-              <div className="space-y-3 pt-2">
-                <div className="flex items-start gap-3 rounded-xl border border-slate-800 bg-slate-900/80 p-3.5">
-                  <Key className="mt-0.5 h-5 w-5 shrink-0 text-cyan-400" />
+              {/* Security Feature Cards */}
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.15 }}
+                variants={{
+                  hidden: {},
+                  visible: {
+                    transition: {
+                      staggerChildren: 0.18,
+                    },
+                  },
+                }}
+                className="space-y-3 pt-2"
+              >
+                {/* Multi-Signature Consensus */}
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, y: 45 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: {
+                        duration: 0.65,
+                        ease: "easeOut",
+                      },
+                    },
+                  }}
+                  className="group flex items-start gap-3 rounded-xl border border-slate-800 bg-slate-900/80 p-4 transition-colors duration-300 hover:border-cyan-500/40 hover:bg-slate-900"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-cyan-500/20 bg-cyan-500/10">
+                    <Key className="h-5 w-5 text-cyan-400" />
+                  </div>
+
                   <div>
                     <div className="text-sm font-bold text-white">
                       3-of-5 Quorum Consensus
                     </div>
-                    <div className="text-xs text-slate-400">
+                    <div className="mt-1 text-xs leading-relaxed text-slate-400">
                       Withdrawals require independent cryptographic key signing
                       across geographically distributed custodians.
                     </div>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="flex items-start gap-3 rounded-xl border border-slate-800 bg-slate-900/80 p-3.5">
-                  <Database className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+                {/* Segregated Portfolio Balances */}
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, y: 45 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: {
+                        duration: 0.65,
+                        ease: "easeOut",
+                      },
+                    },
+                  }}
+                  className="group flex items-start gap-3 rounded-xl border border-slate-800 bg-slate-900/80 p-4 transition-colors duration-300 hover:border-emerald-500/40 hover:bg-slate-900"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-emerald-500/20 bg-emerald-500/10">
+                    <Database className="h-5 w-5 text-emerald-400" />
+                  </div>
+
                   <div>
                     <div className="text-sm font-bold text-white">
                       Segregated Portfolio Balances
                     </div>
-                    <div className="text-xs text-slate-400">
+                    <div className="mt-1 text-xs leading-relaxed text-slate-400">
                       Digital assets are reconciled against double-entry ledgers
                       with zero commingling of platform operational liquidity.
                     </div>
                   </div>
-                </div>
+                </motion.div>
 
-                <div className="flex items-start gap-3 rounded-xl border border-slate-800 bg-slate-900/80 p-3.5">
-                  <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-blue-400" />
+                {/* Deposit Network Surcharges */}
+                <motion.div
+                  variants={{
+                    hidden: { opacity: 0, y: 45 },
+                    visible: {
+                      opacity: 1,
+                      y: 0,
+                      transition: {
+                        duration: 0.65,
+                        ease: "easeOut",
+                      },
+                    },
+                  }}
+                  className="group flex items-start gap-3 rounded-xl border border-slate-800 bg-slate-900/80 p-4 transition-colors duration-300 hover:border-blue-500/40 hover:bg-slate-900"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-blue-500/20 bg-blue-500/10">
+                    <ShieldCheck className="h-5 w-5 text-blue-400" />
+                  </div>
+
                   <div>
                     <div className="text-sm font-bold text-white">
                       Zero Network Surcharges on Deposits
                     </div>
-                    <div className="text-xs text-slate-400">
+                    <div className="mt-1 text-xs leading-relaxed text-slate-400">
                       CapitalsFargoFX absorbs all protocol ingestion costs for
                       Bitcoin, Ethereum, and USDT transfers.
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Visual Vault Diagram */}
-            <div className="space-y-6 rounded-3xl border border-slate-800 bg-slate-900 p-8 shadow-2xl">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-                <span className="font-mono text-xs text-slate-400 uppercase">
-                  Custody Protocol Matrix
-                </span>
-                <span className="flex items-center gap-1.5 font-mono text-xs text-emerald-400">
-                  <span className="h-2 w-2 animate-ping rounded-full bg-emerald-400" />
-                  <span>Vaults Online</span>
-                </span>
-              </div>
-
-              <div className="space-y-3 font-mono text-xs">
-                <div className="flex justify-between rounded-xl border border-slate-800 bg-slate-950 p-3.5">
-                  <span className="text-slate-400">Bitcoin Core (BTC):</span>
-                  <span className="font-bold text-white">
-                    Native SegWit (Bech32)
-                  </span>
-                </div>
-
-                <div className="flex justify-between rounded-xl border border-slate-800 bg-slate-950 p-3.5">
-                  <span className="text-slate-400">
-                    Ethereum Mainnet (ETH):
-                  </span>
-                  <span className="font-bold text-white">
-                    ERC-20 Smart Contract Vault
-                  </span>
-                </div>
-
-                <div className="flex justify-between rounded-xl border border-slate-800 bg-slate-950 p-3.5">
-                  <span className="text-slate-400">Tether USD (USDT):</span>
-                  <span className="font-bold text-white">
-                    Dual-Rail ERC-20 / TRC-20
-                  </span>
-                </div>
-
-                <div className="flex justify-between rounded-xl border border-slate-800 bg-slate-950 p-3.5">
-                  <span className="text-slate-400">Maturity Execution:</span>
-                  <span className="font-bold text-cyan-300">
-                    Deterministic Epoch Release
-                  </span>
-                </div>
-              </div>
-
-              <div className="pt-2">
-                <button
-                  onClick={() => onOpenInvestModal()}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-blue-600 to-cyan-600 px-4 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition-all"
-                >
-                  <span>Open Capital Allocation Terminal</span>
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
         </div>
       </section>
-
       {/* Diversified Categories */}
       <DiversifiedCategoriesSection />
 
