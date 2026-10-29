@@ -8,6 +8,7 @@ import { PlatformSettings } from "@/models/PlatformSettings"
 import { Referral } from "@/models/Referral"
 import { User } from "@/models/User"
 import { SupportTicket } from "@/models/SupportTicket"
+import { AuditLog } from "@/models/AuditLog"
 
 export async function getUserReferrals() {
   const session = await getServerSession(authOptions)
@@ -139,6 +140,17 @@ export async function changeUserPassword(data: {
 
     user.passwordHash = await bcrypt.hash(data.newPassword, 12)
     await user.save()
+
+    await AuditLog.create({
+      actorId: user._id.toString(),
+      actorUsername: user.username,
+      action: "PASSWORD_CHANGED",
+      entity: "User",
+      entityId: user._id.toString(),
+      newState: { passwordChanged: true },
+      notes: "User changed their password.",
+    })
+
     return { success: true }
   } catch (error) {
     console.error("Failed to change user password:", error)

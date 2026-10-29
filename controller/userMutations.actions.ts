@@ -1,3 +1,4 @@
+// userMutations.actions.ts
 "use server"
 
 import mongoose from "mongoose"
@@ -9,6 +10,43 @@ import { Investment } from "@/models/Investment"
 import { Plan } from "@/models/Plan"
 import { User } from "@/models/User"
 import { Withdrawal } from "@/models/Withdrawal"
+import { AuditLog } from "@/models/AuditLog"
+
+type UserAuditAction =
+  | "DEPOSIT_SUBMITTED"
+  | "WITHDRAWAL_REQUESTED"
+  | "INVESTMENT_SETTLED"
+
+async function writeUserAudit({
+  actorId,
+  actorUsername,
+  action,
+  entity,
+  entityId,
+  previousState,
+  newState,
+  notes,
+}: {
+  actorId: string
+  actorUsername: string
+  action: UserAuditAction
+  entity: string
+  entityId: string
+  previousState?: Record<string, unknown>
+  newState: Record<string, unknown>
+  notes: string
+}) {
+  await AuditLog.create({
+    actorId,
+    actorUsername,
+    action,
+    entity,
+    entityId,
+    previousState,
+    newState,
+    notes,
+  })
+}
 
 async function userId() {
   const session = await getServerSession(authOptions)
@@ -39,11 +77,31 @@ export async function createUserDeposit(data: {
     }).lean()
     if (!plan) return { success: false, message: "Investment plan not found." }
 
+    const actor = await User.findById(id).select("username").lean()
+    if (!actor) return { success: false, message: "User account not found." }
+
     const deposit = await Deposit.create({
       ...data,
       userId: id,
       planId: plan._id,
     })
+
+    await writeUserAudit({
+      actorId: id,
+      actorUsername: actor.username,
+      action: "DEPOSIT_SUBMITTED",
+      entity: "Deposit",
+      entityId: deposit._id.toString(),
+      newState: {
+        status: deposit.status,
+        amount: deposit.amount,
+        asset: deposit.asset,
+        network: deposit.network,
+        planId: plan._id.toString(),
+      },
+      notes: "User submitted a deposit for review.",
+    })
+
     return { success: true, deposit: JSON.parse(JSON.stringify(deposit)) }
   } catch (error) {
     console.error("Failed to create deposit:", error)
@@ -68,9 +126,35 @@ export async function createUserWithdrawal(data: {
     }
 
     const withdrawal = await Withdrawal.create({ ...data, userId: id })
-    await User.findByIdAndUpdate(id, {
-      $inc: { availableBalance: -Number(data.amount) },
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { $inc: { availableBalance: -Number(data.amount) } },
+      { new: true }
+    )
+      .select("username availableBalance")
+      .lean()
+    if (!updatedUser) throw new Error("User account not found.")
+
+    await writeUserAudit({
+      actorId: id,
+      actorUsername: updatedUser.username,
+      action: "WITHDRAWAL_REQUESTED",
+      entity: "Withdrawal",
+      entityId: withdrawal._id.toString(),
+      previousState: {
+        availableBalance:
+          Number(updatedUser.availableBalance) + Number(data.amount),
+      },
+      newState: {
+        status: withdrawal.status,
+        amount: withdrawal.amount,
+        asset: withdrawal.asset,
+        network: withdrawal.network,
+        availableBalance: updatedUser.availableBalance,
+      },
+      notes: "User requested a withdrawal.",
     })
+
     return { success: true, withdrawal: JSON.parse(JSON.stringify(withdrawal)) }
   } catch (error) {
     console.error("Failed to create withdrawal:", error)
@@ -85,6 +169,9 @@ export async function settleUserInvestment(investmentId: string) {
 
   try {
     await connectToDB()
+    const actor = await User.findById(id).select("username").lean()
+    if (!actor) return { success: false, message: "User account not found." }
+
     const investment = await Investment.findOneAndUpdate(
       {
         _id: investmentId,
@@ -110,6 +197,23 @@ export async function settleUserInvestment(investmentId: string) {
         earningBalance: investment.expectedProfit,
       },
     })
+
+    await writeUserAudit({
+      actorId: id,
+      actorUsername: actor.username,
+      action: "INVESTMENT_SETTLED",
+      entity: "Investment",
+      entityId: investment._id.toString(),
+      previousState: { status: "ACTIVE" },
+      newState: {
+        status: investment.status,
+        payoutProcessed: investment.payoutProcessed,
+        payout,
+        expectedProfit: investment.expectedProfit,
+      },
+      notes: "User settled a matured investment.",
+    })
+
     return { success: true, investment: JSON.parse(JSON.stringify(investment)) }
   } catch (error) {
     console.error("Failed to settle investment:", error)
