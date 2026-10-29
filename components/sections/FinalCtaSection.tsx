@@ -1,3 +1,4 @@
+// FinalCtsSection.tsx
 "use client"
 
 import React from "react"
@@ -26,7 +27,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({
   return (
     <section
       id="final-cta-section"
-      className="relative overflow-hidden border-t border-slate-800 bg-gradient-to-br from-slate-900 via-slate-950 to-blue-950 py-20 text-white sm:py-24"
+      className="relative overflow-hidden border-t border-slate-800 bg-linear-to-br from-slate-900 via-slate-950 to-blue-950 py-20 text-white sm:py-24"
     >
       {/* Abstract Background Glows */}
       <div className="pointer-events-none absolute -top-24 -right-24 h-96 w-96 rounded-full bg-blue-500/15 blur-3xl" />
@@ -53,9 +54,9 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({
           {benefits.map((benefit, idx) => (
             <div
               key={idx}
-              className="flex items-center gap-2 text-sm font-medium text-slate-200"
+              className="flex items-center gap-2 text-xs lg:text-sm font-medium text-slate-200"
             >
-              <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-emerald-400" />
+              <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
               <span>{benefit}</span>
             </div>
           ))}
@@ -66,7 +67,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = ({
           <button
             id="final-cta-create-account-btn"
             onClick={() => onOpenAuth("signup")}
-            className="group flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600 px-8 py-4 text-base font-extrabold text-white shadow-xl shadow-blue-500/25 transition-all hover:from-cyan-300 hover:to-indigo-500 sm:w-auto"
+            className="group flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-r from-cyan-400 via-blue-500 to-indigo-600 px-8 py-4 text-base font-extrabold text-white shadow-xl shadow-blue-500/25 transition-all hover:from-cyan-300 hover:to-indigo-500 sm:w-auto"
           >
             <span>Create Investor Account</span>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

@@ -185,7 +185,7 @@ export const TestimonialsSection: React.FC = () => {
         {/* Disclaimer                                                         */}
         {/* ------------------------------------------------------------------ */}
 
-        <div className="mt-5 text-center text-xs text-slate-400">
+        <div className="hidden mt-5 text-center text-xs text-slate-400">
           <span>
             *Supplied testimonials reflect individual investor operational
             experiences with configured contract maturities.
