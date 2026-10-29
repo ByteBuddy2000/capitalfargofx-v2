@@ -170,7 +170,7 @@ export const AdminDeposits: React.FC<AdminDepositsProps> = ({
             aria-label="Deposits table"
             tabIndex={0}
           >
-            <table className="w-full min-w-[1000px] text-left text-xs text-slate-300">
+            <table className="w-full min-w-250 text-left text-xs text-slate-300">
               <thead>
                 <tr className="border-b border-slate-800 bg-slate-950/80 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                   <th className="py-3.5 pl-6">Investor</th>

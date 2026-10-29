@@ -434,18 +434,18 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total Balance */}
-        <div className="dashboard-panel p-5 transition-all hover:border-[var(--landing-blue)]/40">
+        <div className="dashboard-panel p-5 transition-all hover:border-(--landing-blue)/40">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold tracking-wide text-[#64748B] uppercase">
               Total Balance
             </span>
 
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--landing-blue)]/10 text-[var(--landing-blue)]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-(--landing-blue)/10 text-(--landing-blue)">
               <DollarSign className="h-4 w-4" />
             </div>
           </div>
 
-          <div className="mt-1 text-2xl font-bold tracking-tight text-[var(--dashboard-text)] sm:text-3xl">
+          <div className="mt-1 text-2xl font-bold tracking-tight text-(--dashboard-text) sm:text-3xl">
             ${formatCurrency(totalBalance)}
           </div>
 
@@ -466,13 +466,13 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         </div>
 
         {/* Active Capital */}
-        <div className="dashboard-panel p-5 transition-all hover:border-[var(--landing-blue)]/40">
+        <div className="dashboard-panel p-5 transition-all hover:border-(--landing-blue)/40">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold tracking-wide text-[#64748B] uppercase">
               Active Investments
             </span>
 
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--landing-blue)]/10 text-[var(--landing-blue)]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-(--landing-blue)/10 text-(--landing-blue)">
               <Layers className="h-4 w-4" />
             </div>
           </div>
@@ -518,7 +518,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               Yield & Referral
             </span>
 
-            <span className="text-[10px] font-bold text-[var(--dashboard-muted)]">
+            <span className="text-[10px] font-bold text-(--dashboard-muted)">
               All-Time
             </span>
           </div>

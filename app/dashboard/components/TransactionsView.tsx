@@ -209,7 +209,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
             aria-label="Transactions table"
             tabIndex={0}
           >
-            <table className="w-full min-w-[760px] text-left text-xs">
+            <table className="w-full min-w-190 text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
                   <th className="hidden py-3.5 pl-6">Type & Operation</th>
