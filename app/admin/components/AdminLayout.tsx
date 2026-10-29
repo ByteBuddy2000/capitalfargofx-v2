@@ -16,6 +16,9 @@ import {
   X,
 } from "lucide-react"
 import { User } from "@/types"
+import { Button } from "@/components/ui/Button"
+import Link from "next/link"
+import Image from "next/image"
 
 export type AdminTab =
   | "overview"
@@ -88,11 +91,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
       label: "Platform Settings",
       icon: <Settings className="h-4 w-4" />,
     },
-    {
-      id: "audit" as AdminTab,
-      label: "Audit Trail Logs",
-      icon: <ScrollText className="h-4 w-4" />,
-    },
+    // {
+    //   id: "audit" as AdminTab,
+    //   label: "Audit Trail Logs",
+    //   icon: <ScrollText className="h-4 w-4" />,
+    // },
   ]
 
   return (
@@ -109,17 +112,34 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
             </button>
 
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-500 font-black text-slate-950">
-                <ShieldCheck className="h-5 w-5" />
+               <div>
+            {/* Brand Logo */}
+            <Link
+              href="/"
+              className="group flex cursor-pointer items-center gap-2.5 text-left focus:outline-none"
+            >
+              <div className="">
+                <Image
+                  src="/capitalsfargofx-logo.png"
+                  width={1055}
+                  height={1055}
+                  alt="CapitalsFargoFX Logo"
+                  className="h-10 w-10"
+                  priority
+                />
               </div>
               <div>
-                <span className="text-base font-extrabold tracking-tight text-white">
-                  CapitalsFargoFX<span className="text-amber-400">Admin</span>
-                </span>
-                <span className="ml-2 hidden rounded-md border border-amber-800 bg-amber-950 px-2 py-0.5 text-[10px] font-bold tracking-wider text-amber-300 uppercase">
-                  Institutional Security Suite
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xl font-extrabold tracking-tight text-gray-600">
+                    CapitalsFargo<span className="text-blue-400">FX</span>
+                  </span>
+                </div>
+                <p className="-mt-0.5 text-[10px] font-medium tracking-wider text-slate-400 uppercase">
+                  Digital Asset Management
+                </p>
               </div>
+            </Link>
+          </div>
             </div>
           </div>
 
@@ -189,19 +209,19 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           </nav>
 
           <div className="mt-8 space-y-1 border-t border-slate-800 pt-4">
-            <button
+            {/* <button
               onClick={onNavigateDashboard}
               className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3.5 py-2 text-left text-xs font-medium text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" />
               Investor Portal
-            </button>
+            </button> */}
             <button
               onClick={onLogout}
-              className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3.5 py-2 text-left text-xs font-semibold text-rose-400 transition-colors hover:bg-rose-950/40"
+              className="flex text-center w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl px-3.5 py-2  text-xs font-semibold text-white bg-rose-600 transition-colors hover:bg-rose-950/40"
             >
               <LogOut className="h-4 w-4" />
-              Sign Out
+             <span> Sign Out</span>
             </button>
           </div>
         </aside>

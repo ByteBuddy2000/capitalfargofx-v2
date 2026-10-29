@@ -171,14 +171,14 @@ export const AdminWallets: React.FC<AdminWalletsProps> = ({
           </p>
         </div>
 
-        <Button
+        {/* <Button
           variant="primary"
           onClick={handleOpenCreate}
           leftIcon={<Plus className="h-4 w-4" />}
           className="bg-teal-600 font-bold text-white hover:bg-teal-700"
         >
           Add Settlement Address
-        </Button>
+        </Button> */}
       </div>
 
       {/* Wallets Grid */}
@@ -241,17 +241,17 @@ export const AdminWallets: React.FC<AdminWalletsProps> = ({
             <div className="flex justify-between gap-2">
               <Button
                 onClick={() => handleOpenEdit(w)}
-                className="bg-slate-800 font-bold text-slate-200 hover:bg-slate-700"
+                className="flex bg-slate-800 font-bold text-slate-200 hover:bg-slate-700"
               >
-                <Edit2 className="h-4 w-4" />
+                <Edit2 className="h-4 w-4" /> 
               </Button>
 
-              <Button
+              {/* <Button
                 onClick={() => handleDeleteWallet(w)}
                 className="bg-red-600 text-white hover:bg-red-700"
               >
                 <Trash2 className="h-4 w-4" />
-              </Button>
+              </Button> */}
             </div>
           </div>
         ))}
