@@ -450,7 +450,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
 
           <div className="mt-2 flex items-center justify-between border-t border-[#E2E8F0] pt-2">
-            <span className="flex items-center gap-0.5 text-[10px] font-semibold bg-(--landing-cyan)">
+            <span className="rounded-sm p-1 flex items-center gap-0.5 text-[10px] font-semibold bg-(--landing-cyan)">
               <TrendingUp className="h-3 w-3" />
               +14.8% this cycle
             </span>
@@ -509,12 +509,12 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </div>
           </div>
 
-          <div className="mt-1 text-2xl font-bold tracking-tight bg-(--landing-cyan) sm:text-3xl">
+          <div className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
             +${formatCurrency(totalEarnings)}
           </div>
 
           <div className="mt-2 flex items-center justify-between border-t border-[#E2E8F0] pt-2">
-            <span className="text-[10px] font-semibold bg-(--landing-cyan)">
+            <span className="rounded-sm p-1 text-[10px] font-semibold bg-(--landing-cyan)">
               Yield & Referral
             </span>
 
