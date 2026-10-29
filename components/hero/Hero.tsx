@@ -30,31 +30,38 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
           {/* <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8"> */}
           {/* Left Column: Editorial Copy */}
           <div className="space-y-6 flex items-center flex-col text-center justify-center">
-          {/* <div className="space-y-6 text-left lg:col-span-7"> */}
-            {/* Eyebrow */}
+
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/60 px-3.5 py-1.5 text-[9px] shadow-xs">
               <span className="h-2 w-2 animate-pulse rounded-full bg-blue-400"></span>
               <span className="font-mono font-bold tracking-wider text-blue-300 uppercase">
-                Institutional Yield Engine{" "}
-                <span className="mx-1 text-blue-500">•</span> Audited
-                Multi-Asset Settlement
+                Your Financial Goals
+                <span className="mx-1 text-blue-500">•</span>
+                Powered by Digital Assets
               </span>
             </div>
 
+
             {/* Main Headline */}
-            <h1 className="text-4xl leading-[1.12] font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Build Your Financial Future With{" "}
-              <span className="bg-linear-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
-                Smarter Digital Investing
-              </span>
-            </h1>
+            <div>
+              <h1 className=" text-4xl leading-[1.12] font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Build Your Financial Future With{" "}
+                <span className="bg-linear-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
+                  Smarter Digital Investing
+                </span>
+              </h1>
+
+              <h1 className=" text-4xl leading-[1.12] font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Invest With Clarity{" "}
+                <span className="bg-linear-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
+                  Build Your Financial Future
+                </span>
+              </h1>
+
+            </div>
 
             {/* Supporting copy */}
             <p className="max-w-2xl text-lg leading-relaxed font-normal text-slate-300 sm:text-xl">
-              Access structured investment opportunities and manage your
-              portfolio from one secure platform. Engineered for institutional
-              transparency, automated yield compounding, and cryptocurrency
-              withdrawals.
+              Explore structured digital investment opportunities through a secure platform designed to help you manage your portfolio, monitor performance, and access cryptocurrency transactions with confidence.
             </p>
 
             {/* CTA Buttons */}
