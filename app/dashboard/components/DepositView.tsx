@@ -526,7 +526,7 @@ export const DepositView: React.FC<DepositViewProps> = ({
             <div className="grid grid-cols-1 items-center gap-8 rounded-3xl border border-slate-200 bg-slate-50 p-6 sm:p-8 md:grid-cols-12">
               {/* QR Code */}
               <div className="flex flex-col items-center justify-center md:col-span-4">
-                <div className="w-full max-w-[220px] rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+                <div className="w-full max-w-55 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
                   <QRCode
                     value={qrValue}
                     style={{

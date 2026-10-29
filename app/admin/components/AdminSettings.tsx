@@ -302,7 +302,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
         </div>
       </div>
 
-      <form onSubmit={handleSaveSettings} className="space-y-8">
+      <form onSubmit={handleSaveSettings} className="hidden space-y-8">
         {/* Public Identity & Contacts */}
         <div className="space-y-6 rounded-3xl border border-slate-800 bg-slate-900 p-6 sm:p-8">
           <div className="flex items-center gap-2 border-b border-slate-800 pb-4">

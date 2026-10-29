@@ -268,11 +268,10 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({
                     <td className="px-4 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">
                         <span
-                          className={`rounded px-2 py-0.5 text-[10px] font-black uppercase ${
-                            u.role === "admin" || u.role === "super admin"
+                          className={`rounded px-2 py-0.5 text-[10px] font-black uppercase ${u.role === "admin" || u.role === "super admin"
                               ? "border border-amber-800 bg-amber-950 text-amber-300"
                               : "bg-slate-800 text-slate-300"
-                          }`}
+                            }`}
                         >
                           {u.role}
                         </span>
@@ -291,14 +290,16 @@ export const AdminUsers: React.FC<AdminUsersProps> = ({
 
                     <td className="px-6 py-4 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleOpenAdjust(u)}
-                          className="border-slate-700 bg-slate-800 px-2.5 py-1 text-xs text-amber-300 hover:bg-slate-700"
-                        >
-                          Adjust Balance
-                        </Button>
+                        {u.role !== "admin" && u.role !== "super admin" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleOpenAdjust(u)}
+                            className="border-slate-700 bg-slate-800 px-2.5 py-1 text-xs text-amber-300 hover:bg-slate-700"
+                          >
+                            Adjust Balance
+                          </Button>
+                        )}
 
                         {u.id !== currentUser.id && (
                           <>

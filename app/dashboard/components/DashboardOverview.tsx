@@ -450,7 +450,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           </div>
 
           <div className="mt-2 flex items-center justify-between border-t border-[#E2E8F0] pt-2">
-            <span className="flex items-center gap-0.5 text-[10px] font-semibold text-[var(--landing-cyan)]">
+            <span className="flex items-center gap-0.5 text-[10px] font-semibold bg-(--landing-cyan)">
               <TrendingUp className="h-3 w-3" />
               +14.8% this cycle
             </span>
@@ -477,7 +477,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
             </div>
           </div>
 
-          <div className="mt-1 text-2xl font-bold tracking-tight text-[var(--landing-blue)] sm:text-3xl">
+          <div className="mt-1 text-2xl font-bold tracking-tight text-(--landing-blue) sm:text-3xl">
             ${formatCurrency(activeCapital)}
           </div>
 
@@ -498,23 +498,23 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         </div>
 
         {/* Earnings */}
-        <div className="dashboard-panel p-5 transition-all hover:border-[var(--landing-cyan)]/40">
+        <div className="dashboard-panel p-5 transition-all hover:border-(--landing-cyan)/40">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold tracking-wide text-[#64748B] uppercase">
               Total Earnings
             </span>
 
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--landing-cyan)]/10 text-[var(--landing-cyan)]">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-(--landing-cyan)/10 text-(--landing-cyan)">
               <TrendingUp className="h-4 w-4" />
             </div>
           </div>
 
-          <div className="mt-1 text-2xl font-bold tracking-tight text-[var(--landing-cyan)] sm:text-3xl">
+          <div className="mt-1 text-2xl font-bold tracking-tight bg-(--landing-cyan) sm:text-3xl">
             +${formatCurrency(totalEarnings)}
           </div>
 
           <div className="mt-2 flex items-center justify-between border-t border-[#E2E8F0] pt-2">
-            <span className="text-[10px] font-semibold text-[var(--landing-cyan)]">
+            <span className="text-[10px] font-semibold bg-(--landing-cyan)">
               Yield & Referral
             </span>
 

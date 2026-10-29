@@ -265,7 +265,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
         )}
 
         {/* Main Admin Content */}
-        <main className="w-full lg:col-span-9">{children}</main>
+        <main className="w-full min-w-0 lg:col-span-9">{children}</main>
       </div>
     </div>
   )

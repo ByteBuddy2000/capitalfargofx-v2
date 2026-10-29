@@ -164,8 +164,13 @@ export const AdminDeposits: React.FC<AdminDepositsProps> = ({
             No deposits found in this view.
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
+          <div
+            className="min-w-0 overflow-x-auto overscroll-x-contain"
+            role="region"
+            aria-label="Deposits table"
+            tabIndex={0}
+          >
+            <table className="w-full min-w-[1000px] text-left text-xs text-slate-300">
               <thead>
                 <tr className="border-b border-slate-800 bg-slate-950/80 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
                   <th className="py-3.5 pl-6">Investor</th>
