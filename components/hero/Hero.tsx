@@ -179,7 +179,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
                 }}
                 className="group flex items-center justify-center gap-2 rounded-xl border border-slate-700/80 bg-slate-900/80 px-7 py-4 text-base font-bold text-slate-200 shadow-sm transition-all hover:border-slate-600 hover:bg-slate-800 hover:shadow-md"
               >
-                <span>Explore Investment Plans</span>
+                <span>Learn More</span>
                 <PlayIcon size={32} className="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:text-slate-200" />
               </button>
             </div>
