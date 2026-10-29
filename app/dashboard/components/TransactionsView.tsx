@@ -214,7 +214,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
             <table className="w-full min-w-190 text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50 text-[11px] font-bold tracking-wider text-slate-500 uppercase">
-                  <th className="hidden py-3.5 pl-6">Type & Operation</th>
+                  <th className="py-3.5 pl-6">Type & Operation</th>
                   <th className="py-3.5">Description</th>
                   <th className="py-3.5">Amount (USD)</th>
                   <th className="hidden py-3.5">Asset</th>
@@ -232,7 +232,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
                       key={tx.id}
                       className="transition-colors hover:bg-slate-50/70"
                     >
-                      <td className="hidden py-4 pl-6">
+                      <td className="py-4 pl-6">
                         <div className="flex items-center gap-2.5">
                           <div className="rounded-xl bg-slate-100 p-2">
                             {getTypeIcon(tx.type)}
@@ -241,9 +241,9 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
                             <span className="block font-bold text-slate-900">
                               {tx.type}
                             </span>
-                            <span className="font-mono text-[10px] text-slate-400">
-                              ID: {tx.id.substring(0, 10)}
-                            </span>
+                            {/* <span className="font-mono text-[10px] text-slate-400">
+                              ID: {tx.id}
+                            </span> */}
                           </div>
                         </div>
                       </td>
@@ -320,7 +320,7 @@ export const TransactionsView: React.FC<TransactionsViewProps> = ({
                       <td className="py-4">{getStatusBadge(tx.status)}</td>
                       <td className="py-4 pr-6 text-right font-mono text-[11px] text-slate-500">
                         <div>{new Date(tx.createdAt).toLocaleDateString()}</div>
-                        <div className="text-[10px] text-slate-400">
+                        <div className="hidden text-[10px] text-slate-400">
                           {new Date(tx.createdAt).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",

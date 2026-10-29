@@ -27,6 +27,7 @@ import { User, Investment, Transaction, Withdrawal } from "@/types"
 import { settleUserInvestment } from "@/controller/userMutations.actions"
 import { useToast } from "@/components/ui/Toast"
 import { Button } from "@/components/ui/Button"
+import AssetAllocation from "@/components/AssetAllocation/AssetAllocation"
 
 interface DashboardOverviewProps {
   currentUser: User
@@ -188,7 +189,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     cryptoBalance > 0
       ? cryptoBalance + (Number.isFinite(earningBalance) ? earningBalance : 0)
       : (Number.isFinite(availableBalance) ? availableBalance : 0) +
-        (Number.isFinite(earningBalance) ? earningBalance : 0)
+      (Number.isFinite(earningBalance) ? earningBalance : 0)
 
   /*
    * ---------------------------------------------------------
@@ -582,11 +583,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   key={timeframe}
                   type="button"
                   onClick={() => setChartTimeframe(timeframe)}
-                  className={`cursor-pointer rounded-lg px-3 py-1 text-xs font-bold transition-all ${
-                    chartTimeframe === timeframe
+                  className={`cursor-pointer rounded-lg px-3 py-1 text-xs font-bold transition-all ${chartTimeframe === timeframe
                       ? "bg-[#2563EB] text-white shadow-xs"
                       : "text-[#64748B] hover:text-[#0F172A]"
-                  }`}
+                    }`}
                 >
                   {timeframe}
                 </button>
@@ -672,138 +672,8 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         </div>
 
         {/* Asset Allocation */}
-        <div className="flex flex-col justify-between rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-xs lg:col-span-4">
-          <div>
-            <div className="mb-4 flex items-center justify-between">
-              <div>
-                <h4 className="text-base font-bold text-[#0F172A]">
-                  Asset Allocation
-                </h4>
 
-                <p className="text-xs text-[#64748B]">
-                  Multi-chain liquidity channels
-                </p>
-              </div>
-
-              <span className="hidden rounded-full bg-[#059669]/10 px-2 py-0.5 text-[10px] font-bold text-[#059669]">
-                Active 24/7
-              </span>
-
-              <Image
-                src="/24-hours.png"
-                alt="Active 24/7"
-                width={512}
-                height={512}
-                className="h-8 w-8 object-contain"
-              />
-            </div>
-
-            <div className="md:grid-col-3 mt-4 grid grid-cols-1 gap-3 sm:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1">
-              {/* Bitcoin */}
-              <div className="flex items-center justify-between rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F7931A]/10">
-                    <Image
-                      src="/bitcoin.png"
-                      alt="Bitcoin"
-                      width={512}
-                      height={512}
-                      className="object-contain"
-                    />
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-bold text-gray-600">Bitcoin</p>
-                    <p className="text-[10px] text-gray-400">BTC Mainnet</p>
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <p className="font-mono text-xs font-bold text-gray-600">
-                    ${formatCurrency(assetValue("BTC"))}
-                  </p>
-
-                  <p className="text-[10px] font-medium text-[#059669]">
-                    3 Confirms
-                  </p>
-                </div>
-              </div>
-
-              {/* Ethereum */}
-              <div className="flex items-center justify-between rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#627EEA]/10">
-                    <Image
-                      src="/ethereum.png"
-                      alt="Ethereum"
-                      width={512}
-                      height={512}
-                      className="object-contain"
-                    />
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-bold text-gray-600">Ethereum</p>
-                    <p className="text-[10px] text-gray-400">ERC-20</p>
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <p className="font-mono text-xs font-bold text-gray-600">
-                    ${formatCurrency(assetValue("ETH"))}
-                  </p>
-
-                  <p className="text-[10px] font-medium text-[#059669]">
-                    12 Confirms
-                  </p>
-                </div>
-              </div>
-
-              {/* USDT */}
-              <div className="flex items-center justify-between rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-3">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#26A17B]/10">
-                    <Image
-                      src="/usdt.png"
-                      alt="Tether USDT"
-                      width={512}
-                      height={512}
-                      className="object-contain"
-                    />
-                  </div>
-
-                  <div>
-                    <p className="text-xs font-bold text-gray-600">
-                      Tether USDT
-                    </p>
-                    <p className="text-[10px] text-gray-400">
-                      {" "}
-                      TRC-20 / ERC-20
-                    </p>
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <p className="font-mono text-xs font-bold text-gray-600">
-                    ${formatCurrency(assetValue("USDT"))}
-                  </p>
-
-                  <p className="text-[10px] font-medium text-[#059669]">
-                    Fast Payout
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => onNavigateTab("deposit")}
-            className="mt-6 w-full cursor-pointer rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] py-2.5 text-center text-xs font-bold text-[#2563EB] transition-all hover:bg-[#2563EB] hover:text-white"
-          >
-            + Start New Investment
-          </button>
-        </div>
+        <AssetAllocation />
       </div>
 
       {/* =====================================================
@@ -891,7 +761,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
                   progress = Math.round(
                     ((now - startTimestamp) /
                       (maturityTimestamp - startTimestamp)) *
-                      100
+                    100
                   )
                 }
 
@@ -1200,15 +1070,14 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
                       <td className="px-5 py-3.5">
                         <span
-                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                            status === "COMPLETED"
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${status === "COMPLETED"
                               ? "bg-[#059669]/10 text-[#059669]"
                               : status === "PENDING"
                                 ? "bg-amber-500/10 text-amber-600"
                                 : status === "FAILED" || status === "REJECTED"
                                   ? "bg-rose-500/10 text-rose-600"
                                   : "bg-slate-500/10 text-slate-600"
-                          }`}
+                            }`}
                         >
                           {status}
                         </span>
