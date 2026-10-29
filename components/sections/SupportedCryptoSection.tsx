@@ -116,7 +116,7 @@ export const SupportedCryptoSection: React.FC = () => {
           ))}
         </div>
 
-        <div className="mt-6 text-center text-xs text-slate-400">
+        <div className="hidden mt-6 text-center text-xs text-slate-400">
           <p>
             *All digital asset transactions require on-chain verification
             according to standard cryptographic consensus rules.

@@ -1,4 +1,7 @@
+// WhyUsSection.tsx
+"use client"
 import React from "react"
+import { motion, type Variants } from "framer-motion"
 import { WHY_CapitalsFargoFX } from "../../lib/data"
 import {
   ShieldCheck,
@@ -10,6 +13,24 @@ import {
   Sparkles,
   CheckCircle2,
 } from "lucide-react"
+
+const slideInLeft: Variants = {
+  hidden: { opacity: 0, x: -40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+}
+
+const slideInRight: Variants = {
+  hidden: { opacity: 0, x: 40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+}
 
 export const WhyUsSection: React.FC = () => {
   const getIcon = (idx: number) => {
@@ -56,8 +77,12 @@ export const WhyUsSection: React.FC = () => {
         {/* 6 Glass Cards Grid */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {WHY_CapitalsFargoFX.map((item, idx) => (
-            <div
+            <motion.div
               key={idx}
+              variants={idx % 2 === 0 ? slideInLeft : slideInRight}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
               className="group flex flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/80 p-6 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-xl sm:p-7"
             >
               <div>
@@ -85,7 +110,7 @@ export const WhyUsSection: React.FC = () => {
                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
                 <span>Verified Protocol Standard</span>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

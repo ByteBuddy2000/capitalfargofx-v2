@@ -3,9 +3,28 @@
 
 import React from "react"
 import { useRouter } from "next/navigation"
+import { motion, type Variants } from "framer-motion"
 import { formatCurrency } from "../../lib/plans"
 import type { IPlan } from "@/models/Plan"
 import { Sparkles, Clock, ArrowRight, Check, Layers } from "lucide-react"
+
+const slideInLeft: Variants = {
+  hidden: { opacity: 0, x: -40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+}
+
+const slideInRight: Variants = {
+  hidden: { opacity: 0, x: 40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+}
 
 interface InvestmentPlansSectionProps {
   plans: IPlan[]
@@ -27,7 +46,13 @@ export const InvestmentPlansSection: React.FC<InvestmentPlansSectionProps> = ({
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {showAllHeading && (
           <div className="mb-12 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-            <div className="max-w-2xl space-y-3 text-left">
+            <motion.div
+              variants={slideInLeft}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
+              className="max-w-2xl space-y-3 text-left"
+            >
               <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3 py-1  text-[8px] font-bold tracking-wider text-blue-300 uppercase">
                 <Layers className="h-3.5 w-3.5 text-blue-400" />
                 <span>Structured Yield Architecture</span>
@@ -40,9 +65,13 @@ export const InvestmentPlansSection: React.FC<InvestmentPlansSectionProps> = ({
                 automated maturity distributions powered by multi-signature
                 vaults.
               </p>
-            </div>
+            </motion.div>
 
-            <button
+            <motion.button
+              variants={slideInRight}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2 }}
               onClick={() => {
                 router.push("/investment-plans")
                 window.scrollTo({ top: 0, behavior: "smooth" })
@@ -51,7 +80,7 @@ export const InvestmentPlansSection: React.FC<InvestmentPlansSectionProps> = ({
             >
               <span>View Full Plan Specifications</span>
               <ArrowRight className="h-4 w-4" />
-            </button>
+            </motion.button>
           </div>
         )}
 
@@ -62,7 +91,7 @@ export const InvestmentPlansSection: React.FC<InvestmentPlansSectionProps> = ({
           id="investment-plans-scroll-grid"
           className="no-scrollbar flex snap-x snap-mandatory space-x-5 overflow-x-auto px-1 pt-3 pb-6 sm:space-x-6 md:grid md:grid-cols-2 md:gap-6 md:space-x-0 lg:grid-cols-3"
         >
-          {plans.map((plan) => {
+          {plans.map((plan, idx) => {
             const isFeatured = plan.featured
             const maxLabel =
               plan.maximumAmount === 0
@@ -70,22 +99,29 @@ export const InvestmentPlansSection: React.FC<InvestmentPlansSectionProps> = ({
                 : formatCurrency(plan.maximumAmount)
 
             return (
-              <div
+              <motion.div
                 key={plan.slug}
-                id={`plan-card-${plan.slug}`}
-                className={`relative flex w-72.5 shrink-0 snap-center flex-col justify-between rounded-3xl p-6 transition-all duration-300 sm:w-[320px] sm:p-7 md:w-auto ${
-                  isFeatured
-                    ? "border-2 border-blue-500/60 bg-linear-to-b from-blue-950 via-slate-900 to-slate-950 text-white shadow-2xl md:-translate-y-2"
-                    : "border border-slate-800 bg-slate-900/85 text-slate-100 shadow-sm backdrop-blur-md hover:border-blue-500/50 hover:shadow-xl"
-                }`}
+                variants={idx % 2 === 0 ? slideInLeft : slideInRight}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                className="w-72.5 shrink-0 snap-center sm:w-[320px] md:w-auto"
               >
-                {/* Featured Badge */}
-                {isFeatured && (
-                  <div className="absolute -top-3.5 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-blue-400/40 bg-linear-to-r from-blue-600 to-indigo-600 px-3.5 py-1 text-[10px] font-black tracking-widest text-white uppercase shadow-md">
-                    <Sparkles className="h-3 w-3 text-cyan-300" />
-                    <span>Featured Tier</span>
-                  </div>
-                )}
+                <div
+                  id={`plan-card-${plan.slug}`}
+                  className={`relative flex h-full w-full flex-col justify-between rounded-3xl p-6 transition-all duration-300 sm:p-7 ${
+                    isFeatured
+                      ? "border-2 border-blue-500/60 bg-linear-to-b from-blue-950 via-slate-900 to-slate-950 text-white shadow-2xl"
+                      : "border border-slate-800 bg-slate-900/85 text-slate-100 shadow-sm backdrop-blur-md hover:border-blue-500/50 hover:shadow-xl"
+                  }`}
+                >
+                  {/* Featured Badge */}
+                  {isFeatured && (
+                    <div className="absolute -top-3.5 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-blue-400/40 bg-linear-to-r from-blue-600 to-indigo-600 px-3.5 py-1 text-[10px] font-black tracking-widest text-white uppercase shadow-md">
+                      <Sparkles className="h-3 w-3 text-cyan-300" />
+                      <span>Featured Tier</span>
+                    </div>
+                  )}
 
                 <div>
                   {/* Top Meta Bar */}
@@ -204,7 +240,8 @@ export const InvestmentPlansSection: React.FC<InvestmentPlansSectionProps> = ({
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </button>
                 </div>
-              </div>
+                </div>
+              </motion.div>
             )
           })}
         </div>

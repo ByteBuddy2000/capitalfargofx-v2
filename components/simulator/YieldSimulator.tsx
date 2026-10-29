@@ -1,6 +1,28 @@
+// YieldSimulator.tsx
+"use client"
+
 import React, { useState } from "react"
+import { motion, type Variants } from "framer-motion"
 import { CURRENT_PLANS, formatCurrency, calculateYield } from "../../lib/plans"
 import { Calculator, Users, ArrowRight, Info, AlertCircle } from "lucide-react"
+
+const slideInLeft: Variants = {
+  hidden: { opacity: 0, x: -40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+}
+
+const slideInRight: Variants = {
+  hidden: { opacity: 0, x: 40 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+}
 
 interface YieldSimulatorProps {
   initialPlanSlug?: string
@@ -110,14 +132,20 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
         <div className="mx-auto max-w-5xl overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/90 shadow-2xl shadow-black/50 backdrop-blur-xl">
           <div className="grid grid-cols-1 lg:grid-cols-12">
             {/* Left Controls Pane (7 Cols) */}
-            <div className="space-y-7 border-b border-slate-800 p-6 sm:p-8 lg:col-span-7 lg:border-r lg:border-b-0">
+            <motion.div
+              variants={slideInLeft}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.15 }}
+              className="space-y-7 border-b border-slate-800 p-6 sm:p-8 lg:col-span-7 lg:border-r lg:border-b-0"
+            >
               {/* Step 1: Select Plan Tier */}
               <div>
-                <div className="mb-3 flex items-center justify-between">
+                <div className="mb-3 flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
                   <label className="flex items-center gap-1.5 font-mono text-xs font-bold tracking-wider text-slate-400 uppercase">
                     <span>1. Select Investment Plan</span>
                   </label>
-                  <span className="font-mono text-xs font-semibold text-blue-400">
+                  <span className="self-end font-mono text-xs font-semibold text-blue-400">
                     {selectedPlan.durationHours}h Cycle ·{" "}
                     {selectedPlan.returnPercentage}% Yield
                   </span>
@@ -132,11 +160,10 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
                         type="button"
                         id={`simulator-select-${plan.slug}`}
                         onClick={() => handlePlanChange(plan)}
-                        className={`relative rounded-xl border p-2.5 text-center transition-all ${
-                          isSelected
-                            ? "border-blue-500 bg-blue-600 font-bold text-white shadow-md shadow-blue-600/30"
-                            : "border-slate-800 bg-slate-950 font-medium text-slate-300 hover:border-slate-700 hover:bg-slate-800"
-                        }`}
+                        className={`relative rounded-xl border p-2.5 text-center transition-all ${isSelected
+                          ? "border-blue-500 bg-blue-600 font-bold text-white shadow-md shadow-blue-600/30"
+                          : "border-slate-800 bg-slate-950 font-medium text-slate-300 hover:border-slate-700 hover:bg-slate-800"
+                          }`}
                       >
                         {plan.featured && (
                           <span className="py-0.2 absolute -top-2 left-1/2 -translate-x-1/2 rounded-full bg-amber-400 px-1.5 text-[8px] font-black tracking-wider text-slate-900 uppercase shadow-xs">
@@ -159,7 +186,7 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
 
               {/* Step 2: Capital Allocation Input */}
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
+                <div className="mb-3 flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
                   <label
                     htmlFor="simulator-amount-input"
                     className="font-mono text-xs font-bold tracking-wider text-slate-400 uppercase"
@@ -226,7 +253,7 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
                 {/* Preset Chips */}
                 {presets.length > 0 && (
                   <div className="flex flex-wrap items-center gap-2 pt-2">
-                    <span className="mr-1 font-mono text-[10px] font-bold text-slate-400 uppercase">
+                    <span className="hidden xl:block mr-1 font-mono text-[10px] font-bold text-slate-400 uppercase">
                       Presets:
                     </span>
                     {presets.slice(0, 5).map((amount) => (
@@ -234,11 +261,10 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
                         key={amount}
                         type="button"
                         onClick={() => setInvestmentAmount(amount)}
-                        className={`rounded-lg px-2.5 py-1 font-mono text-xs font-semibold transition-colors ${
-                          investmentAmount === amount
-                            ? "border border-blue-500/50 bg-blue-950 text-blue-300"
-                            : "border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700"
-                        }`}
+                        className={`rounded-lg px-2.5 py-1 font-mono text-xs font-semibold transition-colors ${investmentAmount === amount
+                          ? "border border-blue-500/50 bg-blue-950 text-blue-300"
+                          : "border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700"
+                          }`}
                       >
                         {formatCurrency(amount)}
                       </button>
@@ -248,7 +274,7 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
               </div>
 
               {/* Plan Description & Terms Snippet */}
-              <div className="rounded-xl border border-slate-800 bg-slate-950/80 p-3.5 text-xs leading-relaxed text-slate-400">
+              <div className="hidden rounded-xl border border-slate-800 bg-slate-950/80 p-3.5 text-xs leading-relaxed text-slate-400">
                 <div className="mb-1 flex items-center gap-1.5 font-semibold text-slate-200">
                   <Info className="h-3.5 w-3.5 text-blue-400" />
                   <span>{selectedPlan.name} Term Specifications</span>
@@ -259,10 +285,17 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
                   {selectedPlan.durationHours}-hour investment cycle
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Right Output Display Pane (5 Cols) */}
-            <div className="flex flex-col justify-between bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-6 text-white sm:p-8 lg:col-span-5">
+            <motion.div
+              variants={slideInRight}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.15 }}
+              className="hidden flex-col justify-between bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-6 text-white sm:p-8 lg:col-span-5"
+              // className="flex flex-col justify-between bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 p-6 text-white sm:p-8 lg:col-span-5"
+            >
               <div>
                 <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                   <div className="font-mono text-xs font-bold tracking-wider text-slate-400 uppercase">
@@ -376,7 +409,7 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </button>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Mandatory Disclaimers Strip */}
