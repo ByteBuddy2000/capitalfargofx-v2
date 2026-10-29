@@ -40,11 +40,6 @@ export const HomePage: React.FC<HomePageProps> = ({ plans }) => {
       {/* 1. Hero with Alpha Tracker visual */}
       <Hero onOpenInvestModal={onOpenInvestModal} />
 
-      <div className="space-y-6">
-        <h2 className="text-xl font-bold">Cryptocurrency Prices</h2>
-
-        <CoinPriceBlocks />
-      </div>
       {/* 2. Platform Metrics */}
       <MetricsSection />
 

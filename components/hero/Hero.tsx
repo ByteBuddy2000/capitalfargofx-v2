@@ -1,17 +1,90 @@
+// Hero.tsx
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { AlphaTrackerCard } from "./AlphaTrackerCard"
 import { ArrowRight, ChevronRight, CheckCircle } from "lucide-react"
 import { TRUST_FEATURES } from "@/lib/data"
+import { AnimatePresence, motion } from "motion/react"
 
 interface HeroProps {
   onOpenInvestModal: (planSlug?: string) => void
 }
 
+interface AnimatedHeadlineProps {
+  children: React.ReactNode
+  className?: string
+}
+
+const AnimatedHeadline: React.FC<AnimatedHeadlineProps> = ({
+  children,
+  className = "",
+}) => {
+  return (
+    <motion.h1
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            staggerChildren: 0.12,
+            delayChildren: 0.15,
+          },
+        },
+      }}
+      className={className}
+    >
+      {children}
+    </motion.h1>
+  )
+}
+
+const wordVariants = {
+  hidden: {
+    opacity: 0,
+    y: 28,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.65,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  },
+}
+
+function AnimatedWord({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return (
+    <motion.span
+      variants={wordVariants}
+      className={`inline-block ${className}`}
+    >
+      {children}
+    </motion.span>
+  )
+}
+
 export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
   const router = useRouter()
+  const [headlineIndex, setHeadlineIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeadlineIndex((current) => (current === 0 ? 1 : 0))
+    }, 6000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <section
@@ -42,21 +115,44 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
 
 
             {/* Main Headline */}
-            <div>
-              <h1 className=" text-4xl leading-[1.12] font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Build Your Financial Future With{" "}
-                <span className="bg-linear-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
-                  Smarter Digital Investing
-                </span>
-              </h1>
-
-              <h1 className=" text-4xl leading-[1.12] font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-                Invest With Clarity{" "}
-                <span className="bg-linear-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
-                  Build Your Financial Future
-                </span>
-              </h1>
-
+            <div className="mx-auto max-w-5xl">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={headlineIndex}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -16 }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                >
+                  {headlineIndex === 0 ? (
+                    <AnimatedHeadline
+                      className="text-4xl leading-[1.12] font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl"
+                    >
+                      <AnimatedWord>Build</AnimatedWord>{" "}
+                      <AnimatedWord>Your</AnimatedWord>{" "}
+                      <AnimatedWord>Financial</AnimatedWord>{" "}
+                      <AnimatedWord>Future</AnimatedWord>{" "}
+                      <AnimatedWord>With</AnimatedWord>{" "}
+                      <AnimatedWord className="bg-linear-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
+                        Smarter Digital Investing
+                      </AnimatedWord>
+                    </AnimatedHeadline>
+                  ) : (
+                    <AnimatedHeadline
+                      className="text-4xl leading-[1.12] font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl"
+                    >
+                      <AnimatedWord>Invest</AnimatedWord>{" "}
+                      <AnimatedWord>With</AnimatedWord>{" "}
+                      <AnimatedWord className="bg-linear-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
+                        Clarity
+                      </AnimatedWord>{" "}
+                      <AnimatedWord className="bg-linear-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent">
+                        Build Your Financial Future
+                      </AnimatedWord>
+                    </AnimatedHeadline>
+                  )}
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             {/* Supporting copy */}
@@ -107,11 +203,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
                 ))}
               </div>
             </div>
-          </div>
-
-          {/* Right Column: Floating Portfolio Alpha Tracker Visualization */}
-          <div className="hidden justify-center lg:col-span-5">
-            <AlphaTrackerCard />
           </div>
         </div>
       </div>

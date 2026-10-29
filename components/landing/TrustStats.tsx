@@ -1,3 +1,4 @@
+// TrustStats.tsx
 import React from "react"
 import { motion } from "motion/react"
 import { Users, ArrowDownToLine, ArrowUpFromLine, Coins } from "lucide-react"

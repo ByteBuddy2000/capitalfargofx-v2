@@ -14,6 +14,15 @@ declare module "react" {
         "transparent-background"?: string;
         outlined?: string;
       };
+      "gecko-coin-price-static-headline-widget": DetailedHTMLProps<
+        HTMLAttributes<HTMLElement>,
+        HTMLElement
+      > & {
+        locale?: string;
+        outlined?: string;
+        "coin-ids"?: string;
+        "initial-currency"?: string;
+      };
     }
   }
 }
