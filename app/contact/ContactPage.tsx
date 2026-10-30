@@ -103,7 +103,7 @@ export const ContactPage: React.FC = () => {
                   {/* Phone Contact */}
                   <Link
                     href={`tel:${CONTACT_PHONE.replace(/[^+\\d]/g, "")}`}
-                    className="group flex items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4 transition-all hover:border-blue-500/50 hover:shadow-xs"
+                    className="group hidden items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4 transition-all hover:border-blue-500/50 hover:shadow-xs"
                   >
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-950/60 text-emerald-400">
                       <Phone className="h-5 w-5" />
