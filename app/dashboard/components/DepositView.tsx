@@ -168,6 +168,23 @@ export const DepositView: React.FC<DepositViewProps> = ({
     }
   }
 
+  const handleCopyTransactionHash = async () => {
+    const txHash = submittedDeposit?.txHash
+    if (!txHash) return
+
+    try {
+      await navigator.clipboard.writeText(txHash)
+      success("Transaction Hash Copied", "The full transaction hash was copied.")
+    } catch (error) {
+      toastError(
+        "Copy Error",
+        error instanceof Error
+          ? error.message
+          : "Unable to copy the transaction hash."
+      )
+    }
+  }
+
   const handleSubmitPayment = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -727,9 +744,29 @@ export const DepositView: React.FC<DepositViewProps> = ({
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Transaction TXID:</span>
-              <span className="max-w-50 truncate font-mono text-slate-800">
-                {submittedDeposit.txHash}
-              </span>
+              {submittedDeposit.txHash ? (
+                <span className="flex min-w-0 items-center gap-2">
+                  <span
+                    className="max-w-50 truncate font-mono text-slate-800"
+                    title={submittedDeposit.txHash}
+                  >
+                    {submittedDeposit.txHash.length > 9
+                      ? `${submittedDeposit.txHash.slice(0, 5)}...${submittedDeposit.txHash.slice(-4)}`
+                      : submittedDeposit.txHash}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleCopyTransactionHash}
+                    className="shrink-0 rounded p-1 text-slate-500 transition-colors hover:bg-slate-200 hover:text-slate-900"
+                    aria-label="Copy full transaction hash"
+                    title="Copy full transaction hash"
+                  >
+                    <Copy className="h-3.5 w-3.5" />
+                  </button>
+                </span>
+              ) : (
+                <span className="font-mono text-slate-500">—</span>
+              )}
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Current Status:</span>
