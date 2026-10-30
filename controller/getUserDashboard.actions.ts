@@ -9,6 +9,7 @@ import { Referral } from "@/models/Referral"
 import { User } from "@/models/User"
 import { SupportTicket } from "@/models/SupportTicket"
 import { AuditLog } from "@/models/AuditLog"
+import { writeAuditLog } from "@/lib/auditLog"
 
 export async function getUserReferrals() {
   const session = await getServerSession(authOptions)
@@ -75,7 +76,7 @@ export async function createUserSupportTicket(data: {
   try {
     await connectToDB()
     const user = await User.findById(session.user.id)
-      .select("fullName email")
+      .select("fullName username email")
       .lean()
     if (!user) return { success: false, message: "User not found." }
 
@@ -85,6 +86,21 @@ export async function createUserSupportTicket(data: {
       userFullName: user.fullName,
       userEmail: user.email,
     })
+
+    await writeAuditLog({
+      actorId: user._id.toString(),
+      actorUsername: user.username,
+      action: "SUPPORT_TICKET_CREATED",
+      entity: "SupportTicket",
+      entityId: ticket._id.toString(),
+      newState: {
+        subject: ticket.subject,
+        category: ticket.category,
+        priority: ticket.priority,
+      },
+      notes: "User submitted a support ticket.",
+    })
+
     return { success: true, ticket: JSON.parse(JSON.stringify(ticket)) }
   } catch (error) {
     console.error("Failed to create support ticket:", error)
@@ -103,6 +119,9 @@ export async function updateUserProfile(data: {
 
   try {
     await connectToDB()
+    const previousUser = await User.findById(session.user.id)
+      .select("btcWallet ethWallet usdtWallet")
+      .lean()
     const user = await User.findByIdAndUpdate(
       session.user.id,
       { $set: data },
@@ -110,6 +129,27 @@ export async function updateUserProfile(data: {
     )
       .select("-passwordHash")
       .lean()
+
+    if (user && previousUser) {
+      await writeAuditLog({
+        actorId: user._id.toString(),
+        actorUsername: user.username,
+        action: "PROFILE_UPDATED",
+        entity: "User",
+        entityId: user._id.toString(),
+        previousState: {
+          btcWallet: previousUser.btcWallet,
+          ethWallet: previousUser.ethWallet,
+          usdtWallet: previousUser.usdtWallet,
+        },
+        newState: {
+          btcWallet: user.btcWallet,
+          ethWallet: user.ethWallet,
+          usdtWallet: user.usdtWallet,
+        },
+        notes: "User updated wallet addresses in their profile.",
+      })
+    }
 
     return user
       ? { success: true, user: JSON.parse(JSON.stringify(user)) }

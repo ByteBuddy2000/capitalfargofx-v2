@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth"
 
 import { authOptions } from "@/auth"
 import { connectToDB } from "@/lib/connectToDB"
+import { writeAuditLog } from "@/lib/auditLog"
 import { User } from "@/models/User"
 
 const changePasswordSchema = z.object({
@@ -68,6 +69,16 @@ export async function changeAdminPassword(
     user.passwordHash = await bcrypt.hash(validatedData.newPassword, 12)
 
     await user.save()
+
+    await writeAuditLog({
+      actorId: user._id.toString(),
+      actorUsername: user.username,
+      action: "PASSWORD_CHANGED",
+      entity: "User",
+      entityId: user._id.toString(),
+      newState: { passwordChanged: true },
+      notes: "Administrator changed their password.",
+    })
 
     return {
       success: true,

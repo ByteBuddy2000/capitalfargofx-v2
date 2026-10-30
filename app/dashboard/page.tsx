@@ -18,6 +18,8 @@ import type {
 } from "@/types"
 import { connectToDB } from "@/lib/connectToDB"
 import { getUserAssets } from "@/controller/getUserAssets.actions"
+import { getUserAssetAllocation } from "@/controller/deposit"
+import type { AssetAllocationData } from "@/controller/deposit"
 import { getUserDeposits } from "@/controller/getUserDesposit.actions"
 import { getUserInvestments } from "@/controller/getUserInvestments.actions"
 import { getUserLedger } from "@/controller/getUserLedger.action"
@@ -36,6 +38,10 @@ type DashboardRecord = Record<string, unknown>
 
 export type DashboardInitialData = {
   assets: UserAsset[]
+  assetAllocation: Pick<
+    AssetAllocationData,
+    "assets" | "totalApprovedDeposits"
+  >
   deposits: DashboardRecord[]
   investments: Investment[]
   ledgerEntries: DashboardRecord[]
@@ -81,6 +87,8 @@ export default async function DashboardPage() {
     .lean()
 
   if (!storedUser) redirect("/login")
+
+  const assetAllocation = await getUserAssetAllocation()
 
   const [
     assetsResult,
@@ -137,6 +145,10 @@ export default async function DashboardPage() {
 
   const dashboardData: DashboardInitialData = {
     assets,
+    assetAllocation: {
+      assets: assetAllocation.assets,
+      totalApprovedDeposits: assetAllocation.totalApprovedDeposits,
+    },
     deposits: getFulfilledRecords<DashboardRecord>(depositsResult, "deposits"),
     investments: getFulfilledRecords<Investment>(
       investmentsResult,

@@ -56,6 +56,7 @@ export default function DashboardClient({
             initialInvestments={initialData.investments}
             initialTransactions={initialData.transactions}
             initialWithdrawals={initialData.withdrawals}
+            assetAllocation={initialData.assetAllocation}
           />
         )}
         {activeTab === "deposit" && (

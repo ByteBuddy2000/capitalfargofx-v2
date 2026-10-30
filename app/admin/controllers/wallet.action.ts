@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth"
 
 import { authOptions } from "@/auth"
 import { connectToDB } from "@/lib/connectToDB"
+import { writeAuditLog } from "@/lib/auditLog"
 import { CryptoWallet } from "@/models/CryptoWallet"
 import { Asset, ASSET_SYMBOLS } from "@/models/Asset"
 
@@ -140,6 +141,10 @@ export async function saveAdminWallet(
 
     await connectToDB()
 
+    const previousWallet =
+      id && mongoose.isValidObjectId(id)
+        ? await CryptoWallet.findById(id).lean()
+        : null
     const wallet =
       id && mongoose.isValidObjectId(id)
         ? await CryptoWallet.findByIdAndUpdate(id, values, {
@@ -154,6 +159,17 @@ export async function saveAdminWallet(
         message: "Wallet not found.",
       }
     }
+
+    await writeAuditLog({
+      actorId: admin.id,
+      actorUsername: admin.username || admin.email || admin.id,
+      action: previousWallet ? "WALLET_UPDATED" : "WALLET_CREATED",
+      entity: "CryptoWallet",
+      entityId: String(wallet._id),
+      previousState: previousWallet ?? undefined,
+      newState: values,
+      notes: `${previousWallet ? "Updated" : "Created"} ${values.symbol} wallet.`,
+    })
 
     return {
       success: true,
@@ -222,6 +238,20 @@ export async function createAsset(data: {
       lockedBalance: 0,
     })
 
+    await writeAuditLog({
+      actorId: admin.id,
+      actorUsername: admin.username || admin.email || admin.id,
+      action: "ASSET_CREATED",
+      entity: "Asset",
+      entityId: asset._id.toString(),
+      newState: {
+        userId: data.userId,
+        symbol,
+        walletAddress: data.walletAddress || "",
+      },
+      notes: `Created ${symbol} asset for user ${data.userId}.`,
+    })
+
     return {
       success: true,
       asset: JSON.parse(JSON.stringify(asset)),
@@ -261,6 +291,7 @@ export async function updateAsset(
       }
     }
 
+    const previousAsset = await Asset.findById(assetId).lean()
     const asset = await Asset.findByIdAndUpdate(
       assetId,
       {
@@ -280,6 +311,17 @@ export async function updateAsset(
         message: "Asset not found.",
       }
     }
+
+    await writeAuditLog({
+      actorId: admin.id,
+      actorUsername: admin.username || admin.email || admin.id,
+      action: "ASSET_UPDATED",
+      entity: "Asset",
+      entityId: assetId,
+      previousState: previousAsset ?? undefined,
+      newState: asset,
+      notes: "Updated asset wallet address.",
+    })
 
     return {
       success: true,
@@ -323,6 +365,16 @@ export async function deleteAsset(assetId: string): Promise<AssetResponse> {
         message: "Asset not found.",
       }
     }
+
+    await writeAuditLog({
+      actorId: admin.id,
+      actorUsername: admin.username || admin.email || admin.id,
+      action: "ASSET_DELETED",
+      entity: "Asset",
+      entityId: assetId,
+      previousState: asset,
+      notes: `Deleted ${asset.symbol} asset for user ${asset.userId}.`,
+    })
 
     return {
       success: true,
@@ -369,6 +421,16 @@ export async function deleteAdminWallet(
         message: "Wallet not found.",
       }
     }
+
+    await writeAuditLog({
+      actorId: admin.id,
+      actorUsername: admin.username || admin.email || admin.id,
+      action: "WALLET_DELETED",
+      entity: "CryptoWallet",
+      entityId: walletId,
+      previousState: wallet,
+      notes: `Deleted ${wallet.symbol} wallet.`,
+    })
 
     return {
       success: true,

@@ -34,6 +34,7 @@ export const ReferralsView: React.FC<ReferralsViewProps> = ({
       id: String(record.id || ""),
       referrerId: currentUser.id,
       referrerUsername: currentUser.username,
+      referrerFullName: currentUser.fullName,
       referredUserId: String(
         typeof referred === "object" ? referred?._id : referred || ""
       ),

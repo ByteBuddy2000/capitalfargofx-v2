@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth"
 
 import { authOptions } from "@/auth"
 import { connectToDB } from "@/lib/connectToDB"
+import { writeAuditLog } from "@/lib/auditLog"
 import { Plan } from "@/models/Plan"
 
 export type AdminPlansResponse = {
@@ -194,8 +195,10 @@ export async function saveAdminPlan(
     }
 
     let plan
+    let previousState: Record<string, unknown> | undefined
 
     if (id && mongoose.isValidObjectId(id)) {
+      previousState = (await Plan.findById(id).lean()) ?? undefined
       plan = await Plan.findByIdAndUpdate(id, values, {
         new: true,
         runValidators: true,
@@ -210,6 +213,17 @@ export async function saveAdminPlan(
         message: "Plan not found.",
       }
     }
+
+    await writeAuditLog({
+      actorId: admin.id,
+      actorUsername: admin.username || admin.email || admin.id,
+      action: previousState ? "PLAN_UPDATED" : "PLAN_CREATED",
+      entity: "Plan",
+      entityId: String(plan._id),
+      previousState,
+      newState: values,
+      notes: `${previousState ? "Updated" : "Created"} investment plan "${name}".`,
+    })
 
     return {
       success: true,
@@ -256,6 +270,16 @@ export async function deleteAdminPlan(
         message: "Plan not found.",
       }
     }
+
+    await writeAuditLog({
+      actorId: admin.id,
+      actorUsername: admin.username || admin.email || admin.id,
+      action: "PLAN_DELETED",
+      entity: "Plan",
+      entityId: planId,
+      previousState: plan,
+      notes: `Deleted investment plan "${plan.name}".`,
+    })
 
     return {
       success: true,

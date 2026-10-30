@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth"
 
 import { authOptions } from "@/auth"
 import { connectToDB } from "@/lib/connectToDB"
+import { writeAuditLog } from "@/lib/auditLog"
 import { PlatformSettings } from "@/models/PlatformSettings"
 
 export type AdminSettingsResponse = {
@@ -98,6 +99,9 @@ export async function updateAdminSettings(
 
     await connectToDB()
 
+    const previousSettings = await PlatformSettings.findOne({})
+      .sort({ updatedAt: -1 })
+      .lean()
     const updates = Object.fromEntries(
       settingFields
         .filter((field) => data[field] !== undefined)
@@ -109,6 +113,17 @@ export async function updateAdminSettings(
       upsert: true,
       runValidators: true,
     }).lean()
+
+    await writeAuditLog({
+      actorId: admin.id,
+      actorUsername: admin.username || admin.email || admin.id,
+      action: "PLATFORM_SETTINGS_UPDATED",
+      entity: "PlatformSettings",
+      entityId: String(settings?._id || "platform"),
+      previousState: previousSettings,
+      newState: updates,
+      notes: "Updated platform settings.",
+    })
 
     return {
       success: true,

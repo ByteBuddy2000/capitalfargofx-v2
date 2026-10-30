@@ -130,8 +130,8 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xl font-extrabold tracking-tight text-gray-600">
-                    CapitalsFargo<span className="text-blue-400">FX</span>
+                  <span className="text-xl font-extrabold tracking-tight text-gray-300">
+                    CapitalsFargo<span className="text-orange-400">FX</span>
                   </span>
                 </div>
                 <p className="-mt-0.5 text-[10px] font-medium tracking-wider text-slate-400 uppercase">

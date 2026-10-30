@@ -1,6 +1,6 @@
-import { getUserAssetAllocation } from "@/controller/deposit"
 import Image from "next/image"
 import Link from "next/link"
+import type { AssetAllocationData } from "@/controller/deposit"
 
 const formatCurrency = (amount: number) =>
   new Intl.NumberFormat("en-US", {
@@ -8,10 +8,10 @@ const formatCurrency = (amount: number) =>
     maximumFractionDigits: 2,
   }).format(amount)
 
-export default async function AssetAllocation() {
-  const { assets, totalApprovedDeposits } =
-    await getUserAssetAllocation()
-
+export default function AssetAllocation({
+  assets,
+  totalApprovedDeposits,
+}: Pick<AssetAllocationData, "assets" | "totalApprovedDeposits">) {
   const assetItems = [
     {
       symbol: "BTC" as const,
@@ -59,7 +59,7 @@ export default async function AssetAllocation() {
           />
         </div>
 
-        <div className="mb-4 flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 p-3">
+        <div className="mb-4 hidden items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 p-3">
           <span className="text-xs font-medium text-emerald-800">
             Total Approved Deposits
           </span>

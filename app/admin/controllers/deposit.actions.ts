@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth"
 
 import { authOptions } from "@/auth"
 import { connectToDB } from "@/lib/connectToDB"
+import { writeAuditLog } from "@/lib/auditLog"
 import { Deposit, type IDeposit } from "@/models/Deposit"
 import { Investment } from "@/models/Investment"
 import { User, type IUser } from "@/models/User"
@@ -160,6 +161,12 @@ export async function approveAdminDeposit(
       }
     }
 
+    const previousState = {
+      status: deposit.status,
+      adminNotes: deposit.adminNotes,
+      investorTotalDeposits: investor.totalDeposits,
+    }
+
     const expectedProfit =
       (Number(deposit.amount) * Number(plan.returnPercentage || 0)) / 100
 
@@ -266,6 +273,23 @@ export async function approveAdminDeposit(
       }
     }
 
+    await writeAuditLog({
+      actorId: admin.id,
+      actorUsername: admin.username || admin.email || admin.id,
+      action: "DEPOSIT_APPROVED",
+      entity: "Deposit",
+      entityId: deposit._id.toString(),
+      previousState,
+      newState: {
+        status: deposit.status,
+        amount: deposit.amount,
+        asset: deposit.asset,
+        investorTotalDeposits: investor.totalDeposits,
+        investmentId: investment._id.toString(),
+      },
+      notes: data?.adminNotes || "Approved deposit and activated investment.",
+    })
+
     return {
       success: true,
       message: "Deposit approved successfully.",
@@ -323,6 +347,11 @@ export async function rejectAdminDeposit(
       }
     }
 
+    const previousState = {
+      status: deposit.status,
+      adminNotes: deposit.adminNotes,
+    }
+
     deposit.status = "REJECTED"
     deposit.rejectedAt = new Date()
     deposit.adminNotes = data?.reason || "Rejected by administrator."
@@ -344,6 +373,20 @@ export async function rejectAdminDeposit(
       title: "Deposit rejected",
       message: deposit.adminNotes,
       type: "DEPOSIT",
+    })
+
+    await writeAuditLog({
+      actorId: admin.id,
+      actorUsername: admin.username || admin.email || admin.id,
+      action: "DEPOSIT_REJECTED",
+      entity: "Deposit",
+      entityId: deposit._id.toString(),
+      previousState,
+      newState: {
+        status: deposit.status,
+        adminNotes: deposit.adminNotes,
+      },
+      notes: deposit.adminNotes,
     })
 
     return {

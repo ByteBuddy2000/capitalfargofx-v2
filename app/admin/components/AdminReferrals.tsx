@@ -1,3 +1,4 @@
+// AdminReferrals.tsx
 "use client"
 import React, { useState } from "react"
 import { Users, Search, TrendingUp, Gift } from "lucide-react"
@@ -13,11 +14,12 @@ export const AdminReferrals: React.FC<AdminReferralsProps> = ({
   initialReferrals = [],
 }) => {
   const [searchTerm, setSearchTerm] = useState("")
-  const [allReferrals, setAllReferrals] = useState<Referral[]>(() =>
+  const [allReferrals] = useState<Referral[]>(() =>
     initialReferrals.map((record) => ({
       ...record,
       id: String(record.id || ""),
       referrerUsername: record.referrerUsername || "unknown",
+      referrerFullName: record.referrerFullName || "Unknown sponsor",
       referredUsername: record.referredUsername || "unknown",
       referredFullName: record.referredFullName || "Unknown Investor",
       totalDeposits: Number(record.totalDeposits || 0),
@@ -31,6 +33,7 @@ export const AdminReferrals: React.FC<AdminReferralsProps> = ({
     const q = searchTerm.toLowerCase()
     return (
       r.referrerUsername.toLowerCase().includes(q) ||
+      r.referrerFullName.toLowerCase().includes(q) ||
       r.referredUsername.toLowerCase().includes(q) ||
       r.referredFullName.toLowerCase().includes(q)
     )
@@ -155,7 +158,10 @@ export const AdminReferrals: React.FC<AdminReferralsProps> = ({
                     className="transition-colors hover:bg-slate-800/50"
                   >
                     <td className="py-4 pl-6">
-                      <span className="font-mono font-bold text-purple-400">
+                      <span className="block font-bold text-white">
+                        {r.referrerFullName}
+                      </span>
+                      <span className="font-mono text-[11px] text-purple-400">
                         @{r.referrerUsername}
                       </span>
                     </td>

@@ -14,6 +14,7 @@ import { Investment } from "@/models/Investment"
 import { SupportTicket } from "@/models/SupportTicket"
 import { Withdrawal } from "@/models/Withdrawal"
 import { AuditLog } from "@/models/AuditLog"
+import { writeAuditLog } from "@/lib/auditLog"
 import { Notification } from "@/models/Notification"
 
 const publicUser = (user: Record<string, unknown>) => ({
@@ -131,6 +132,12 @@ export async function updateAdminUser(data: {
       }
     }
 
+    const previousState = {
+      status: user.status,
+      availableBalance: user.availableBalance,
+      earningBalance: user.earningBalance,
+    }
+
     if (data.status) {
       user.status = data.status
       await user.save()
@@ -199,6 +206,23 @@ export async function updateAdminUser(data: {
       })
     }
 
+    await writeAuditLog({
+      actorId: admin.id,
+      actorUsername: admin.username || admin.email || admin.id,
+      action: data.status ? "USER_STATUS_UPDATED" : "USER_BALANCE_ADJUSTED",
+      entity: "User",
+      entityId: user._id.toString(),
+      previousState,
+      newState: {
+        status: user.status,
+        availableBalance: user.availableBalance,
+        earningBalance: user.earningBalance,
+      },
+      notes: data.status
+        ? `Changed user status to ${data.status}.`
+        : `Adjusted ${data.balanceType} balance: ${data.operation} ${data.amount}; reason: ${data.reason?.trim()}.`,
+    })
+
     return {
       success: true,
       user: publicUser(user.toObject() as unknown as Record<string, unknown>),
@@ -238,7 +262,9 @@ export async function deleteUser(userId: string): Promise<DeleteUserResponse> {
 
     await connectToDB()
 
-    const user = await User.findById(userId).select("_id").lean()
+    const user = await User.findById(userId)
+      .select("username fullName email status availableBalance earningBalance")
+      .lean()
 
     if (!user) {
       return {
@@ -258,6 +284,16 @@ export async function deleteUser(userId: string): Promise<DeleteUserResponse> {
     ])
 
     await User.deleteOne({ _id: userId })
+
+    await writeAuditLog({
+      actorId: admin.id,
+      actorUsername: admin.username || admin.email || admin.id,
+      action: "USER_DELETED",
+      entity: "User",
+      entityId: userId,
+      previousState: user,
+      notes: `Deleted user "${user.username}" and related records.`,
+    })
 
     return {
       success: true,

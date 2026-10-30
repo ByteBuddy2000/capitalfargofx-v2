@@ -686,7 +686,7 @@ export const DepositView: React.FC<DepositViewProps> = ({
             {/* <Button variant="primary" onClick={onNavigateTransactions}>
               View in Transaction Ledger
             </Button> */}
-            <Button variant="primary" onClick={router.back}>
+            <Button variant="primary" onClick={router.push("/dashboard")}>
               Continue
             </Button>
             {/* <Button

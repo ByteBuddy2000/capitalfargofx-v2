@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth"
 
 import { authOptions } from "@/auth"
 import { connectToDB } from "@/lib/connectToDB"
+import { writeAuditLog } from "@/lib/auditLog"
 import { Withdrawal } from "@/models/Withdrawal"
 import { User } from "@/models/User"
 import { Transaction } from "@/models/Transaction"
@@ -116,6 +117,12 @@ export async function updateAdminWithdrawal(
       }
     }
 
+    const previousState = {
+      status: withdrawal.status,
+      txHash: withdrawal.txHash,
+      adminNotes: withdrawal.adminNotes,
+    }
+
     withdrawal.status = normalizedStatus
     withdrawal.txHash = data.txHash || ""
     withdrawal.adminNotes = data.adminNotes || ""
@@ -180,6 +187,21 @@ export async function updateAdminWithdrawal(
         new: true,
       }
     ).exec()
+
+    await writeAuditLog({
+      actorId: admin.id,
+      actorUsername: admin.username || admin.email || admin.id,
+      action: "WITHDRAWAL_STATUS_UPDATED",
+      entity: "Withdrawal",
+      entityId: withdrawal._id.toString(),
+      previousState,
+      newState: {
+        status: withdrawal.status,
+        txHash: withdrawal.txHash,
+        adminNotes: withdrawal.adminNotes,
+      },
+      notes: `Updated withdrawal status to ${normalizedStatus}.`,
+    })
 
     return {
       success: true,

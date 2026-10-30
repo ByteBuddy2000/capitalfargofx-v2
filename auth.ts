@@ -80,6 +80,7 @@ export const authOptions: NextAuthOptions = {
           .toLowerCase() as "user" | "admin" | "super admin"
         session.user.name = token.name as string
         session.user.email = token.email as string
+        session.user.username = token.username as string
         session.user.fullName = token.fullname as string
         session.user.status = token.status as
           "ACTIVE" | "INACTIVE" | "SUSPENDED" | "BANNED"

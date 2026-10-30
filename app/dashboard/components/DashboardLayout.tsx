@@ -284,15 +284,15 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
           </div>
 
           <div className="flex items-center justify-between pt-1 text-xs">
-            <button
+            {/* <button
               onClick={onNavigateLanding}
               className="cursor-pointer text-[11px] font-medium text-slate-400 transition-colors hover:text-white"
             >
               Public Portal
-            </button>
+            </button> */}
             <button
               onClick={onLogout}
-              className="flex cursor-pointer items-center gap-1.5 text-[11px] font-semibold text-rose-400 transition-colors hover:text-rose-300"
+              className="flex cursor-pointer items-center justify-center gap-1.5 text-[11px] font-semibold bg-rose-500 hover:bg-rose-600 w-full p-3 rounded-md text-center transition-colors"
             >
               <LogOut className="h-3.5 w-3.5" />
               <span>Sign Out</span>

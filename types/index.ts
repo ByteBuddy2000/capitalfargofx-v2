@@ -172,6 +172,7 @@ export interface Referral {
   id: string
   referrerId: string
   referrerUsername: string
+  referrerFullName: string
   referredUserId?: string
   referredUsername: string
   referredFullName: string

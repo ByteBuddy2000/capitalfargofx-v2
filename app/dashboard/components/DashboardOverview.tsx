@@ -24,6 +24,7 @@ import {
 import { DashboardTab } from "./DashboardLayout"
 import Image from "next/image"
 import { User, Investment, Transaction, Withdrawal } from "@/types"
+import type { AssetAllocationData } from "@/controller/deposit"
 import { settleUserInvestment } from "@/controller/userMutations.actions"
 import { useToast } from "@/components/ui/Toast"
 import { Button } from "@/components/ui/Button"
@@ -35,6 +36,10 @@ interface DashboardOverviewProps {
   initialInvestments: Investment[]
   initialTransactions: Transaction[]
   initialWithdrawals: Withdrawal[]
+  assetAllocation: Pick<
+    AssetAllocationData,
+    "assets" | "totalApprovedDeposits"
+  >
 }
 
 type ChartTimeframe = "7D" | "30D" | "3M" | "1Y"
@@ -109,6 +114,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   initialInvestments,
   initialTransactions,
   initialWithdrawals,
+  assetAllocation,
 }) => {
   const [copiedRef, setCopiedRef] = useState(false)
   const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>("30D")
@@ -673,7 +679,7 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
         {/* Asset Allocation */}
 
-        <AssetAllocation />
+        <AssetAllocation {...assetAllocation} />
       </div>
 
       {/* =====================================================

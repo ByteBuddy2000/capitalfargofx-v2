@@ -6,6 +6,7 @@ import { getServerSession } from "next-auth"
 
 import { authOptions } from "@/auth"
 import { connectToDB } from "@/lib/connectToDB"
+import { writeAuditLog } from "@/lib/auditLog"
 import { Notification } from "@/models/Notification"
 
 export type MeNotificationsResponse = {
@@ -89,6 +90,16 @@ export async function markNotificationAsRead(
         message: "Notification not found.",
       }
     }
+
+    await writeAuditLog({
+      actorId: userId,
+      actorUsername: session.user.username || userId,
+      action: "NOTIFICATION_MARKED_READ",
+      entity: "Notification",
+      entityId: notification._id.toString(),
+      newState: { read: true },
+      notes: "User marked a notification as read.",
+    })
 
     return {
       success: true,
