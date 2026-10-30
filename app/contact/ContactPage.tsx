@@ -85,9 +85,9 @@ export const ContactPage: React.FC = () => {
                   {/* Email Channel */}
                   <Link
                     href="mailto:support@CapitalsFargofx.com"
-                    className="group block flex items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4 transition-all hover:border-blue-500/50 hover:shadow-xs"
+                    className="group flex items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4 transition-all hover:border-blue-500/50 hover:shadow-xs"
                   >
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-blue-950/60 text-blue-400">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-950/60 text-blue-400">
                       <Mail className="h-5 w-5" />
                     </div>
                     <div>
@@ -103,19 +103,19 @@ export const ContactPage: React.FC = () => {
                   {/* Phone Contact */}
                   <Link
                     href={`tel:${CONTACT_PHONE.replace(/[^+\\d]/g, "")}`}
-                    className="group block flex items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4 transition-all hover:border-blue-500/50 hover:shadow-xs"
+                    className="group flex items-start gap-4 rounded-2xl border border-slate-800 bg-slate-950 p-4 transition-all hover:border-blue-500/50 hover:shadow-xs"
                   >
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-emerald-950/60 text-emerald-400">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-950/60 text-emerald-400">
                       <Phone className="h-5 w-5" />
                     </div>
                     <div className="min-w-0">
                       <div className="font-mono text-xs font-bold tracking-wider text-slate-400 uppercase">
                         Phone Support
                       </div>
-                      <div className="font-mono text-sm font-bold break-words text-white transition-colors group-hover:text-emerald-400">
+                      <div className="font-mono text-sm font-bold wrap-break-word text-white transition-colors group-hover:text-emerald-400">
                         {CONTACT_PHONE}
                       </div>
-                      <p className="mt-1 text-xs leading-relaxed text-slate-500">
+                      <p className="hidden mt-1 text-xs leading-relaxed text-slate-500">
                         Call our team for general and account-related inquiries.
                       </p>
                     </div>
@@ -185,7 +185,7 @@ export const ContactPage: React.FC = () => {
               {/* Safety notice */}
               <div className="hidden items-start gap-2.5 rounded-2xl border border-slate-800 bg-slate-900 p-4 text-xs text-slate-400">
                 {/* <div className="flex items-start gap-2.5 rounded-2xl border border-slate-800 bg-slate-900 p-4 text-xs text-slate-400"> */}
-                <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-400" />
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
                 <p>
                   Security Reminder: CapitalsFargoFX will never contact you
                   requesting your private keys or master wallet seed phrases.
