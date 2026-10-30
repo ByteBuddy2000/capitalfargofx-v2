@@ -226,12 +226,12 @@ export const HowItWorksPage: React.FC = () => {
                     {step.description}
                   </p>
 
-                  <p className="text-xs leading-relaxed text-slate-400">
+                  <p className="hidden text-xs leading-relaxed text-slate-400">
                     {step.detail}
                   </p>
                 </div>
 
-                <div className="mt-6 flex items-center gap-2 border-t border-slate-800 pt-6 text-xs font-semibold text-blue-400">
+                <div className="mt-6 hidden items-center gap-2 border-t border-slate-800 pt-6 text-xs font-semibold text-blue-400">
                   <CheckCircle2 className="h-4 w-4" />
                   <span>Standard Institutional Protocol</span>
                 </div>
