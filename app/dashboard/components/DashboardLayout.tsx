@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
   LayoutDashboard,
   ArrowDownToLine,
@@ -63,6 +63,29 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [userDropdownOpen, setUserDropdownOpen] = useState(false)
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
+  const notificationsDropdownRef = useRef<HTMLDivElement>(null)
+  const userDropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!notificationsOpen && !userDropdownOpen) return
+
+    const handleOutsidePointerDown = (event: PointerEvent) => {
+      const target = event.target
+      if (!(target instanceof Node)) return
+
+      if (!notificationsDropdownRef.current?.contains(target)) {
+        setNotificationsOpen(false)
+      }
+
+      if (!userDropdownRef.current?.contains(target)) {
+        setUserDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener("pointerdown", handleOutsidePointerDown)
+    return () =>
+      document.removeEventListener("pointerdown", handleOutsidePointerDown)
+  }, [notificationsOpen, userDropdownOpen])
 
   const [notifications, setNotifications] = useState<DashboardNotification[]>(
     initialNotifications.map((notification) => ({
@@ -332,9 +355,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             </div>
 
             {/* Notifications Dropdown */}
-            <div className="relative">
+            <div className="relative" ref={notificationsDropdownRef}>
               <button
-                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                onClick={() => {
+                  setNotificationsOpen((open) => !open)
+                  setUserDropdownOpen(false)
+                }}
                 className="relative cursor-pointer rounded-xl border border-white/10 bg-slate-800/50 p-2.5 text-slate-300 transition-colors hover:border-white/20 hover:text-white"
                 title="Notifications"
               >
@@ -421,9 +447,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
               )}
 
             {/* User Profile Avatar Dropdown */}
-            <div className="relative">
+            <div className="relative" ref={userDropdownRef}>
               <button
-                onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                onClick={() => {
+                  setUserDropdownOpen((open) => !open)
+                  setNotificationsOpen(false)
+                }}
                 className="flex cursor-pointer items-center gap-2 transition-transform active:scale-95"
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-[#2563EB] font-bold text-white shadow-sm">

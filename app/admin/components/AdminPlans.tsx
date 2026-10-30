@@ -152,14 +152,14 @@ export const AdminPlans: React.FC<AdminPlansProps> = ({
           </p>
         </div>
 
-        <Button
+        {/* <Button
           variant="primary"
           onClick={handleOpenCreate}
           leftIcon={<Plus className="h-4 w-4" />}
           className="bg-blue-600 font-bold text-white hover:bg-blue-700"
         >
           Create New Plan Tier
-        </Button>
+        </Button> */}
       </div>
 
       {/* Plans Grid */}

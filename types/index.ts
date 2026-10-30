@@ -70,7 +70,9 @@ export interface Deposit {
   userEmail?: string
   planId: string
   planName: string
+  /** Deposit amount in USD. */
   amount: number
+  cryptoAmount?: number
   asset?: "BTC" | "ETH" | "USDT"
   cryptoCurrency?: "BTC" | "ETH" | "USDT"
   network: string

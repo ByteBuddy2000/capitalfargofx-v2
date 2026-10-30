@@ -11,9 +11,63 @@ import { Plan } from "@/models/Plan"
 import { User } from "@/models/User"
 import { Withdrawal } from "@/models/Withdrawal"
 import { AuditLog } from "@/models/AuditLog"
+import { convertFiatToCrypto } from "@/lib/coingecko"
 
 type UserAuditAction =
   "DEPOSIT_SUBMITTED" | "WITHDRAWAL_REQUESTED" | "INVESTMENT_SETTLED"
+
+const COINGECKO_COIN_IDS = {
+  BTC: "bitcoin",
+  ETH: "ethereum",
+  USDT: "tether",
+} as const
+
+const getDepositConversion = async (
+  amount: number,
+  asset: keyof typeof COINGECKO_COIN_IDS
+) => {
+  if (!Object.prototype.hasOwnProperty.call(COINGECKO_COIN_IDS, asset)) {
+    throw new Error("Unsupported cryptocurrency asset.")
+  }
+
+  const conversion = await convertFiatToCrypto({
+    cryptoId: COINGECKO_COIN_IDS[asset],
+    fiatCurrency: "usd",
+    fiatAmount: amount,
+  })
+
+  const decimals = asset === "USDT" ? 6 : 8
+  return {
+    ...conversion,
+    cryptoAmount: Number(conversion.cryptoAmount.toFixed(decimals)),
+  }
+}
+
+export async function getDepositCryptoQuote(
+  amount: number,
+  asset: keyof typeof COINGECKO_COIN_IDS
+) {
+  const id = await userId()
+  if (!id) return { success: false, message: "Authentication required." }
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return { success: false, message: "A valid USD amount is required." }
+  }
+
+  try {
+    const conversion = await getDepositConversion(amount, asset)
+    return { success: true, cryptoAmount: conversion.cryptoAmount }
+  } catch (error) {
+    console.error("Failed to quote deposit crypto amount:", error)
+    return {
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Unable to retrieve the current cryptocurrency price.",
+    }
+  }
+}
 
 async function writeUserAudit({
   actorId,
@@ -64,6 +118,10 @@ export async function createUserDeposit(data: {
 
   try {
     await connectToDB()
+    if (!Number.isFinite(data.amount) || data.amount <= 0) {
+      return { success: false, message: "A valid USD amount is required." }
+    }
+
     const plan = await Plan.findOne({
       status: "ACTIVE",
       $or: [
@@ -74,12 +132,24 @@ export async function createUserDeposit(data: {
       ],
     }).lean()
     if (!plan) return { success: false, message: "Investment plan not found." }
+    if (
+      data.amount < plan.minimumAmount ||
+      (plan.maximumAmount > 0 && data.amount > plan.maximumAmount)
+    ) {
+      return {
+        success: false,
+        message: "Deposit amount is outside the selected plan limits.",
+      }
+    }
 
     const actor = await User.findById(id).select("username").lean()
     if (!actor) return { success: false, message: "User account not found." }
 
+    const conversion = await getDepositConversion(data.amount, data.asset)
     const deposit = await Deposit.create({
       ...data,
+      amount: data.amount,
+      cryptoAmount: conversion.cryptoAmount,
       userId: id,
       planId: plan._id,
     })
@@ -93,6 +163,7 @@ export async function createUserDeposit(data: {
       newState: {
         status: deposit.status,
         amount: deposit.amount,
+        cryptoAmount: deposit.cryptoAmount,
         asset: deposit.asset,
         network: deposit.network,
         planId: plan._id.toString(),

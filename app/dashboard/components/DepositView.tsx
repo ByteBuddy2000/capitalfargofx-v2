@@ -12,14 +12,17 @@ import {
   Clock,
 } from "lucide-react"
 import { User, InvestmentPlan, Deposit, CryptoWalletConfig } from "@/types"
-import { createUserDeposit } from "@/controller/userMutations.actions"
+import {
+  createUserDeposit,
+  getDepositCryptoQuote,
+} from "@/controller/userMutations.actions"
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
 import { Badge } from "@/components/ui/Badge"
 import { useToast } from "@/components/ui/Toast"
 import Image from "next/image"
 import QRCode from "react-qr-code"
-import {useRouter} from "next/navigation"
+import { useRouter } from "next/navigation"
 
 interface DepositViewProps {
   currentUser: User
@@ -65,7 +68,10 @@ export const DepositView: React.FC<DepositViewProps> = ({
   const [selectedCrypto, setSelectedCrypto] = useState<"BTC" | "ETH" | "USDT">(
     "USDT"
   )
-  const prices = { BTC: 64000, ETH: 3400, USDT: 1 }
+  const [quotedCryptoAmount, setQuotedCryptoAmount] = useState<number | null>(
+    null
+  )
+  const [isLoadingQuote, setIsLoadingQuote] = useState(false)
 
   // Confirmation state
   const [transactionHash, setTransactionHash] = useState<string>("")
@@ -83,14 +89,10 @@ export const DepositView: React.FC<DepositViewProps> = ({
     ((amount || 0) * (selectedPlan?.returnPercentage || 0)) / 100
   const calculatedTotal = (amount || 0) + calculatedProfit
 
-  // Crypto conversion estimates (approximate for display)
   const getEstimatedCryptoAmount = () => {
-    if (selectedCrypto === "USDT") return `${amount.toFixed(2)} USDT`
-    if (selectedCrypto === "BTC")
-      return `${(amount / prices.BTC).toFixed(6)} BTC`
-    if (selectedCrypto === "ETH")
-      return `${(amount / prices.ETH).toFixed(4)} ETH`
-    return `${amount} USD`
+    if (quotedCryptoAmount === null) return ""
+    const decimals = selectedCrypto === "USDT" ? 6 : 8
+    return `${quotedCryptoAmount.toFixed(decimals)} ${selectedCrypto}`
   }
 
   const depositAddress = activeWalletConfig?.address || ""
@@ -101,7 +103,7 @@ export const DepositView: React.FC<DepositViewProps> = ({
       : selectedCrypto === "ETH"
         ? `ethereum:${depositAddress}`
         : depositAddress
-  const handleProceedToPayment = (e: React.FormEvent) => {
+  const handleProceedToPayment = async (e: React.FormEvent) => {
     e.preventDefault()
     setErrorMsg("")
 
@@ -122,7 +124,26 @@ export const DepositView: React.FC<DepositViewProps> = ({
       return
     }
 
-    setStep("PAYMENT")
+    setIsLoadingQuote(true)
+    try {
+      const quote = await getDepositCryptoQuote(amount, selectedCrypto)
+      if (!quote.success || quote.cryptoAmount === undefined) {
+        throw new Error(
+          quote.message || "Unable to quote cryptocurrency amount."
+        )
+      }
+      setQuotedCryptoAmount(quote.cryptoAmount)
+      setStep("PAYMENT")
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Unable to retrieve the current cryptocurrency price."
+      setErrorMsg(message)
+      toastError("Price Quote Error", message)
+    } finally {
+      setIsLoadingQuote(false)
+    }
   }
 
   const handleCopyWallet = () => {
@@ -276,10 +297,12 @@ export const DepositView: React.FC<DepositViewProps> = ({
                   <div
                     key={p.id}
                     onClick={() => {
+                      if (isLoadingQuote) return
                       setSelectedPlanId(p.id)
                       if (amount < p.minimumAmount) {
                         setAmount(p.minimumAmount)
                       }
+                      setQuotedCryptoAmount(null)
                     }}
                     className={`flex cursor-pointer flex-col justify-between rounded-2xl border-2 p-5 transition-all ${
                       isSelected
@@ -339,16 +362,20 @@ export const DepositView: React.FC<DepositViewProps> = ({
                 </span>
                 <input
                   type="number"
+                  disabled={isLoadingQuote}
                   min={selectedPlan?.minimumAmount || 100}
                   max={
                     (selectedPlan?.maximumAmount || 0) > 0
                       ? selectedPlan.maximumAmount
                       : undefined
                   }
-                  step={50}
+                  step="any"
                   value={amount}
-                  onChange={(e) => setAmount(Number(e.target.value))}
-                  className="w-full rounded-xl border border-slate-300 bg-slate-50 py-3 pr-4 pl-9 font-mono text-xl font-bold text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none"
+                  onChange={(e) => {
+                    setAmount(Number(e.target.value))
+                    setQuotedCryptoAmount(null)
+                  }}
+                  className="w-full appearance-none rounded-xl border border-slate-300 bg-slate-50 py-3 pr-4 pl-9 font-mono text-xl font-bold text-slate-900 focus:border-blue-600 focus:bg-white focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   required
                 />
               </div>
@@ -396,7 +423,11 @@ export const DepositView: React.FC<DepositViewProps> = ({
                   <button
                     key={c.symbol}
                     type="button"
-                    onClick={() => setSelectedCrypto(c.symbol)}
+                    disabled={isLoadingQuote}
+                    onClick={() => {
+                      setSelectedCrypto(c.symbol)
+                      setQuotedCryptoAmount(null)
+                    }}
                     className={`cursor-pointer rounded-2xl border-2 p-3 text-center transition-all ${
                       selectedCrypto === c.symbol
                         ? `${c.color} font-black shadow-xs ring-1`
@@ -485,10 +516,13 @@ export const DepositView: React.FC<DepositViewProps> = ({
                 type="submit"
                 variant="primary"
                 size="lg"
+                isLoading={isLoadingQuote}
                 rightIcon={<ArrowRight className="h-4 w-4" />}
                 className="border-none bg-emerald-500 font-bold text-slate-950 hover:bg-emerald-600"
               >
-                Proceed to Payment Details →
+                {isLoadingQuote
+                  ? "Getting current exchange rate..."
+                  : "Proceed to Payment Details →"}
               </Button>
             </div>
           </div>
@@ -553,10 +587,12 @@ export const DepositView: React.FC<DepositViewProps> = ({
                     Send Exact Cryptocurrency Amount:
                   </label>
                   <div className="font-mono text-2xl font-black text-blue-600">
-                    {getEstimatedCryptoAmount()}
+                    {isLoadingQuote
+                      ? "Fetching current exchange rate..."
+                      : getEstimatedCryptoAmount()}
                   </div>
                   <p className="mt-0.5 text-xs text-slate-500">
-                    Rate pegged at standard market index for {selectedCrypto}
+                    Converted from USD using the current CoinGecko market price.
                   </p>
                 </div>
 
@@ -671,6 +707,15 @@ export const DepositView: React.FC<DepositViewProps> = ({
               </span>
             </div>
             <div className="flex justify-between">
+              <span className="text-slate-500">Cryptocurrency Amount:</span>
+              <span className="font-mono font-semibold text-slate-800">
+                {submittedDeposit.cryptoAmount?.toFixed(
+                  submittedDeposit.asset === "USDT" ? 6 : 8
+                )}{" "}
+                {submittedDeposit.asset}
+              </span>
+            </div>
+            <div className="flex justify-between">
               <span className="text-slate-500">Transaction TXID:</span>
               <span className="max-w-50 truncate font-mono text-slate-800">
                 {submittedDeposit.txHash}
@@ -683,22 +728,18 @@ export const DepositView: React.FC<DepositViewProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            {/* <Button variant="primary" onClick={onNavigateTransactions}>
+            <Button variant="outline" onClick={onNavigateTransactions}>
               View in Transaction Ledger
-            </Button> */}
-            <Button variant="primary" onClick={router.push("/dashboard")}>
-              Continue
             </Button>
-            {/* <Button
-              variant="outline"
+            <Button
+              variant="primary"
               onClick={() => {
-                setStep("CONFIGURE")
-                setTransactionHash("")
                 onDepositSuccess()
+                router.push("/dashboard")
               }}
             >
-              Create Another Deposit
-            </Button> */}
+              Continue
+            </Button>
           </div>
         </div>
       )}
