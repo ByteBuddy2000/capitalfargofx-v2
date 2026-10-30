@@ -19,7 +19,7 @@ import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 import Link from "next/link"
 
 const CONTACT_ADDRESS = "Add your official business address"
-const CONTACT_PHONE = "+234 XXX XXX XXXX"
+const CONTACT_PHONE = "+44 XXX XXX XXXX"
 
 export const ContactPage: React.FC = () => {
   const [fullName, setFullName] = useState("")
