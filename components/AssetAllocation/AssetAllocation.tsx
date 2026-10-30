@@ -1,17 +1,20 @@
+// AssetAllocation.tsx
+"use client"
 import Image from "next/image"
-import Link from "next/link"
 import type { AssetAllocationData } from "@/controller/deposit"
+import { Button } from "../ui/Button"
+import type { DashboardTab } from "@/app/dashboard/components/DashboardLayout"
 
-const formatCurrency = (amount: number) =>
-  new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount)
+interface AssetAllocationProps
+  extends Pick<AssetAllocationData, "assets" | "totalApprovedDeposits"> {
+  onNavigateTab: (tab: DashboardTab) => void
+}
 
 export default function AssetAllocation({
   assets,
   totalApprovedDeposits,
-}: Pick<AssetAllocationData, "assets" | "totalApprovedDeposits">) {
+  onNavigateTab,
+}: AssetAllocationProps) {
   const assetItems = [
     {
       symbol: "BTC" as const,
@@ -99,7 +102,7 @@ export default function AssetAllocation({
                     </p>
 
                     <p className="mt-1 text-[10px] text-emerald-600">
-                      {allocation.count} approved{" "}
+                      {allocation.count} confirm{" "}
                       {allocation.count === 1 ? "deposit" : "deposits"}
                     </p>
                   </div>
@@ -108,13 +111,13 @@ export default function AssetAllocation({
                 <div className="ml-2 text-right">
                   <p className="font-mono text-xs font-bold text-gray-600">
                     {asset.symbol === "BTC"
-                      ? `${formatCurrency(allocation.total)} BTC`
+                      ? `${allocation.cryptoTotal.toFixed(8)} BTC`
                       : asset.symbol === "ETH"
-                        ? `${formatCurrency(allocation.total)} ETH`
-                        : `${formatCurrency(allocation.total)} USDT`}
+                        ? `${allocation.cryptoTotal.toFixed(8)} ETH`
+                        : `${allocation.cryptoTotal.toFixed(6)} USDT`}
                   </p>
 
-                  <p className="text-[10px] font-medium text-emerald-600">
+                  <p className="hidden text-[10px] font-medium text-emerald-600">
                     Approved
                   </p>
                 </div>
@@ -124,12 +127,12 @@ export default function AssetAllocation({
         </div>
       </div>
 
-      <Link
-        href="/dashboard/deposit"
-        className="mt-6 block w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] py-2.5 text-center text-xs font-bold text-[#2563EB] transition-all hover:bg-[#2563EB] hover:text-white"
+      <Button
+        onClick={() => onNavigateTab("deposit")}
+        className="mt-6 block w-full rounded-xl border text-[#F8FAFC] py-2.5 text-center text-xs font-bold bg-[#2563EB] transition-all hover:bg-[#2563EB] hover:text-white"
       >
         + Start New Investment
-      </Link>
+      </Button>
     </div>
   )
 }

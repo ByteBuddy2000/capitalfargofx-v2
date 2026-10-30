@@ -12,6 +12,7 @@ export interface AssetAllocationData {
     DepositAsset,
     {
       total: number
+      cryptoTotal: number
       count: number
     }
   >
@@ -19,9 +20,9 @@ export interface AssetAllocationData {
 }
 
 const EMPTY_ASSETS: AssetAllocationData["assets"] = {
-  BTC: { total: 0, count: 0 },
-  ETH: { total: 0, count: 0 },
-  USDT: { total: 0, count: 0 },
+  BTC: { total: 0, cryptoTotal: 0, count: 0 },
+  ETH: { total: 0, cryptoTotal: 0, count: 0 },
+  USDT: { total: 0, cryptoTotal: 0, count: 0 },
 }
 
 /**
@@ -48,6 +49,7 @@ export async function getUserAssetAllocation(): Promise<AssetAllocationData> {
     assets: Array<{
       _id: DepositAsset
       total: number
+      cryptoTotal: number
       count: number
     }>
     totalApprovedDeposits: Array<{ count: number }>
@@ -65,6 +67,7 @@ export async function getUserAssetAllocation(): Promise<AssetAllocationData> {
             $group: {
               _id: "$asset",
               total: { $sum: "$amount" },
+              cryptoTotal: { $sum: { $ifNull: ["$cryptoAmount", 0] } },
               count: { $sum: 1 },
             },
           },
@@ -79,6 +82,7 @@ export async function getUserAssetAllocation(): Promise<AssetAllocationData> {
   for (const item of results?.assets ?? []) {
     assets[item._id] = {
       total: item.total,
+      cryptoTotal: item.cryptoTotal,
       count: item.count,
     }
   }

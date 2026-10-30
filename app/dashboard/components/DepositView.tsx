@@ -33,6 +33,17 @@ interface DepositViewProps {
   onNavigateTransactions: () => void
 }
 
+const formatCryptoAmount = (
+  amount: number | undefined,
+  asset: "BTC" | "ETH" | "USDT"
+) => {
+  if (amount === undefined) return "—"
+  const decimals = asset === "USDT" ? 0 : 4
+  const scale = 10 ** decimals
+  const roundedAmount = Math.ceil(amount * scale) / scale
+  return `${roundedAmount.toFixed(decimals)} ${asset}`
+}
+
 export const DepositView: React.FC<DepositViewProps> = ({
   currentUser,
   initialPlans,
@@ -91,8 +102,7 @@ export const DepositView: React.FC<DepositViewProps> = ({
 
   const getEstimatedCryptoAmount = () => {
     if (quotedCryptoAmount === null) return ""
-    const decimals = selectedCrypto === "USDT" ? 6 : 8
-    return `${quotedCryptoAmount.toFixed(decimals)} ${selectedCrypto}`
+    return formatCryptoAmount(quotedCryptoAmount, selectedCrypto)
   }
 
   const depositAddress = activeWalletConfig?.address || ""
@@ -591,7 +601,7 @@ export const DepositView: React.FC<DepositViewProps> = ({
                       ? "Fetching current exchange rate..."
                       : getEstimatedCryptoAmount()}
                   </div>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <p className="hidden mt-0.5 text-xs text-slate-500">
                     Converted from USD using the current CoinGecko market price.
                   </p>
                 </div>
@@ -709,10 +719,10 @@ export const DepositView: React.FC<DepositViewProps> = ({
             <div className="flex justify-between">
               <span className="text-slate-500">Cryptocurrency Amount:</span>
               <span className="font-mono font-semibold text-slate-800">
-                {submittedDeposit.cryptoAmount?.toFixed(
-                  submittedDeposit.asset === "USDT" ? 6 : 8
-                )}{" "}
-                {submittedDeposit.asset}
+                {formatCryptoAmount(
+                  submittedDeposit.cryptoAmount,
+                  submittedDeposit.asset || "USDT"
+                )}
               </span>
             </div>
             <div className="flex justify-between">

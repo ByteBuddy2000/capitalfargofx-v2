@@ -3,6 +3,7 @@ import { AssetsPage } from "./AssetsPage"
 import { Navbar } from "@/components/layout/Navbar"
 import { Footer } from "@/components/layout/Footer"
 import CoinPriceMarquee from "@/components/CoinPriceMarquee/CoinPriceMarquee"
+import Tawk from "@/components/tawk/Tawk"
 
 const page = () => {
   return (
@@ -13,6 +14,8 @@ const page = () => {
 
       <AssetsPage />
       <Footer />
+              <Tawk />
+
     </div>
   )
 }

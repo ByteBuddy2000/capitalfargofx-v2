@@ -20,6 +20,7 @@ import { TestimonialsSection } from "@/components/sections/TestimonialsSection"
 import { FinalCtaSection } from "@/components/sections/FinalCtaSection"
 import type { IPlan } from "@/models/Plan"
 import CoinPriceBlocks from "@/components/CoinPriceBlocks/CoinPriceBlocks"
+import Tawk from "@/components/tawk/Tawk"
 
 interface HomePageProps {
   plans: IPlan[]
@@ -83,6 +84,8 @@ export const HomePage: React.FC<HomePageProps> = ({ plans }) => {
 
       {/* 13. High-Impact Final CTA */}
       <FinalCtaSection onOpenAuth={onOpenAuth} />
+      <Tawk />
+
     </div>
   )
 }

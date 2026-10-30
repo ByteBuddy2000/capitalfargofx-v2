@@ -679,7 +679,10 @@ export const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
         {/* Asset Allocation */}
 
-        <AssetAllocation {...assetAllocation} />
+        <AssetAllocation
+          {...assetAllocation}
+          onNavigateTab={onNavigateTab}
+        />
       </div>
 
       {/* =====================================================

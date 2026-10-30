@@ -1,7 +1,6 @@
 // app/layout.tsx
 import type { Metadata } from "next"
 import "@/app/globals.css"
-import Tawk from "@/components/tawk/Tawk"
 import SessionWrapper from "@/components/SessionWrapper/SessionWrapper"
 
 export const metadata: Metadata = {
@@ -19,7 +18,6 @@ export default function RootLayout({
     <html lang="en">
       <body cz-shortcut-listen="true">
         <SessionWrapper>{children}</SessionWrapper>
-        {/* <Tawk /> */}
       </body>
     </html>
   )
