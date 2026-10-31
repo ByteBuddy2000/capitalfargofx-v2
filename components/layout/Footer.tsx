@@ -178,14 +178,14 @@ export const Footer: React.FC<FooterProps> = ({
                   Privacy Policy
                 </button>
               </li>
-              <li>
+              {/* <li>
                 <button
                   onClick={() => handleLegalClick("Risk Disclosure")}
                   className="text-slate-400 transition-colors hover:text-white"
                 >
                   Risk Disclosure
                 </button>
-              </li>
+              </li> */}
               <li>
                 <button
                   onClick={() => handleLegalClick("Cookie Policy")}
@@ -208,13 +208,15 @@ export const Footer: React.FC<FooterProps> = ({
                 className="flex items-center gap-2 text-slate-300 transition-colors hover:text-cyan-400"
               >
                 <Mail className="h-4 w-4 text-blue-400" />
-                <span className="font-mono text-xs">
+                <span className=" text-xs">
+                {/* <span className="font-mono text-xs"> */}
                   support@CapitalsFargofx.com
                 </span>
               </a>
               <div className="flex items-center gap-2 text-slate-300">
                 <Send className="h-4 w-4 text-blue-400" />
-                <span className="font-mono text-xs">
+                <span className=" text-xs">
+                {/* <span className="font-mono text-xs"> */}
                   Telegram: @CapitalsFargofx_official
                 </span>
               </div>
