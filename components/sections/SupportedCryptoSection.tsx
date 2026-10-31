@@ -13,24 +13,6 @@ const cryptoImages: Record<string, string> = {
   USDT: "/usdt.png",
 }
 
-const fadeInLeft = {
-  hidden: { opacity: 0, x: -50 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.7, ease: "easeOut" as const },
-  },
-}
-
-const fadeInRight = {
-  hidden: { opacity: 0, x: 50 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.7, ease: "easeOut" as const },
-  },
-}
-
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -88,11 +70,11 @@ export const SupportedCryptoSection: React.FC = () => {
           viewport={{ once: true, amount: 0.12 }}
           className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 py-4 pb-5 sm:-mx-6 sm:px-6 md:mx-0 md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:px-0 lg:grid-cols-3"
         >
-          {SUPPORTED_CRYPTOS.map((crypto, index) => (
+          {SUPPORTED_CRYPTOS.map((crypto) => (
             <motion.article
               key={crypto.symbol}
               id={`crypto-rail-${crypto.symbol.toLowerCase()}`}
-              variants={index % 2 === 0 ? fadeInLeft : fadeInRight}
+              variants={fadeInUp}
               className="group relative flex w-[min(85vw,340px)] shrink-0 snap-center flex-col overflow-hidden rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/40 hover:shadow-xl hover:shadow-emerald-950/20 sm:w-85 sm:p-7 md:w-auto md:min-w-0"
             >
               {/* Decorative Background */}

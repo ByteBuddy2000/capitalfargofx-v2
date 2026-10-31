@@ -19,15 +19,6 @@ const fadeInUp = {
   },
 }
 
-const fadeInLeft = {
-  hidden: { opacity: 0, x: -45 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.7, ease: "easeOut" as const },
-  },
-}
-
 const staggerContainer = {
   hidden: {},
   visible: {
@@ -153,7 +144,7 @@ export const TestimonialsSection: React.FC = () => {
 
         {/* Auto-Scrolling Testimonial Track */}
         <motion.div
-          variants={fadeInLeft}
+          variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}

@@ -28,7 +28,6 @@ interface CryptoCardProps {
   price: number | null
   currency?: string
   loading?: boolean
-  index: number
 }
 
 const INITIAL_ASSETS: CryptoAsset[] = [
@@ -36,24 +35,6 @@ const INITIAL_ASSETS: CryptoAsset[] = [
   { id: "ethereum", symbol: "ETH", name: "Ethereum", price: null },
   { id: "tether", symbol: "USDT", name: "Tether", price: null },
 ]
-
-const fadeInLeft = {
-  hidden: { opacity: 0, x: -60 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.7, ease: "easeOut" as const },
-  },
-}
-
-const fadeInRight = {
-  hidden: { opacity: 0, x: 60 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.7, ease: "easeOut" as const },
-  },
-}
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -91,7 +72,6 @@ function CryptoCard({
   price,
   currency = "USD",
   loading = false,
-  index,
 }: CryptoCardProps) {
   const formattedPrice =
     price === null
@@ -105,7 +85,7 @@ function CryptoCard({
 
   return (
     <motion.article
-      variants={index % 2 === 0 ? fadeInLeft : fadeInRight}
+      variants={fadeInUp}
       className="group relative overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/80 p-6 shadow-sm transition-colors duration-300 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-lg hover:shadow-blue-950/20"
     >
       <div className="absolute -top-10 -right-10 h-28 w-28 rounded-full bg-blue-500/5 blur-2xl transition-colors duration-300 group-hover:bg-blue-500/10" />
@@ -236,7 +216,7 @@ export default function CoinPriceBlocks() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section Introduction */}
         <motion.div
-          variants={fadeInLeft}
+          variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
@@ -274,7 +254,7 @@ export default function CoinPriceBlocks() {
           viewport={{ once: true, amount: 0.15 }}
           className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {assets.map((asset, index) => (
+          {assets.map((asset) => (
             <CryptoCard
               key={asset.id}
               name={asset.name}
@@ -282,7 +262,6 @@ export default function CoinPriceBlocks() {
               price={asset.price}
               currency="USD"
               loading={loading}
-              index={index}
             />
           ))}
         </motion.div>

@@ -6,20 +6,11 @@ import { motion, type Variants } from "framer-motion"
 import { CURRENT_PLANS, formatCurrency, calculateYield } from "../../lib/plans"
 import { Calculator, Users, ArrowRight, Info, AlertCircle } from "lucide-react"
 
-const slideInLeft: Variants = {
-  hidden: { opacity: 0, x: -40 },
+const slideInUp: Variants = {
+  hidden: { opacity: 0, y: 40 },
   visible: {
     opacity: 1,
-    x: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-}
-
-const slideInRight: Variants = {
-  hidden: { opacity: 0, x: 40 },
-  visible: {
-    opacity: 1,
-    x: 0,
+    y: 0,
     transition: { duration: 0.6, ease: "easeOut" },
   },
 }
@@ -133,7 +124,7 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12">
             {/* Left Controls Pane (7 Cols) */}
             <motion.div
-              variants={slideInLeft}
+              variants={slideInUp}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.15 }}
@@ -291,7 +282,7 @@ export const YieldSimulator: React.FC<YieldSimulatorProps> = ({
 
             {/* Right Output Display Pane (5 Cols) */}
             <motion.div
-              variants={slideInRight}
+              variants={slideInUp}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.15 }}

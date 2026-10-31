@@ -14,20 +14,11 @@ import {
   CheckCircle2,
 } from "lucide-react"
 
-const slideInLeft: Variants = {
-  hidden: { opacity: 0, x: -40 },
+const slideInUp: Variants = {
+  hidden: { opacity: 0, y: 40 },
   visible: {
     opacity: 1,
-    x: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-}
-
-const slideInRight: Variants = {
-  hidden: { opacity: 0, x: 40 },
-  visible: {
-    opacity: 1,
-    x: 0,
+    y: 0,
     transition: { duration: 0.6, ease: "easeOut" },
   },
 }
@@ -79,7 +70,7 @@ export const WhyUsSection: React.FC = () => {
           {WHY_CapitalsFargoFX.map((item, idx) => (
             <motion.div
               key={idx}
-              variants={idx % 2 === 0 ? slideInLeft : slideInRight}
+              variants={slideInUp}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}

@@ -14,23 +14,6 @@ import {
   Sparkles,
 } from "lucide-react"
 
-const fadeInLeft: Variants = {
-  hidden: { opacity: 0, x: -60 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.7, ease: "easeOut" },
-  },
-}
-
-const fadeInRight: Variants = {
-  hidden: { opacity: 0, x: 60 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.7, ease: "easeOut" },
-  },
-}
 
 const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 35 },
@@ -81,7 +64,7 @@ export const AboutPreview: React.FC = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* About Introduction */}
         <motion.div
-          variants={fadeInLeft}
+          variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
@@ -116,7 +99,7 @@ export const AboutPreview: React.FC = () => {
           {ABOUT_FEATURES.map((feature, idx) => (
             <motion.div
               key={feature.title ?? idx}
-              variants={idx % 2 === 0 ? fadeInLeft : fadeInRight}
+              variants={fadeInUp}
               className="group rounded-2xl border border-slate-800 bg-slate-900/80 p-6 shadow-sm transition-colors duration-300 hover:-translate-y-1 hover:border-blue-500/40 hover:shadow-md"
             >
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-slate-700/60 bg-slate-800 transition-colors duration-300 group-hover:bg-blue-950/80">
@@ -136,7 +119,7 @@ export const AboutPreview: React.FC = () => {
 
         {/* Bottom CTA */}
         <motion.div
-          variants={fadeInRight}
+          variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}

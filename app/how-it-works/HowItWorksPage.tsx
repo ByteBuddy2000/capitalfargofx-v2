@@ -32,14 +32,14 @@ const fadeUpVariants = {
   },
 }
 
-const horizontalVariants = {
-  hidden: (index: number) => ({
+const stepVariants = {
+  hidden: {
     opacity: 0,
-    x: index % 2 === 0 ? -65 : 65,
-  }),
+    y: 45,
+  },
   visible: {
     opacity: 1,
-    x: 0,
+    y: 0,
     transition: {
       duration: 0.7,
       ease: easing,
@@ -160,8 +160,8 @@ export const HowItWorksPage: React.FC = () => {
 
             <div className="max-w-3xl space-y-6 text-left">
               <motion.div
-                initial={shouldReduceMotion ? false : { opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, ease: easing }}
                 className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 text-[8px] font-bold tracking-wider text-blue-300 uppercase lg:text-xs"
@@ -190,8 +190,7 @@ export const HowItWorksPage: React.FC = () => {
             {steps.map((step, idx) => (
               <motion.div
                 key={step.number}
-                custom={idx}
-                variants={horizontalVariants}
+                variants={stepVariants}
                 initial={shouldReduceMotion ? false : "hidden"}
                 whileInView={shouldReduceMotion ? undefined : "visible"}
                 viewport={{ once: true, amount: 0.2 }}

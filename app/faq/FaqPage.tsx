@@ -25,14 +25,12 @@ const fadeUpVariants = {
 }
 
 const faqVariants = {
-  hidden: (index: number) => ({
+  hidden: {
     opacity: 0,
-    x: index % 2 === 0 ? -50 : 50,
-    y: 15,
-  }),
+    y: 40,
+  },
   visible: {
     opacity: 1,
-    x: 0,
     y: 0,
     transition: { duration: 0.55, ease: easing },
   },
@@ -95,8 +93,8 @@ export const FaqPage: React.FC = () => {
 
             <div className="mt-6 max-w-3xl space-y-6 text-left">
               <motion.div
-                initial={shouldReduceMotion ? false : { opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.55, ease: easing }}
                 className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-950/80 px-3.5 py-1 text-[8px] font-bold tracking-wider text-blue-300 uppercase lg:text-xs"
@@ -196,7 +194,6 @@ export const FaqPage: React.FC = () => {
                   <motion.div
                     key={faq.id || `faq-${idx}`}
                     id={`faq-item-${idx}`}
-                    custom={idx}
                     variants={faqVariants}
                     initial={shouldReduceMotion ? false : "hidden"}
                     whileInView={shouldReduceMotion ? undefined : "visible"}
@@ -285,7 +282,7 @@ export const FaqPage: React.FC = () => {
 
             <motion.button
               type="button"
-              whileHover={shouldReduceMotion ? undefined : { x: 4 }}
+              whileHover={shouldReduceMotion ? undefined : { y: -4 }}
               whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
               onClick={() => {
                 router.push("/contact")

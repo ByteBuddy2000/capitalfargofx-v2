@@ -24,21 +24,15 @@ const sectionVariants = {
 
 const cardVariants = {
   hidden: (index: number) => {
-    const directions = [
-      { x: -70, y: 0 }, // Left to center
-      { x: 70, y: 0 }, // Right to center
-      { x: 0, y: 60 }, // Bottom to center
-      { x: 0, y: -60 }, // Top to center
-    ]
+    const verticalOffsets = [60, 60, 60, -60]
 
     return {
       opacity: 0,
-      ...directions[index % directions.length],
+      y: verticalOffsets[index % verticalOffsets.length],
     }
   },
   visible: {
     opacity: 1,
-    x: 0,
     y: 0,
     transition: {
       duration: 0.75,
@@ -93,15 +87,15 @@ export const AlternativeAssetsSection: React.FC = () => {
           {/* Animated Explore Button */}
           <motion.button
             type="button"
-            initial={shouldReduceMotion ? false : { opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{
               duration: 0.6,
               delay: 0.2,
               ease: easing,
             }}
-            whileHover={shouldReduceMotion ? undefined : { x: 5 }}
+            whileHover={shouldReduceMotion ? undefined : { y: -5 }}
             whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
             onClick={() => {
               router.push("/fiat-assets")

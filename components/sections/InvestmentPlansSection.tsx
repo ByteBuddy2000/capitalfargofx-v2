@@ -8,20 +8,11 @@ import { formatCurrency } from "../../lib/plans"
 import type { IPlan } from "@/models/Plan"
 import { Sparkles, Clock, ArrowRight, Check, Layers } from "lucide-react"
 
-const slideInLeft: Variants = {
-  hidden: { opacity: 0, x: -40 },
+const slideInUp: Variants = {
+  hidden: { opacity: 0, y: 40 },
   visible: {
     opacity: 1,
-    x: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-}
-
-const slideInRight: Variants = {
-  hidden: { opacity: 0, x: 40 },
-  visible: {
-    opacity: 1,
-    x: 0,
+    y: 0,
     transition: { duration: 0.6, ease: "easeOut" },
   },
 }
@@ -47,7 +38,7 @@ export const InvestmentPlansSection: React.FC<InvestmentPlansSectionProps> = ({
         {showAllHeading && (
           <div className="mb-12 flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <motion.div
-              variants={slideInLeft}
+              variants={slideInUp}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
@@ -68,7 +59,7 @@ export const InvestmentPlansSection: React.FC<InvestmentPlansSectionProps> = ({
             </motion.div>
 
             <motion.button
-              variants={slideInRight}
+              variants={slideInUp}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
@@ -91,7 +82,7 @@ export const InvestmentPlansSection: React.FC<InvestmentPlansSectionProps> = ({
           id="investment-plans-scroll-grid"
           className="no-scrollbar flex snap-x snap-mandatory space-x-5 overflow-x-auto px-1 pt-3 pb-6 sm:space-x-6 md:grid md:grid-cols-2 md:gap-6 md:space-x-0 lg:grid-cols-3"
         >
-          {plans.map((plan, idx) => {
+          {plans.map((plan) => {
             const isFeatured = plan.featured
             const maxLabel =
               plan.maximumAmount === 0
@@ -101,7 +92,7 @@ export const InvestmentPlansSection: React.FC<InvestmentPlansSectionProps> = ({
             return (
               <motion.div
                 key={plan.slug}
-                variants={idx % 2 === 0 ? slideInLeft : slideInRight}
+                variants={slideInUp}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.2 }}
