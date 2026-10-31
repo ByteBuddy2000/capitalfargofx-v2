@@ -84,7 +84,6 @@ export const HomePage: React.FC<HomePageProps> = ({ plans }) => {
 
       {/* 13. High-Impact Final CTA */}
       <FinalCtaSection onOpenAuth={onOpenAuth} />
-      <Tawk />
 
     </div>
   )
