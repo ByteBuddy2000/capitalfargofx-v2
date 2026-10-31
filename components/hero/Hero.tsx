@@ -169,7 +169,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
               <button
                 id="hero-primary-cta"
                 onClick={() => onOpenInvestModal()}
-                className="group flex items-center justify-center gap-2.5 rounded-xl bg-linear-to-r from-blue-600 via-blue-700 to-indigo-700 px-7 py-4 text-[10px] xl:text-sm font-semibold text-white shadow-lg shadow-blue-900/40 transition-all hover:-translate-y-0.5 hover:from-blue-500 hover:to-indigo-600 hover:shadow-xl hover:shadow-blue-600/40"
+                className="group flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-blue-600 via-blue-700 to-indigo-700 px-5 py-3 md:px-7 md:py-4 text-[10px] xl:text-sm font-semibold text-white shadow-lg shadow-blue-900/40 transition-all hover:-translate-y-0.5 hover:from-blue-500 hover:to-indigo-600 hover:shadow-xl hover:shadow-blue-600/40"
               >
                 <span>Start Investing</span>
                 <RocketIcon
@@ -184,7 +184,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenInvestModal }) => {
                   router.push("/investment-plans")
                   window.scrollTo({ top: 0, behavior: "smooth" })
                 }}
-                className="group flex items-center justify-center gap-2 rounded-xl border border-slate-700/80 bg-slate-900/80 px-7 py-4 text-[10px] xl:text-sm font-semibold text-slate-200 shadow-sm transition-all hover:border-slate-600 hover:bg-slate-800 hover:shadow-md"
+                className="group flex items-center justify-center gap-2 rounded-xl border border-slate-700/80 bg-slate-900/80 px-5 py-3 md:px-7 md:py-4 text-[10px] xl:text-sm font-semibold text-slate-200 shadow-sm transition-all hover:border-slate-600 hover:bg-slate-800 hover:shadow-md"
               >
                 <span>Learn More</span>
                 <PlayIcon
